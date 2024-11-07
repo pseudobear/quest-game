@@ -1,16 +1,14 @@
 #![allow(clippy::type_complexity)]
 
-mod actions;
-mod audio;
 mod loading;
 mod menu;
-mod player;
+mod gameplay;
 
-use crate::actions::ActionsPlugin;
-use crate::audio::InternalAudioPlugin;
+use crate::gameplay::actions::ActionsPlugin;
+use crate::gameplay::audio::InternalAudioPlugin;
 use crate::loading::LoadingPlugin;
 use crate::menu::MenuPlugin;
-use crate::player::PlayerPlugin;
+use crate::gameplay::player::PlayerPlugin;
 
 use bevy::app::App;
 #[cfg(debug_assertions)]
@@ -27,6 +25,8 @@ enum GameState {
     Loading,
     // During this State the actual game logic is executed
     Playing,
+    // During this State, the game is drawn, but the input is suspended and a pause menu is displayed
+    Paused,
     // Here the menu is drawn and waiting for player interaction
     Menu,
 }

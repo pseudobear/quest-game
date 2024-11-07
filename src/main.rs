@@ -33,7 +33,7 @@ fn main() {
                     ..default()
                 }),
         )
-        .add_plugins(GamePlugin)
+        .add_plugins(GamePlugin)   // Game plugin contains the actual game, this file only gives basic configs otherwise
         .add_systems(Startup, set_window_icon)
         .run();
 }
