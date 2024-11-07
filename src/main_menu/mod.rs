@@ -23,11 +23,11 @@ pub struct MainMenuPlugin;
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_sub_state::<MainMenuState>()
+           .add_systems(OnEnter(GameState::Menu), setup_menu)
            .add_plugins((
                 StartMenuPlugin,
                 OptionsMenuPlugin,
            ))
-           .add_systems(OnEnter(GameState::Menu), setup_menu)
            .add_systems(OnExit(GameState::Menu), cleanup_menu);
     }
 }

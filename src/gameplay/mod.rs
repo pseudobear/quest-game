@@ -1,11 +1,21 @@
 mod actions;
 mod player;
 mod audio;
+mod maps;
 use crate::GameState;
-use bevy::prelude::*;
 use crate::gameplay::player::PlayerPlugin;
 use crate::gameplay::actions::ActionsPlugin;
 use crate::gameplay::audio::InternalAudioPlugin;
+use crate::gameplay::maps::MapsPlugin;
+use bevy::prelude::*;
+
+#[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
+#[source(GameState = GameState::Playing)]
+enum PauseState {
+    #[default]
+    NotPaused,
+    IsPaused,
+}
 
 pub struct GameplayPlugin;
 
@@ -16,12 +26,14 @@ struct Gameplay;
 /// Player logic is only active during the State `GameState::Playing`
 impl Plugin for GameplayPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((
-            ActionsPlugin,
-            InternalAudioPlugin,
-            PlayerPlugin,
-        ))
+        app.add_sub_state::<PauseState>()
            .add_systems(OnEnter(GameState::Playing), setup_gameplay)
+           .add_plugins((
+                ActionsPlugin,
+                InternalAudioPlugin,
+                PlayerPlugin,
+                MapsPlugin,
+            ))
            .add_systems(OnExit(GameState::Playing), cleanup_gameplay);
     }
 }
