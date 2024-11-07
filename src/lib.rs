@@ -1,13 +1,13 @@
 #![allow(clippy::type_complexity)]
 
 mod loading;
-mod menu;
+mod menus;
 mod gameplay;
 
 use crate::gameplay::actions::ActionsPlugin;
 use crate::gameplay::audio::InternalAudioPlugin;
 use crate::loading::LoadingPlugin;
-use crate::menu::MenuPlugin;
+use crate::menus::start_menu::StartMenuPlugin;
 use crate::gameplay::player::PlayerPlugin;
 
 use bevy::app::App;
@@ -37,7 +37,7 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<GameState>().add_plugins((
             LoadingPlugin,
-            MenuPlugin,
+            StartMenuPlugin,
             ActionsPlugin,
             InternalAudioPlugin,
             PlayerPlugin,

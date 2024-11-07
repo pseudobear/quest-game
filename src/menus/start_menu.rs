@@ -2,11 +2,11 @@ use crate::loading::TextureAssets;
 use crate::GameState;
 use bevy::prelude::*;
 
-pub struct MenuPlugin;
+pub struct StartMenuPlugin;
 
 /// This plugin is responsible for the game menu (containing only one button...)
 /// The menu is only drawn during the State `GameState::Menu` and is removed when that state is exited
-impl Plugin for MenuPlugin {
+impl Plugin for StartMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Menu), setup_menu)
             .add_systems(Update, click_play_button.run_if(in_state(GameState::Menu)))
