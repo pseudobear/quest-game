@@ -17,10 +17,15 @@ enum PauseState {
     IsPaused,
 }
 
-pub struct GameplayPlugin;
 
 #[derive(Component)]
 struct Gameplay;
+
+#[derive(Component)]
+struct GameCamera;
+
+
+pub struct GameplayPlugin;
 
 /// This plugin handles player related stuff like movement
 /// Player logic is only active during the State `GameState::Playing`
@@ -40,7 +45,13 @@ impl Plugin for GameplayPlugin {
 
 fn setup_gameplay(mut commands: Commands) {
     info!("gameplay");
-    commands.spawn((Camera2dBundle::default(), Gameplay));
+    let mut camera = Camera2dBundle::default();
+    /*
+    camera.projection.scale = 0.5;
+    camera.transform.translation.x += 1280.0 / 4.0;
+    camera.transform.translation.y += 720.0 / 4.0;
+    */
+    commands.spawn((camera, Gameplay, GameCamera));
 }
 
 fn cleanup_gameplay(mut commands: Commands, gameplay: Query<Entity, With<Gameplay>>) {
