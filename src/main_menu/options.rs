@@ -5,15 +5,15 @@ use crate::main_menu::MainMenuState;
 use crate::main_menu::button::*;
 use bevy::prelude::*;
 
-pub struct StartMenuPlugin;
+pub struct OptionsMenuPlugin;
 
 /// This plugin is responsible for the game menu (containing only one button...)
 /// The menu is only drawn during the State `GameState::Menu` and is removed when that state is exited
-impl Plugin for StartMenuPlugin {
+impl Plugin for OptionsMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(MainMenuState::StartMenu), setup_menu)
-           .add_systems(Update, click_play_button.run_if(in_state(MainMenuState::StartMenu)))
-           .add_systems(OnExit(MainMenuState::StartMenu), cleanup_menu);
+        app.add_systems(OnEnter(MainMenuState::OptionsMenu), setup_menu)
+           .add_systems(Update, click_play_button.run_if(in_state(MainMenuState::OptionsMenu)))
+           .add_systems(OnExit(MainMenuState::OptionsMenu), cleanup_menu);
     }
 }
 
@@ -21,7 +21,7 @@ impl Plugin for StartMenuPlugin {
 struct StartMenu;
 
 fn setup_menu(mut commands: Commands, textures: Res<TextureAssets>) {
-    info!("start menu");
+    info!("options menu");
     commands
         .spawn((
             NodeBundle {
@@ -43,54 +43,34 @@ fn setup_menu(mut commands: Commands, textures: Res<TextureAssets>) {
                 .spawn((
                     menu_button(140.0, 50.0),
                     button_colors,
-                    ChangeGameState(GameState::Playing),  // attach component to specify interaction with button
+                    ChangeState(GameState::Playing),  // attach component to specify interaction with button
                 ))
                 .with_children(|parent| {
-                    parent.spawn(menu_button_text("play"));
-                });
-        })
-        .with_children(|children| {
-            let button_colors = ButtonColors::default();
-            children
-                .spawn((
-                    menu_button(140.0, 50.0),
-                    button_colors,
-                    ChangeMenuState(MainMenuState::OptionsMenu),
-                ))
-                .with_children(|parent| {
-                    parent.spawn(menu_button_text("options"));
+                    parent.spawn(menu_button_text("play, but from options :)"));
                 });
         });
 }
 
 #[derive(Component)]
-struct ChangeGameState(GameState);
-
-#[derive(Component)]
-struct ChangeMenuState(MainMenuState);
+struct ChangeState(GameState);
 
 fn click_play_button(
-    mut next_game_state: ResMut<NextState<GameState>>,
-    mut next_menu_state: ResMut<NextState<MainMenuState>>,
+    mut next_state: ResMut<NextState<GameState>>,
     mut interaction_query: Query<
         (
             &Interaction,
             &mut BackgroundColor,
             &ButtonColors,
-            Option<&ChangeGameState>,
-            Option<&ChangeMenuState>,
+            Option<&ChangeState>,
         ),
         (Changed<Interaction>, With<Button>),
     >,
 ) {
-    for (interaction, mut color, button_colors, change_game_state, change_menu_state) in &mut interaction_query {
+    for (interaction, mut color, button_colors, change_state) in &mut interaction_query {
         match *interaction {
             Interaction::Pressed => {
-                if let Some(state) = change_game_state {
-                    next_game_state.set(state.0.clone());
-                } 
-                if let Some(state) = change_menu_state {
-                    next_menu_state.set(state.0.clone());
+                if let Some(state) = change_state {
+                    next_state.set(state.0.clone());
                 } 
             }
             Interaction::Hovered => {
@@ -103,8 +83,8 @@ fn click_play_button(
     }
 }
 
-fn cleanup_menu(mut commands: Commands, start_menu: Query<Entity, With<StartMenu>>) {
-    for entity in start_menu.iter() {
+fn cleanup_menu(mut commands: Commands, start_menus: Query<Entity, With<StartMenu>>) {
+    for entity in start_menus.iter() {
         commands.entity(entity).despawn_recursive();
     }
 }

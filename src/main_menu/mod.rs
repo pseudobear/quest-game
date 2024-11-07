@@ -1,8 +1,10 @@
-pub mod start_menu;
+mod start_menu;
+mod options;
 mod button;
 
 use crate::GameState;
 use crate::main_menu::start_menu::StartMenuPlugin;
+use crate::main_menu::options::OptionsMenuPlugin;
 use bevy::prelude::*;
 
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
@@ -10,7 +12,11 @@ use bevy::prelude::*;
 enum MainMenuState {
     #[default]
     StartMenu,
+    OptionsMenu,
 }
+
+#[derive(Component)]
+struct MainMenu;
 
 pub struct MainMenuPlugin;
 
@@ -19,15 +25,23 @@ impl Plugin for MainMenuPlugin {
         app.add_sub_state::<MainMenuState>()
            .add_plugins((
                 StartMenuPlugin,
+                OptionsMenuPlugin,
            ))
            .add_systems(OnEnter(GameState::Menu), setup_menu)
            .add_systems(OnExit(GameState::Menu), cleanup_menu);
     }
 }
 
-fn setup_menu(mut next_state: ResMut<NextState<MainMenuState>>) { }
+fn setup_menu(mut commands: Commands) {
+    info!("main menu");
+    commands.spawn((Camera2dBundle::default(), MainMenu));
+}
 
-fn cleanup_menu(mut next_state: ResMut<NextState<MainMenuState>>) { }
+fn cleanup_menu(mut commands: Commands, menu: Query<Entity, With<MainMenu>>) {
+    for entity in menu.iter() {
+        commands.entity(entity).despawn_recursive();
+    }
+}
 
 
 #[derive(Component)]
