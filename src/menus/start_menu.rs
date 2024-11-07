@@ -1,5 +1,6 @@
 use crate::loading::TextureAssets;
 use crate::GameState;
+use crate::menus::ButtonColors;
 use bevy::prelude::*;
 
 pub struct StartMenuPlugin;
@@ -15,22 +16,7 @@ impl Plugin for StartMenuPlugin {
 }
 
 #[derive(Component)]
-struct ButtonColors {
-    normal: Color,
-    hovered: Color,
-}
-
-impl Default for ButtonColors {
-    fn default() -> Self {
-        ButtonColors {
-            normal: Color::linear_rgb(0.15, 0.15, 0.15),
-            hovered: Color::linear_rgb(0.25, 0.25, 0.25),
-        }
-    }
-}
-
-#[derive(Component)]
-struct Menu;
+struct StartMenu;
 
 fn setup_menu(mut commands: Commands, textures: Res<TextureAssets>) {
     info!("menu");
@@ -48,7 +34,7 @@ fn setup_menu(mut commands: Commands, textures: Res<TextureAssets>) {
                 },
                 ..default()
             },
-            Menu,
+            StartMenu,
         ))
         .with_children(|children| {
             let button_colors = ButtonColors::default();
@@ -93,7 +79,7 @@ fn setup_menu(mut commands: Commands, textures: Res<TextureAssets>) {
                 },
                 ..default()
             },
-            Menu,
+            StartMenu,
         ))
         .with_children(|children| {
             children
@@ -215,8 +201,8 @@ fn click_play_button(
     }
 }
 
-fn cleanup_menu(mut commands: Commands, menu: Query<Entity, With<Menu>>) {
-    for entity in menu.iter() {
+fn cleanup_menu(mut commands: Commands, start_menus: Query<Entity, With<StartMenu>>) {
+    for entity in start_menus.iter() {
         commands.entity(entity).despawn_recursive();
     }
 }
