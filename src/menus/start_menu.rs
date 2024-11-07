@@ -1,6 +1,7 @@
 use crate::loading::TextureAssets;
 use crate::GameState;
 use crate::menus::ButtonColors;
+use crate::menus::MenuState;
 use crate::menus::button::*;
 use bevy::prelude::*;
 
@@ -10,9 +11,9 @@ pub struct StartMenuPlugin;
 /// The menu is only drawn during the State `GameState::Menu` and is removed when that state is exited
 impl Plugin for StartMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::Menu), setup_menu)
-           .add_systems(Update, click_play_button.run_if(in_state(GameState::Menu)))
-           .add_systems(OnExit(GameState::Menu), cleanup_menu);
+        app.add_systems(OnEnter(MenuState::StartMenu), setup_menu)
+           .add_systems(Update, click_play_button.run_if(in_state(MenuState::StartMenu)))
+           .add_systems(OnExit(MenuState::StartMenu), cleanup_menu);
     }
 }
 

@@ -7,7 +7,7 @@ mod gameplay;
 use crate::gameplay::actions::ActionsPlugin;
 use crate::gameplay::audio::InternalAudioPlugin;
 use crate::loading::LoadingPlugin;
-use crate::menus::start_menu::StartMenuPlugin;
+use crate::menus::MenuPlugin;
 use crate::gameplay::player::PlayerPlugin;
 
 use bevy::app::App;
@@ -25,8 +25,6 @@ enum GameState {
     Loading,
     // During this State the actual game logic is executed
     Playing,
-    // During this State, the game is drawn, but the input is suspended and a pause menu is displayed
-    Paused,
     // Here the menu is drawn and waiting for player interaction
     Menu,
 }
@@ -37,7 +35,7 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<GameState>().add_plugins((
             LoadingPlugin,
-            StartMenuPlugin,
+            MenuPlugin,
             ActionsPlugin,
             InternalAudioPlugin,
             PlayerPlugin,
