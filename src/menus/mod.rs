@@ -1,6 +1,21 @@
 pub mod start_menu;
+mod button;
 
 use bevy::prelude::*;
+
+enum MenuState {
+    StartMenu,
+    
+}
+
+pub struct MenuPlugin;
+
+impl Plugin for MenuPlugin {
+    fn build(&self, app: &mut App) {
+    }
+}
+
+
 
 #[derive(Component)]
 struct ButtonColors {
