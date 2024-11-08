@@ -60,13 +60,13 @@ fn move_player(
     actions: Res<Actions>,
     mut player_query: Query<&mut Transform, With<Player>>,
 ) {
-    if actions.player_movement.is_none() {
+    if actions.player_drift.is_none() {
         return;
     }
     let speed = 25.;
     let movement = Vec3::new(
-        actions.player_movement.unwrap().x * speed * time.delta_seconds(),
-        actions.player_movement.unwrap().y * speed * time.delta_seconds(),
+        actions.player_drift.unwrap().x * speed * time.delta_seconds(),
+        actions.player_drift.unwrap().y * speed * time.delta_seconds(),
         0.,
     );
     for mut player_transform in &mut player_query {

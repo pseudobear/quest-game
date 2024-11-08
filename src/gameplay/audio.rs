@@ -1,4 +1,4 @@
-use crate::gameplay::actions::{set_movement_actions, Actions};
+use crate::gameplay::actions::{set_drift_input, Actions};
 use crate::loading::AudioAssets;
 use crate::GameState;
 use bevy::prelude::*;
@@ -14,7 +14,7 @@ impl Plugin for InternalAudioPlugin {
             .add_systems(
                 Update,
                 control_flying_sound
-                    .after(set_movement_actions)
+                    .after(set_drift_input)
                     .run_if(in_state(GameState::Playing)),
             );
     }
@@ -41,12 +41,12 @@ fn control_flying_sound(
     if let Some(instance) = audio_instances.get_mut(&audio.0) {
         match instance.state() {
             PlaybackState::Paused { .. } => {
-                if actions.player_movement.is_some() {
+                if actions.player_drift.is_some() {
                     instance.resume(AudioTween::default());
                 }
             }
             PlaybackState::Playing { .. } => {
-                if actions.player_movement.is_none() {
+                if actions.player_drift.is_none() {
                     instance.pause(AudioTween::default());
                 }
             }
