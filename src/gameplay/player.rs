@@ -1,6 +1,8 @@
 use crate::gameplay::actions::Actions;
-use crate::loading::TextureAssets;
+use crate::loading::{SwordsMasterSpriteAssets, TextureAssets};
 use crate::GameState;
+use crate::animations::trigger_animation;
+use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 
 pub struct PlayerPlugin;
@@ -13,14 +15,18 @@ pub struct Player;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Playing), spawn_player)
-            .add_systems(Update, move_player.run_if(in_state(GameState::Playing)));
+            .add_systems(Update, move_player.run_if(in_state(GameState::Playing)))
+            .add_systems(Update, (
+                trigger_animation::<Player>.run_if(input_just_pressed(KeyCode::ArrowRight)),
+                trigger_animation::<Player>.run_if(input_just_pressed(KeyCode::ArrowLeft)),
+            ));
     }
 }
 
-fn spawn_player(mut commands: Commands, textures: Res<TextureAssets>) {
+fn spawn_player(mut commands: Commands, player_sprite: Res<SwordsMasterSpriteAssets>) {
     commands
         .spawn(SpriteBundle {
-            texture: textures.bevy.clone(),
+            texture: player_sprite.sheet.clone(),
             transform: Transform::from_translation(Vec3::new(0., 0., 2.5)),
             ..Default::default()
         })
