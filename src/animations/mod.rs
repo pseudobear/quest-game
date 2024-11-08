@@ -9,20 +9,11 @@ impl Plugin for AnimationPlugin {
     }
 }
 
-/*
-// triggers animation for animatable with marker S
-pub fn trigger_animation<S: Component>(mut query: Query<&mut AnimationConfig, With<S>>) {
-    // we expect the Component of type S to be used as a marker Component by only a single entity
-    let mut animation = query.single_mut();
-    // we create a new timer when the animation is triggered
-    animation.frame_timer = AnimationConfig::timer_from_fps(animation.fps);
-}
-*/
 
 #[derive(Component)]
 pub struct Animatable {
     pub animations: Vec<AnimationConfig>,
-    pub active: Option<usize>,
+    active: Option<usize>,
 }
 
 impl Animatable {
@@ -31,6 +22,12 @@ impl Animatable {
             animations: animations,
             active: None
         }
+    }
+
+    // activates animation given by index
+    pub fn trigger_animation(&mut self, index: usize) {
+        self.active = Some(index);
+        self.animations[index].frame_timer = AnimationConfig::timer_from_fps(self.animations[index].fps);
     }
 }
 
@@ -75,6 +72,9 @@ fn execute_animations(
         } else {
             return;
         }
+
+        // set correct layout
+        atlas.layout = config.layout.clone();
 
         // we track how long the current sprite has been displayed for
         config.frame_timer.tick(time.delta());

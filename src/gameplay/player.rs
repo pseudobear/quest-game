@@ -31,7 +31,8 @@ fn spawn_player(
     let mut player_animatable = Animatable::new(Vec::from([
         idle_config,
     ]));
-    player_animatable.active =  Some(0);
+
+    player_animatable.trigger_animation(0);
 
     commands
         .spawn((
