@@ -2,9 +2,9 @@ use crate::gameplay::actions::Actions;
 use crate::loading::SwordsMasterSpriteAssets;
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
-use crate::animations::{ trigger_animation, AnimationConfig };
+use crate::animations::{ Animatable, AnimationConfig };
 use bevy::input::common_conditions::input_just_pressed;
-use bevy::{animation, prelude::*};
+use bevy::{prelude::*};
 
 pub struct PlayerPlugin;
 
@@ -16,11 +16,7 @@ pub struct Player;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Playing), spawn_player)
-            .add_systems(Update, move_player.run_if(in_state(GameState::Playing)))
-            .add_systems(Update, (
-                trigger_animation::<Player>.run_if(input_just_pressed(KeyCode::ArrowRight)),
-                trigger_animation::<Player>.run_if(input_just_pressed(KeyCode::ArrowLeft)),
-            ));
+           .add_systems(Update, move_player.run_if(in_state(GameState::Playing)));
     }
 }
 
@@ -32,6 +28,11 @@ fn spawn_player(
 
     let idle_config = AnimationConfig::new(0, 8, 10, true, player_sprite.idle.clone());
 
+    let mut player_animatable = Animatable::new(Vec::from([
+        idle_config,
+    ]));
+    player_animatable.active =  Some(0);
+
     commands
         .spawn((
             SpriteBundle {
@@ -42,10 +43,10 @@ fn spawn_player(
                 ..Default::default()
             },
             TextureAtlas {
-                layout: idle_config.layout.clone(),
-                index: idle_config.first_sprite_index,
+                layout: player_animatable.animations[0].layout.clone(),
+                index: player_animatable.animations[0].first_sprite_index,
             },
-            idle_config,
+            player_animatable,
         ))
         .insert(Player);
 }

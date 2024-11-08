@@ -9,6 +9,7 @@ impl Plugin for AnimationPlugin {
     }
 }
 
+/*
 // triggers animation for animatable with marker S
 pub fn trigger_animation<S: Component>(mut query: Query<&mut AnimationConfig, With<S>>) {
     // we expect the Component of type S to be used as a marker Component by only a single entity
@@ -16,14 +17,24 @@ pub fn trigger_animation<S: Component>(mut query: Query<&mut AnimationConfig, Wi
     // we create a new timer when the animation is triggered
     animation.frame_timer = AnimationConfig::timer_from_fps(animation.fps);
 }
-
-pub struct Animatable<'a> {
-    pub animations: Vec<&'a AnimationConfig>,
-    pub active: &'a &'a AnimationConfig,
-    texture: Handle<Image>,
-}
+*/
 
 #[derive(Component)]
+pub struct Animatable {
+    pub animations: Vec<AnimationConfig>,
+    pub active: Option<usize>,
+}
+
+impl Animatable {
+    pub fn new(animations: Vec<AnimationConfig>) -> Self {
+        Self {
+            animations: animations,
+            active: None
+        }
+    }
+}
+
+#[derive(Clone)]
 pub struct AnimationConfig {
     pub first_sprite_index: usize,
     pub last_sprite_index: usize,
@@ -53,10 +64,18 @@ impl AnimationConfig {
 // This system loops through all the sprites in the `TextureAtlas`, from  `first_sprite_index` to
 // `last_sprite_index` (both defined in `AnimationConfig`).
 fn execute_animations(
+    mut commands: Commands,
     time: Res<Time>,
-    mut query: Query<(&mut AnimationConfig, &mut TextureAtlas)>,
+    mut query: Query<(&mut Animatable, &mut TextureAtlas)>,
 ) {
-    for (mut config, mut atlas) in &mut query {
+    for (mut animatable, mut atlas) in &mut query {
+        let config: &mut AnimationConfig;
+        if let Some(active_idx) = animatable.active {
+            config = &mut animatable.animations[active_idx];
+        } else {
+            return;
+        }
+
         // we track how long the current sprite has been displayed for
         config.frame_timer.tick(time.delta());
 
