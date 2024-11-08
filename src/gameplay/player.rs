@@ -30,7 +30,7 @@ fn spawn_player(
     screen_bottom_left: Res<ScreenBottomLeft>,
 ) {
 
-    let animation_config_1 = AnimationConfig::new(0, 2, 2);
+    let idle_config = AnimationConfig::new(0, 8, 10, true, player_sprite.idle.clone());
 
     commands
         .spawn((
@@ -42,10 +42,10 @@ fn spawn_player(
                 ..Default::default()
             },
             TextureAtlas {
-                layout: player_sprite.idle.clone(),
-                index: animation_config_1.first_sprite_index,
+                layout: idle_config.layout.clone(),
+                index: idle_config.first_sprite_index,
             },
-            animation_config_1,
+            idle_config,
         ))
         .insert(Player);
 }

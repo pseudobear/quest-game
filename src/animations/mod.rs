@@ -17,21 +17,31 @@ pub fn trigger_animation<S: Component>(mut query: Query<&mut AnimationConfig, Wi
     animation.frame_timer = AnimationConfig::timer_from_fps(animation.fps);
 }
 
+pub struct Animatable<'a> {
+    pub animations: Vec<&'a AnimationConfig>,
+    pub active: &'a &'a AnimationConfig,
+    texture: Handle<Image>,
+}
+
 #[derive(Component)]
 pub struct AnimationConfig {
     pub first_sprite_index: usize,
     pub last_sprite_index: usize,
     fps: u8,
+    pub layout: Handle<TextureAtlasLayout>,
     frame_timer: Timer,
+    repeat: bool,
 }
 
 impl AnimationConfig {
-    pub fn new(first: usize, last: usize, fps: u8) -> Self {
+    pub fn new(first: usize, last: usize, fps: u8, repeat: bool, layout: Handle<TextureAtlasLayout>) -> Self {
         Self {
             first_sprite_index: first,
             last_sprite_index: last,
             fps,
+            layout,
             frame_timer: Self::timer_from_fps(fps),
+            repeat
         }
     }
 
@@ -55,10 +65,12 @@ fn execute_animations(
             if atlas.index == config.last_sprite_index {
                 // ...and it IS the last frame, then we move back to the first frame and stop.
                 atlas.index = config.first_sprite_index;
+                if config.repeat {
+                    config.frame_timer = AnimationConfig::timer_from_fps(config.fps);
+                }
             } else {
                 // ...and it is NOT the last frame, then we move to the next frame...
                 atlas.index += 1;
-                // ...and reset the frame timer to start counting all over again
                 config.frame_timer = AnimationConfig::timer_from_fps(config.fps);
             }
         }
