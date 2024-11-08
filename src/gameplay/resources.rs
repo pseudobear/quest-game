@@ -9,7 +9,7 @@ pub struct ScreenBottomLeft {
 // this default is based on standard camera for 512x288 stage given 1280x720 screen
 impl Default for ScreenBottomLeft { 
     fn default() -> Self {
-        ScreenBottomLeft{x: 1280 / 5, y: 720 / 5}
+        ScreenBottomLeft{x: (1280 / 5) - (512 / 2), y: (720 / 5) - (288 / 2)}
     }
 }
 

@@ -42,8 +42,8 @@ fn spawn_player(
         .spawn((
             RigidBody::Dynamic,
             TransformBundle::from(Transform::from_xyz(
-                0.0 + screen_bottom_left.x as f32, 
-                50.0 + screen_bottom_left.y as f32, 
+                10.0 + screen_bottom_left.x as f32 + 20.0, 
+                32.0 + screen_bottom_left.y as f32 + 12.0, 
                 2.5
             )),
             Collider::cuboid(6.0, 12.0),
