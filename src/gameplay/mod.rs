@@ -9,6 +9,7 @@ use crate::gameplay::actions::ActionsPlugin;
 use crate::gameplay::audio::InternalAudioPlugin;
 use crate::gameplay::maps::MapsPlugin;
 use crate::gameplay::resources::ScreenBottomLeft;
+use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
@@ -35,6 +36,8 @@ impl Plugin for GameplayPlugin {
     fn build(&self, app: &mut App) {
         app.add_sub_state::<PauseState>()
            .insert_resource(ScreenBottomLeft { ..Default::default() })
+           .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(35.0))  // account for scaling, x2.5
+           .add_plugins(RapierDebugRenderPlugin::default())
            .add_systems(OnEnter(GameState::Playing), setup_gameplay)
            .add_plugins((
                 ActionsPlugin,

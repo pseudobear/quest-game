@@ -12,8 +12,10 @@ pub struct ActionsPlugin;
 impl Plugin for ActionsPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<Actions>().add_systems(
-            Update,
-            set_drift_input.run_if(in_state(GameState::Playing)),
+            Update, (
+                set_drift_input.run_if(in_state(GameState::Playing)),
+                set_jump_input.run_if(in_state(GameState::Playing)),
+            )
         );
     }
 }
@@ -21,7 +23,7 @@ impl Plugin for ActionsPlugin {
 #[derive(Default, Resource)]
 pub struct Actions {
     pub player_drift: Option<Vec2>,
-    pub jump: Option<bool>,
+    pub jump: bool,
 }
 
 pub fn set_drift_input(
@@ -40,4 +42,11 @@ pub fn set_drift_input(
     } else {
         actions.player_drift = None;
     }
+}
+
+pub fn set_jump_input(
+    mut actions: ResMut<Actions>,
+    keyboard_input: Res<ButtonInput<KeyCode>>
+) {
+    actions.jump = keyboard_input.just_pressed(KeyCode::Space);
 }

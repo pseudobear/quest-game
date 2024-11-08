@@ -3,12 +3,10 @@ use crate::loading::SwordsMasterSpriteAssets;
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
 use crate::animations::{ Animatable, AnimationConfig };
+use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 
 pub struct PlayerPlugin;
-
-#[derive(Component)]
-pub struct Player;
 
 /// This plugin handles player related stuff like movement
 /// Player logic is only active during the State `GameState::Playing`
@@ -18,6 +16,9 @@ impl Plugin for PlayerPlugin {
            .add_systems(Update, move_player.run_if(in_state(GameState::Playing)));
     }
 }
+
+#[derive(Component)]
+pub struct Player;
 
 fn spawn_player(
     mut commands: Commands, 
@@ -39,19 +40,30 @@ fn spawn_player(
 
     commands
         .spawn((
-            SpriteBundle {
-                texture: player_sprite.sheet.clone(),
-                transform: Transform::from_translation(Vec3::new(
-                    0. + screen_bottom_left.x as f32, 0. + screen_bottom_left.y as f32, 2.5
-                )),
-                ..Default::default()
-            },
-            TextureAtlas {
-                layout: player_animatable.animations[0].layout.clone(),
-                index: player_animatable.animations[0].first_sprite_index,
-            },
-            player_animatable,
+            RigidBody::Dynamic,
+            TransformBundle::from(Transform::from_xyz(
+                0.0 + screen_bottom_left.x as f32, 
+                50.0 + screen_bottom_left.y as f32, 
+                2.5
+            )),
+            Collider::cuboid(6.0, 12.0)
         ))
+        .with_children(|children| {
+            children.spawn((
+                SpriteBundle {
+                    texture: player_sprite.sheet.clone(),
+                    transform: Transform::from_translation(Vec3::new(
+                        17.0, 3.0, 0.
+                    )),
+                    ..Default::default()
+                },
+                TextureAtlas {
+                    layout: player_animatable.animations[0].layout.clone(),
+                    index: player_animatable.animations[0].first_sprite_index,
+                },
+                player_animatable,
+            ));
+        })
         .insert(Player);
 }
 
