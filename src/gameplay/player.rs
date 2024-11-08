@@ -1,9 +1,10 @@
 use crate::gameplay::actions::Actions;
-use crate::loading::{SwordsMasterSpriteAssets, TextureAssets};
+use crate::loading::SwordsMasterSpriteAssets;
+use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
-use crate::animations::trigger_animation;
+use crate::animations::{ trigger_animation, AnimationConfig };
 use bevy::input::common_conditions::input_just_pressed;
-use bevy::prelude::*;
+use bevy::{animation, prelude::*};
 
 pub struct PlayerPlugin;
 
@@ -23,13 +24,29 @@ impl Plugin for PlayerPlugin {
     }
 }
 
-fn spawn_player(mut commands: Commands, player_sprite: Res<SwordsMasterSpriteAssets>) {
+fn spawn_player(
+    mut commands: Commands, 
+    player_sprite: Res<SwordsMasterSpriteAssets>,
+    screen_bottom_left: Res<ScreenBottomLeft>,
+) {
+
+    let animation_config_1 = AnimationConfig::new(0, 2, 2);
+
     commands
-        .spawn(SpriteBundle {
-            texture: player_sprite.sheet.clone(),
-            transform: Transform::from_translation(Vec3::new(0., 0., 2.5)),
-            ..Default::default()
-        })
+        .spawn((
+            SpriteBundle {
+                texture: player_sprite.sheet.clone(),
+                transform: Transform::from_translation(Vec3::new(
+                    0. + screen_bottom_left.x as f32, 0. + screen_bottom_left.y as f32, 2.5
+                )),
+                ..Default::default()
+            },
+            TextureAtlas {
+                layout: player_sprite.idle.clone(),
+                index: animation_config_1.first_sprite_index,
+            },
+            animation_config_1,
+        ))
         .insert(Player);
 }
 

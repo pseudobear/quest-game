@@ -19,14 +19,14 @@ pub fn trigger_animation<S: Component>(mut query: Query<&mut AnimationConfig, Wi
 
 #[derive(Component)]
 pub struct AnimationConfig {
-    first_sprite_index: usize,
-    last_sprite_index: usize,
+    pub first_sprite_index: usize,
+    pub last_sprite_index: usize,
     fps: u8,
     frame_timer: Timer,
 }
 
 impl AnimationConfig {
-    fn new(first: usize, last: usize, fps: u8) -> Self {
+    pub fn new(first: usize, last: usize, fps: u8) -> Self {
         Self {
             first_sprite_index: first,
             last_sprite_index: last,

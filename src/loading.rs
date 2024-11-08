@@ -47,6 +47,7 @@ pub struct MapAssets {
     pub testing_map: Handle<LdtkProject>,
 }
 
+
 // sprites
 #[derive(AssetCollection, Resource)]
 pub struct SwordsMasterSpriteAssets {
@@ -58,7 +59,7 @@ pub struct SwordsMasterSpriteAssets {
         columns = 9,
         rows = 1,
         offset_x = 0,
-        offset_y = 0
+        offset_y = 37
     ))]
     pub idle: Handle<TextureAtlasLayout>,
 }
