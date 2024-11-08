@@ -17,7 +17,9 @@ impl Plugin for LoadingPlugin {
                 .continue_to_state(GameState::Menu)
                 .load_collection::<AudioAssets>()
                 .load_collection::<TextureAssets>()
-                .load_collection::<MapAssets>(),
+                .load_collection::<MapAssets>()
+                // sprites
+                .load_collection::<SwordsMasterSpriteAssets>(),
         );
     }
 }
@@ -43,4 +45,20 @@ pub struct TextureAssets {
 pub struct MapAssets {
     #[asset(path = "maps/testing.ldtk")]
     pub testing_map: Handle<LdtkProject>,
+}
+
+// sprites
+#[derive(AssetCollection, Resource)]
+pub struct SwordsMasterSpriteAssets {
+    #[asset(path = "player/swords/The SwordsMaster/Sword Master Sprite Sheet 90x37.png")] 
+    pub sheet: Handle<Image>,  // total (rows, cols): (27, 10)
+    #[asset(texture_atlas_layout(
+        tile_size_x = 90,
+        tile_size_y = 37,
+        columns = 9,
+        rows = 1,
+        offset_x = 0,
+        offset_y = 0
+    ))]
+    idle: Handle<TextureAtlasLayout>,
 }
