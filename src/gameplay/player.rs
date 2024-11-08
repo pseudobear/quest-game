@@ -46,9 +46,9 @@ fn spawn_player(
                 50.0 + screen_bottom_left.y as f32, 
                 2.5
             )),
-            Collider::cuboid(6.0, 12.0)
+            Collider::cuboid(6.0, 12.0),
+            LockedAxes::ROTATION_LOCKED
         ))
-        .insert(GravityScale(0.0))
         .with_children(|children| {
             children.spawn((
                 SpriteBundle {

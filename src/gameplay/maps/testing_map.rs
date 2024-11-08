@@ -1,7 +1,6 @@
 use crate::gameplay::maps::LocationState;
 use crate::gameplay::GameCamera;
 use crate::loading::MapAssets;
-use crate::gameplay::maps::shared_systems::spawn_wall_collision;
 use crate::gameplay::maps::ObstacleBundle;
 use bevy_ecs_ldtk::{app::LdtkIntCellAppExt, LdtkWorldBundle, LevelSelection};
 use bevy::prelude::*;
@@ -16,7 +15,6 @@ impl Plugin for TestingMapPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(LevelSelection::index(0))
            .add_systems(OnEnter(LocationState::TestingMap), setup_testing_map)
-           .add_systems(Update, spawn_wall_collision.run_if(in_state(LocationState::TestingMap)))
            .add_systems(OnExit(LocationState::TestingMap), cleanup_testing_map)
            .register_ldtk_int_cell::<ObstacleBundle>(1);
     }
