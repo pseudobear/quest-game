@@ -48,6 +48,7 @@ fn spawn_player(
             )),
             Collider::cuboid(6.0, 12.0)
         ))
+        .insert(GravityScale(0.0))
         .with_children(|children| {
             children.spawn((
                 SpriteBundle {
