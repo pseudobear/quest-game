@@ -28,11 +28,9 @@ fn setup_testing_map(
     let mut camera_transform = game_camera_transform.single_mut();
     let mut camera_projection = game_camera_projection.single_mut();
 
-    /*
     camera_projection.scale = 0.4;
     camera_transform.translation.x += 1280.0 / 5.0;
     camera_transform.translation.y += 720.0 / 5.0;
-    */
 
     commands.spawn(LdtkWorldBundle {
         ldtk_handle: maps.testing_map.clone(),

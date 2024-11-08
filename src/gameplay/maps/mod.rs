@@ -21,8 +21,7 @@ struct Maps;
 
 pub struct MapsPlugin;
 
-/// This plugin handles player related stuff like movement
-/// Player logic is only active during the State `GameState::Playing`
+/// This plugin is a launching point for all maps, provides map related plugins & entities like camera bundle
 impl Plugin for MapsPlugin {
     fn build(&self, app: &mut App) {
         app.add_sub_state::<LocationState>()

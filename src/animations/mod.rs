@@ -61,7 +61,6 @@ impl AnimationConfig {
 // This system loops through all the sprites in the `TextureAtlas`, from  `first_sprite_index` to
 // `last_sprite_index` (both defined in `AnimationConfig`).
 fn execute_animations(
-    mut commands: Commands,
     time: Res<Time>,
     mut query: Query<(&mut Animatable, &mut TextureAtlas)>,
 ) {

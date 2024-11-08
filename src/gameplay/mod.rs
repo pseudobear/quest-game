@@ -48,11 +48,7 @@ impl Plugin for GameplayPlugin {
 
 fn setup_gameplay(mut commands: Commands) {
     info!("gameplay");
-    let mut camera = Camera2dBundle::default();
-
-    camera.projection.scale = 0.4;
-    camera.transform.translation.x += 1280.0 / 5.0;
-    camera.transform.translation.y += 720.0 / 5.0;
+    let camera = Camera2dBundle::default();
 
     commands.spawn((camera, Gameplay, GameCamera));
 }

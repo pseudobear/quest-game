@@ -1,4 +1,3 @@
-use crate::loading::TextureAssets;
 use crate::GameState;
 use crate::main_menu::ButtonColors;
 use crate::main_menu::MainMenuState;
@@ -20,7 +19,7 @@ impl Plugin for OptionsMenuPlugin {
 #[derive(Component)]
 struct StartMenu;
 
-fn setup_menu(mut commands: Commands, textures: Res<TextureAssets>) {
+fn setup_menu(mut commands: Commands) {
     info!("options menu");
     commands
         .spawn((

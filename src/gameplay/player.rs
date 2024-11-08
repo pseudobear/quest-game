@@ -3,8 +3,7 @@ use crate::loading::SwordsMasterSpriteAssets;
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
 use crate::animations::{ Animatable, AnimationConfig };
-use bevy::input::common_conditions::input_just_pressed;
-use bevy::{prelude::*};
+use bevy::prelude::*;
 
 pub struct PlayerPlugin;
 
@@ -27,9 +26,13 @@ fn spawn_player(
 ) {
 
     let idle_config = AnimationConfig::new(0, 8, 10, true, player_sprite.idle.clone());
+    let walk_config = AnimationConfig::new(0, 7, 10, true, player_sprite.walk.clone());
+    let run_config = AnimationConfig::new(0, 7, 10, true, player_sprite.run.clone());
 
     let mut player_animatable = Animatable::new(Vec::from([
         idle_config,
+        walk_config,
+        run_config,
     ]));
 
     player_animatable.trigger_animation(0);
