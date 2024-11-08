@@ -15,6 +15,13 @@ enum LocationState {
     TestingMap,
 }
 
+#[derive(Component, Default)]
+struct Obstacle;
+
+#[derive(Bundle, Default, LdtkIntCell)]
+pub struct ObstacleBundle {
+    obstacle: Obstacle
+}
 
 #[derive(Component)]
 struct Maps;
