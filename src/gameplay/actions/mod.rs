@@ -12,7 +12,7 @@ impl Plugin for ActionsPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<Actions>().add_systems(
             Update, (
-                set_input_input.run_if(in_state(GameState::Playing)),
+                set_player_input.run_if(in_state(GameState::Playing)),
                 set_jump_input.run_if(in_state(GameState::Playing)),
             )
         );
@@ -25,7 +25,7 @@ pub struct Actions {
     pub jump: bool,
 }
 
-pub fn set_input_input(
+pub fn set_player_input(
     mut actions: ResMut<Actions>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
 ) {

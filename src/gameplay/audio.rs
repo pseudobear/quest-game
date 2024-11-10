@@ -1,4 +1,4 @@
-use crate::gameplay::actions::{set_input_input, Actions};
+use crate::gameplay::actions::{set_player_input, Actions};
 use crate::loading::AudioAssets;
 use crate::GameState;
 use bevy::prelude::*;
@@ -14,7 +14,7 @@ impl Plugin for InternalAudioPlugin {
             .add_systems(
                 Update,
                 control_flying_sound
-                    .after(set_input_input)
+                    .after(set_player_input)
                     .run_if(in_state(GameState::Playing)),
             );
     }

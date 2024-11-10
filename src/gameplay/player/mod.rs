@@ -1,12 +1,16 @@
 mod movement_systems;
 
 use crate::loading::SwordsMasterSpriteAssets;
-use crate::gameplay::player::movement_systems::move_player;
+use crate::gameplay::player::movement_systems::{
+    grounded_movement,
+//    move_player
+};
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
 use crate::animations::{ Animatable, AnimationConfig };
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
+use movement_systems::limit_velocity;
 
 
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
@@ -17,15 +21,36 @@ enum PlayerGroundState {
     Air,
 }
 
+#[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
+#[source(GameState = GameState::Playing)]
+enum PlayerAnimationState {
+    // let all movement continue normally
+    #[default]
+    Free,
+    // player control does not work in this state, but momentum continues
+    Momentum,
+    // player control does not work and player position is frozen
+    Freeze,
+}
+
 pub struct PlayerPlugin;
 
 /// This plugin handles player related stuff like movement
 /// Player logic is only active during the State `GameState::Playing`
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_sub_state::<PlayerGroundState>()
+        app.add_sub_state::<PlayerGroundState>().add_sub_state::<PlayerAnimationState>()
            .add_systems(OnEnter(GameState::Playing), spawn_player)
-           .add_systems(Update, move_player.run_if(in_state(GameState::Playing)));
+           .add_systems(Update, (
+                grounded_movement
+                    .run_if(in_state(GameState::Playing))
+                    .run_if(in_state(PlayerGroundState::Grounded))
+                    .run_if(in_state(PlayerAnimationState::Free)),
+                limit_velocity
+                    .run_if(in_state(GameState::Playing))
+                    .run_if(not(in_state(PlayerAnimationState::Freeze))),
+           )
+        );
     }
 }
 
@@ -55,11 +80,16 @@ fn spawn_player(
             RigidBody::Dynamic,
             TransformBundle::from(Transform::from_xyz(
                 10.0 + screen_bottom_left.x as f32 + 20.0,
-                32.0 + screen_bottom_left.y as f32 + 12.0,
+                32.0 + screen_bottom_left.y as f32 + 12.0 + 300.0,
                 2.5
             )),
-            Collider::cuboid(6.0, 12.0),
-            LockedAxes::ROTATION_LOCKED
+            Collider::capsule_y(6.0, 6.0),
+            LockedAxes::ROTATION_LOCKED,
+            // markers to access rigidbody attributes
+            ExternalForce { ..Default::default() },
+            ExternalImpulse { ..Default::default() },
+            Damping { ..Default::default() },
+            Velocity { ..Default::default() },
         ))
         .with_children(|children| {
             children.spawn((
