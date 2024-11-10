@@ -3,6 +3,7 @@ mod movement_systems;
 use crate::loading::SwordsMasterSpriteAssets;
 use crate::gameplay::player::movement_systems::{
     grounded_movement,
+    detect_grounded,
 //    move_player
 };
 use crate::gameplay::resources::ScreenBottomLeft;
@@ -48,9 +49,17 @@ impl Plugin for PlayerPlugin {
                     .run_if(in_state(PlayerAnimationState::Free)),
                 limit_velocity
                     .run_if(in_state(GameState::Playing)),
+                detect_grounded
+                    .run_if(in_state(GameState::Playing)),
+                debug_state
+                    .run_if(in_state(GameState::Playing)),
            )
         );
     }
+}
+
+fn debug_state(state: Res<State<PlayerGroundState>>) {
+    println!("{:?}", state);
 }
 
 #[derive(Component)]
@@ -79,16 +88,18 @@ fn spawn_player(
             RigidBody::Dynamic,
             TransformBundle::from(Transform::from_xyz(
                 10.0 + screen_bottom_left.x as f32 + 20.0,
-                32.0 + screen_bottom_left.y as f32 + 12.0 + 300.0,
+                32.0 + screen_bottom_left.y as f32 + 12.0,
                 2.5
             )),
             Collider::capsule_y(6.0, 6.0),
             LockedAxes::ROTATION_LOCKED,
+            ActiveEvents::COLLISION_EVENTS,
             // markers to access rigidbody attributes
             ExternalForce { ..Default::default() },
             ExternalImpulse { ..Default::default() },
             Damping { ..Default::default() },
             Velocity { ..Default::default() },
+            CollidingEntities::default(),
         ))
         .with_children(|children| {
             children.spawn((

@@ -1,6 +1,5 @@
-use std::collections::{HashMap, HashSet};
 use crate::gameplay::maps::Obstacle;
-use crate::gameplay::resources::ScreenBottomLeft;
+use crate::gameplay::maps::Ground;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
@@ -53,7 +52,9 @@ pub fn spawn_wall_collision(
                 rect.left as f32,
                 rect.bottom as f32,
                 2.5
-            ))
-        ));
+            )),
+            ActiveEvents::COLLISION_EVENTS,
+        ))
+        .insert(Ground);
     }
 }

@@ -1,6 +1,7 @@
 use crate::gameplay::actions::Actions;
 use crate::gameplay::player::Player;
 use crate::gameplay::player::PlayerGroundState;
+use crate::gameplay::maps::Ground;
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 
@@ -42,9 +43,19 @@ pub fn limit_velocity(mut player_query: Query<&mut Velocity, With<Player>>) {
 }
 
 pub fn detect_grounded(
-    state: Res<State<PlayerGroundState>>,
     mut next_state: ResMut<NextState<PlayerGroundState>>,
-    player_query: Query<Entity, With<Player>>
+    player_query: Query<&CollidingEntities, With<Player>>,
+    ground_query: Query<Entity, With<Ground>>,
 ) {
-    
+    for colliding_entities in player_query.iter() {
+
+        next_state.set(PlayerGroundState::Air);
+
+        for entity in colliding_entities.iter() {
+            if ground_query.contains(entity) {
+                next_state.set(PlayerGroundState::Grounded);
+                break;
+            }
+        }
+    }
 }

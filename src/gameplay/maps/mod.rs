@@ -16,6 +16,9 @@ enum LocationState {
     TestingMap,
 }
 
+#[derive(Component)]
+pub struct Ground;
+
 #[derive(Component, Default)]
 struct Obstacle;
 
