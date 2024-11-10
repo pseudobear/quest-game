@@ -1,7 +1,9 @@
 use crate::gameplay::actions::Actions;
 use crate::gameplay::player::Player;
+use crate::gameplay::player::PlayerGroundState;
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
+
 
 const MAX_VELOCITY: f32 = 500.0;
 const MAX_VELOCITY_SQUARED: f32 = 250_000.0;
@@ -48,4 +50,12 @@ pub fn limit_velocity(mut player_query: Query<&mut Velocity, With<Player>>) {
             velocity.linvel = velocity.linvel.normalize() * MAX_VELOCITY;
         }
     }
+}
+
+pub fn detect_grounded(
+    state: Res<State<PlayerGroundState>>,
+    mut next_state: ResMut<NextState<PlayerGroundState>>,
+    player_query: Query<Entity, With<Player>>
+) {
+
 }

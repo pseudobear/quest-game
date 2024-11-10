@@ -48,7 +48,8 @@ impl Plugin for PlayerPlugin {
                     .run_if(in_state(PlayerAnimationState::Free)),
                 limit_velocity
                     .run_if(in_state(GameState::Playing))
-                    .run_if(not(in_state(PlayerAnimationState::Freeze))),
+                    .run_if(not(in_state(PlayerAnimationState::Freeze)))
+                    .after(grounded_movement),
            )
         );
     }
