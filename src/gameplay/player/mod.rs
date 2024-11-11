@@ -129,7 +129,7 @@ fn spawn_player(
                     ..Default::default()
                 },
                 TextureAtlas {
-                    layout: player_animatable.animations[0].layout.clone(),
+                    layout: player_animatable.animations[0].atlas_layout.clone(),
                     index: player_animatable.animations[0].first_sprite_index,
                 },
                 player_animatable,
