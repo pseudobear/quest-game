@@ -33,4 +33,40 @@ pub struct SwordsMasterSpriteAssets {
         offset_y = 111
     ))]
     pub run: Handle<TextureAtlasLayout>,
+    #[asset(texture_atlas_layout(
+        tile_size_x = 90,
+        tile_size_y = 37,
+        columns = 8,
+        rows = 1,
+        offset_x = 0,
+        offset_y = 148
+    ))]
+    pub run_fast: Handle<TextureAtlasLayout>,
+    #[asset(texture_atlas_layout(
+        tile_size_x = 90,
+        tile_size_y = 37,
+        columns = 3,
+        rows = 1,
+        offset_x = 0,
+        offset_y = 481
+    ))]
+    pub jump: Handle<TextureAtlasLayout>,
+    #[asset(texture_atlas_layout(
+        tile_size_x = 90,
+        tile_size_y = 37,
+        columns = 4,
+        rows = 1,
+        offset_x = 0,
+        offset_y = 518
+    ))]
+    pub jump_fall_transition: Handle<TextureAtlasLayout>,
+    #[asset(texture_atlas_layout(
+        tile_size_x = 90,
+        tile_size_y = 37,
+        columns = 3,
+        rows = 1,
+        offset_x = 0,
+        offset_y = 555
+    ))]
+    pub fall: Handle<TextureAtlasLayout>,
 }

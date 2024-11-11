@@ -22,7 +22,6 @@ use bevy::prelude::*;
 use movement_systems::limit_velocity;
 
 
-// Maybe turn these states into components??
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
 #[source(GameState = GameState::Playing)]
 enum PlayerGroundState {
@@ -97,16 +96,7 @@ fn spawn_player(
     screen_bottom_left: Res<ScreenBottomLeft>,
 ) {
 
-    let idle_config = AnimationConfig::new(0, 8, 10, true, player_sprite.idle.clone());
-    let walk_config = AnimationConfig::new(0, 7, 10, true, player_sprite.walk.clone());
-    let run_config = AnimationConfig::new(0, 7, 10, true, player_sprite.run.clone());
-
-    let mut player_animatable = Animatable::new(Vec::from([
-        idle_config,
-        walk_config,
-        run_config,
-    ]));
-
+    let mut player_animatable = create_player_animatable(&player_sprite);
     player_animatable.trigger_animation(0);
 
     commands
@@ -147,4 +137,35 @@ fn spawn_player(
                 PlayerSprite
             ));
         });
+}
+
+/* Animations List:
+0: Idle
+1: Walk
+2: Run
+3: Run fast
+4: Jump
+5: Jump fall transition
+6: Fall
+*/
+fn create_player_animatable(player_sprite: &Res<SwordsMasterSpriteAssets>) -> Animatable {
+    let idle_config = AnimationConfig::new(0, 8, 10, true, player_sprite.idle.clone());
+    let walk_config = AnimationConfig::new(0, 7, 10, true, player_sprite.walk.clone());
+    let run_config = AnimationConfig::new(0, 7, 10, true, player_sprite.run.clone());
+    let run_fast_config = AnimationConfig::new(0, 7, 10, true, player_sprite.run_fast.clone());
+    let jump_config = AnimationConfig::new(0, 2, 10, true, player_sprite.jump.clone());
+    let jump_fall_transition_config = AnimationConfig::new(0, 3, 10, true, player_sprite.jump_fall_transition.clone());
+    let fall_config = AnimationConfig::new(0, 2, 10, true, player_sprite.fall.clone());
+
+    let player_animatable = Animatable::new(Vec::from([
+        idle_config,
+        walk_config,
+        run_config,
+        run_fast_config,
+        jump_config,
+        jump_fall_transition_config,
+        fall_config,
+    ]));
+
+    return player_animatable;
 }
