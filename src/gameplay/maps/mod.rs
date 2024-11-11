@@ -7,6 +7,9 @@ use crate::gameplay::maps::systems::spawn_wall_collision;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
+
+const MAP_TILE_SIZE: i32 = 16;
+
 /// The 'map' that is currently active 
 /// There is a default, but we will also set this on setup based on a resource
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
