@@ -86,8 +86,9 @@ fn execute_animations(
             return;
         }
 
-        // set correct layout
+        // set correct atlas configs
         atlas.layout = config.atlas_layout.clone();
+        atlas.index = config.atlas_index;
 
         // we track how long the current sprite has been displayed for
         config.frame_timer.tick(time.delta());
@@ -101,14 +102,16 @@ fn execute_animations(
                 atlas.index = config.atlas_index;
             } else {
                 // animation finished, unlock and reset (& repeat)
-                config.reset_index();
                 if config.repeat {
+                    config.reset_index();
                     config.frame_timer = AnimationConfig::timer_from_fps(config.fps);
                 }
                 atlas.index = config.atlas_index;
 
+                animatable.active = None;
                 animatable.locked = false;
             }
         }
     }
+
 }

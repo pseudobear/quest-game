@@ -15,6 +15,7 @@ use crate::gameplay::player::animation_systems::{
     run_animation,
     jump_animation,
     fall_animation,
+    jump_fall_transition_animation,
 };
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
@@ -83,6 +84,7 @@ impl Plugin for PlayerPlugin {
 
                 (   // air animation systems
                     jump_animation,
+                    jump_fall_transition_animation,
                     fall_animation,
                 ).run_if(in_state(PlayerGroundState::Air)).after(air_movement),
 
@@ -161,7 +163,7 @@ fn create_player_animatable(player_sprite: &Res<SwordsMasterSpriteAssets>) -> An
     let run_config = AnimationConfig::new(0, 7, 10, true, player_sprite.run.clone());
     let run_fast_config = AnimationConfig::new(0, 7, 10, true, player_sprite.run_fast.clone());
     let jump_config = AnimationConfig::new(0, 2, 10, true, player_sprite.jump.clone());
-    let jump_fall_transition_config = AnimationConfig::new(0, 3, 10, false, player_sprite.jump_fall_transition.clone());
+    let jump_fall_transition_config = AnimationConfig::new(0, 3, 16, false, player_sprite.jump_fall_transition.clone());
     let fall_config = AnimationConfig::new(0, 2, 10, true, player_sprite.fall.clone());
 
     let player_animatable = Animatable::new(Vec::from([

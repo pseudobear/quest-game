@@ -12,7 +12,7 @@ use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 
 pub const WALK_VELOCITY_PERCENTAGE: f32 = 0.5;
-pub const JUMP_FALL_TRANSITION_VELOCITY: f32 = 1.0;
+pub const JUMP_FALL_TRANSITION_VELOCITY: f32 = 30.0;
 
 pub fn idle_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
@@ -94,7 +94,21 @@ pub fn jump_fall_transition_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<PlayerSprite>>,
     velocity_query: Query<&Velocity, With<Player>>,
-) {}
+) {
+    for velocity in velocity_query.iter() {
+        for mut animatable in &mut animatable_query {
+            if velocity.linvel.y < JUMP_FALL_TRANSITION_VELOCITY && 
+               velocity.linvel.y > 0.0 && 
+                animatable.active.unwrap_or(0) != 5 {
+
+                // play jump animation
+                animatable.trigger_animation(5, false);  // don't lock, but don't play fall while this is playing
+
+                next_state.set(PlayerMovementState::Free);
+            }
+        }
+    }
+}
 
 pub fn fall_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
@@ -104,7 +118,8 @@ pub fn fall_animation(
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
             if velocity.linvel.y < -JUMP_FALL_TRANSITION_VELOCITY && 
-                animatable.active.unwrap_or(0) != 6 {
+                animatable.active.unwrap_or(0) != 6  &&
+                animatable.active.unwrap_or(0) != 5 {
 
                 // play jump animation
                 animatable.trigger_animation(6, false);
