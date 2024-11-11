@@ -1,6 +1,9 @@
 use crate::gameplay::actions::Actions;
 use crate::animations::Animatable;
-use crate::gameplay::player::movement_systems::MAX_GROUNDED_VELOCITY_SQUARED;
+use crate::gameplay::player::movement_systems::{
+    MAX_GROUNDED_VELOCITY_SQUARED,
+    MINIMUM_MOVEMENT,
+};
 use crate::gameplay::player::{
     Player,
     PlayerSprite,
@@ -19,11 +22,9 @@ pub fn idle_animation(
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
-            if velocity.linvel.length_squared() <= 0.2 && 
+            if velocity.linvel.length_squared() <= MINIMUM_MOVEMENT && 
             animatable.active.unwrap_or(1) != 0 &&
                 !actions.jump {
-
-                println!("IDLE: {}", velocity.linvel.length_squared());
 
                 // play idle animation
                 animatable.trigger_animation(0);
@@ -42,12 +43,10 @@ pub fn walk_animation(
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
-            if velocity.linvel.length_squared() > 0.2 && 
+            if velocity.linvel.length_squared() > MINIMUM_MOVEMENT && 
                 velocity.linvel.length_squared() < MAX_GROUNDED_VELOCITY_SQUARED * WALK_VELOCITY_PERCENTAGE && 
                 animatable.active.unwrap_or(0) != 1 &&
                 !actions.jump {
-
-                println!("WALK: {}", velocity.linvel.length_squared());
 
                 // play walk animation
                 animatable.trigger_animation(1);
@@ -69,8 +68,6 @@ pub fn run_animation(
             if velocity.linvel.length_squared() >= MAX_GROUNDED_VELOCITY_SQUARED * WALK_VELOCITY_PERCENTAGE && 
                 animatable.active.unwrap_or(0) != 2 &&
                 !actions.jump {
-
-                println!("RUN: {}", velocity.linvel.length_squared());
 
                 // play run animation
                 animatable.trigger_animation(2);

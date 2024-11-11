@@ -4,7 +4,9 @@ mod animation_systems;
 use crate::loading::SwordsMasterSpriteAssets;
 use crate::gameplay::player::movement_systems::{
     grounded_movement,
+    grounded_turn_player,
     air_movement,
+    air_turn_player,
     detect_grounded,
 };
 use crate::gameplay::player::animation_systems::{
@@ -20,6 +22,7 @@ use bevy::prelude::*;
 use movement_systems::limit_velocity;
 
 
+// Maybe turn these states into components??
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
 #[source(GameState = GameState::Playing)]
 enum PlayerGroundState {
@@ -40,6 +43,18 @@ enum PlayerAnimationState {
     Freeze,
 }
 
+#[derive(Default, Clone, Eq, PartialEq, Debug, Hash)]
+enum Facing {
+    #[default]
+    Right,
+    Left,
+}
+
+#[derive(Component, Default, Debug)]
+pub struct PlayerFacing {
+    face: Facing
+}
+
 pub struct PlayerPlugin;
 
 /// This plugin handles player related stuff like movement
@@ -50,11 +65,12 @@ impl Plugin for PlayerPlugin {
            .add_systems(OnEnter(GameState::Playing), spawn_player)
            .add_systems(Update, (
                 detect_grounded,
+                limit_velocity,
 
                 (   // movement systems
-                    grounded_movement
+                    (grounded_movement, grounded_turn_player)
                         .run_if(in_state(PlayerGroundState::Grounded)),
-                    air_movement
+                    (air_movement, air_turn_player)
                         .run_if(in_state(PlayerGroundState::Air)),
                 ).run_if(in_state(PlayerAnimationState::Free)).after(detect_grounded),
 
@@ -63,8 +79,6 @@ impl Plugin for PlayerPlugin {
                     walk_animation,
                     run_animation,
                 ).run_if(in_state(PlayerGroundState::Grounded)).after(grounded_movement),
-
-                limit_velocity,
 
            ).run_if(in_state(GameState::Playing))
         );
@@ -129,6 +143,7 @@ fn spawn_player(
                     index: player_animatable.animations[0].first_sprite_index,
                 },
                 player_animatable,
+                PlayerFacing { ..Default::default() },
                 PlayerSprite
             ));
         });
