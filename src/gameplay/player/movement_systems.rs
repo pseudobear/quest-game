@@ -14,23 +14,51 @@ const MAX_GROUNDED_VELOCITY_SQUARED: f32 = 22_500.0;
 
 pub fn grounded_movement(
     actions: Res<Actions>,
-    mut player_query: Query<(&mut ExternalImpulse, &Velocity), With<Player>>,
+    mut player_query: Query<(&mut ExternalImpulse, &Velocity, &mut Transform), With<Player>>,
 ) {
-    for (mut external_impulse, velocity) in &mut player_query {
+    for (mut external_impulse, velocity, mut transform) in &mut player_query {
 
+        // Handle no directional input
         if actions.player_input.is_none() {
             // slow down in opposite direction 
             external_impulse.impulse = -(velocity.linvel * 60.0);
-            continue;
-        } 
-
-        if velocity.linvel.length_squared() < MAX_GROUNDED_VELOCITY_SQUARED {
+        
+        // Handle directional input if under velocity limit
+        } else if velocity.linvel.length_squared() < MAX_GROUNDED_VELOCITY_SQUARED {
             external_impulse.impulse = actions.player_input.unwrap() * 6_000.0;
+
+        // Apply velocity limit
         } else {
             external_impulse.impulse = Vec2::ZERO;
         }
 
-        // println!("impulse: {},{}", external_impulse.impulse.x, external_impulse.impulse.y);
+        external_impulse.impulse.y = 0.0;
+
+        // Handle jump
+        if actions.jump {
+            external_impulse.impulse += Vec2::Y * 80_000.0;
+        }
+
+
+        println!("ground impulse {}, velocity {}", external_impulse.impulse, velocity.linvel);
+    }
+}
+
+pub fn air_movement(
+    actions: Res<Actions>,
+    mut player_query: Query<(&mut ExternalImpulse, &mut ExternalForce, &Velocity), With<Player>>,
+) {
+    for (mut external_impulse, mut external_force, velocity) in &mut player_query {
+        external_impulse.impulse = Vec2::ZERO;
+
+        // Handle no directional input
+        if actions.player_input.is_none() {
+            external_force.force = Vec2::ZERO;
+        } else {
+            external_force.force = actions.player_input.unwrap() * 10_000.0;
+        }
+
+        println!("air impulse {}, velocity {}", external_impulse.impulse, velocity.linvel);
     }
 }
 
@@ -44,10 +72,11 @@ pub fn limit_velocity(mut player_query: Query<&mut Velocity, With<Player>>) {
 
 pub fn detect_grounded(
     mut next_state: ResMut<NextState<PlayerGroundState>>,
-    player_query: Query<&CollidingEntities, With<Player>>,
+    mut player_query: Query<(&CollidingEntities, &mut Damping), With<Player>>,
     ground_query: Query<Entity, With<Ground>>,
 ) {
-    for colliding_entities in player_query.iter() {
+    print!("RUN DETECT GROUND  ");
+    for (colliding_entities, mut damping) in &mut player_query {
 
         next_state.set(PlayerGroundState::Air);
 

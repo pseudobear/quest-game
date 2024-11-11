@@ -3,8 +3,8 @@ mod movement_systems;
 use crate::loading::SwordsMasterSpriteAssets;
 use crate::gameplay::player::movement_systems::{
     grounded_movement,
+    air_movement,
     detect_grounded,
-//    move_player
 };
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
@@ -43,23 +43,23 @@ impl Plugin for PlayerPlugin {
         app.add_sub_state::<PlayerGroundState>().add_sub_state::<PlayerAnimationState>()
            .add_systems(OnEnter(GameState::Playing), spawn_player)
            .add_systems(Update, (
+                detect_grounded
+                    .run_if(in_state(GameState::Playing)),
                 grounded_movement
                     .run_if(in_state(GameState::Playing))
                     .run_if(in_state(PlayerGroundState::Grounded))
-                    .run_if(in_state(PlayerAnimationState::Free)),
+                    .run_if(in_state(PlayerAnimationState::Free))
+                    .after(detect_grounded),
+                air_movement
+                    .run_if(in_state(GameState::Playing))
+                    .run_if(in_state(PlayerGroundState::Air))
+                    .run_if(in_state(PlayerAnimationState::Free))
+                    .after(detect_grounded),
                 limit_velocity
-                    .run_if(in_state(GameState::Playing)),
-                detect_grounded
-                    .run_if(in_state(GameState::Playing)),
-                debug_state
                     .run_if(in_state(GameState::Playing)),
            )
         );
     }
-}
-
-fn debug_state(state: Res<State<PlayerGroundState>>) {
-    println!("{:?}", state);
 }
 
 #[derive(Component)]
@@ -92,6 +92,7 @@ fn spawn_player(
                 2.5
             )),
             Collider::capsule_y(6.0, 6.0),
+            GravityScale(2.0),
             LockedAxes::ROTATION_LOCKED,
             ActiveEvents::COLLISION_EVENTS,
             // markers to access rigidbody attributes
