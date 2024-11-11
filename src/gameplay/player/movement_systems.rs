@@ -1,4 +1,4 @@
-use crate::gameplay::actions::Actions;
+use crate::gameplay::inputs::Actions;
 use crate::gameplay::player::{
     Player,
     PlayerSprite,

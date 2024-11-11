@@ -1,4 +1,4 @@
-use crate::gameplay::actions::{set_player_input, Actions};
+use crate::gameplay::inputs::{set_player_input, Actions};
 use crate::loading::AudioAssets;
 use crate::GameState;
 use bevy::prelude::*;

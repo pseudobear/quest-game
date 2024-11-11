@@ -1,11 +1,11 @@
-mod actions;
+mod inputs;
 mod player;
 mod audio;
 mod maps;
 mod resources;
 use crate::GameState;
 use crate::gameplay::player::PlayerPlugin;
-use crate::gameplay::actions::ActionsPlugin;
+use crate::gameplay::inputs::ActionsPlugin;
 use crate::gameplay::audio::InternalAudioPlugin;
 use crate::gameplay::maps::MapsPlugin;
 use crate::gameplay::resources::ScreenBottomLeft;
