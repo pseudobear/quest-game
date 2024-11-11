@@ -92,14 +92,25 @@ pub fn jump_animation(
 
 pub fn jump_fall_transition_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
-    actions: Res<Actions>,
     mut animatable_query: Query<&mut Animatable, With<PlayerSprite>>,
     velocity_query: Query<&Velocity, With<Player>>,
 ) {}
 
 pub fn fall_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
-    actions: Res<Actions>,
     mut animatable_query: Query<&mut Animatable, With<PlayerSprite>>,
     velocity_query: Query<&Velocity, With<Player>>,
-) {}
+) {
+    for velocity in velocity_query.iter() {
+        for mut animatable in &mut animatable_query {
+            if velocity.linvel.y < 0.0 && 
+                animatable.active.unwrap_or(0) != 6 {
+
+                // play jump animation
+                animatable.trigger_animation(6);
+
+                next_state.set(PlayerMovementState::Free);
+            }
+        }
+    }
+}

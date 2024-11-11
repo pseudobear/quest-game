@@ -13,6 +13,8 @@ use crate::gameplay::player::animation_systems::{
     idle_animation,
     walk_animation,
     run_animation,
+    jump_animation,
+    fall_animation,
 };
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
@@ -73,11 +75,16 @@ impl Plugin for PlayerPlugin {
                         .run_if(in_state(PlayerGroundState::Air)),
                 ).run_if(in_state(PlayerMovementState::Free)).after(detect_grounded),
 
-                (   // animation systems
+                (   // grounded animation systems
                     idle_animation,
                     walk_animation,
                     run_animation,
                 ).run_if(in_state(PlayerGroundState::Grounded)).after(grounded_movement),
+
+                (   // air animation systems
+                    jump_animation,
+                    fall_animation,
+                ).run_if(in_state(PlayerGroundState::Air)).after(air_movement),
 
            ).run_if(in_state(GameState::Playing))
         );
