@@ -32,7 +32,7 @@ enum PlayerGroundState {
 
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
 #[source(GameState = GameState::Playing)]
-enum PlayerAnimationState {
+enum PlayerMovementState {
     // let all movement continue normally
     #[default]
     Free,
@@ -60,7 +60,7 @@ pub struct PlayerPlugin;
 /// Player logic is only active during the State `GameState::Playing`
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_sub_state::<PlayerGroundState>().add_sub_state::<PlayerAnimationState>()
+        app.add_sub_state::<PlayerGroundState>().add_sub_state::<PlayerMovementState>()
            .add_systems(OnEnter(GameState::Playing), spawn_player)
            .add_systems(Update, (
                 detect_grounded,
@@ -71,7 +71,7 @@ impl Plugin for PlayerPlugin {
                         .run_if(in_state(PlayerGroundState::Grounded)),
                     (air_movement, air_turn_player)
                         .run_if(in_state(PlayerGroundState::Air)),
-                ).run_if(in_state(PlayerAnimationState::Free)).after(detect_grounded),
+                ).run_if(in_state(PlayerMovementState::Free)).after(detect_grounded),
 
                 (   // animation systems
                     idle_animation,
@@ -154,7 +154,7 @@ fn create_player_animatable(player_sprite: &Res<SwordsMasterSpriteAssets>) -> An
     let run_config = AnimationConfig::new(0, 7, 10, true, player_sprite.run.clone());
     let run_fast_config = AnimationConfig::new(0, 7, 10, true, player_sprite.run_fast.clone());
     let jump_config = AnimationConfig::new(0, 2, 10, true, player_sprite.jump.clone());
-    let jump_fall_transition_config = AnimationConfig::new(0, 3, 10, true, player_sprite.jump_fall_transition.clone());
+    let jump_fall_transition_config = AnimationConfig::new(0, 3, 10, false, player_sprite.jump_fall_transition.clone());
     let fall_config = AnimationConfig::new(0, 2, 10, true, player_sprite.fall.clone());
 
     let player_animatable = Animatable::new(Vec::from([
