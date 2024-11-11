@@ -38,9 +38,6 @@ pub fn grounded_movement(
         if actions.jump {
             external_impulse.impulse += Vec2::Y * 80_000.0;
         }
-
-
-        println!("ground impulse {}, velocity {}", external_impulse.impulse, velocity.linvel);
     }
 }
 
@@ -55,10 +52,9 @@ pub fn air_movement(
         if actions.player_input.is_none() {
             external_force.force = Vec2::ZERO;
         } else {
-            external_force.force = actions.player_input.unwrap() * 10_000.0;
+            external_force.force = actions.player_input.unwrap() * 40_000.0;
         }
-
-        println!("air impulse {}, velocity {}", external_impulse.impulse, velocity.linvel);
+        println!("velocity {}", velocity.linvel);
     }
 }
 
@@ -75,14 +71,15 @@ pub fn detect_grounded(
     mut player_query: Query<(&CollidingEntities, &mut Damping), With<Player>>,
     ground_query: Query<Entity, With<Ground>>,
 ) {
-    print!("RUN DETECT GROUND  ");
     for (colliding_entities, mut damping) in &mut player_query {
 
         next_state.set(PlayerGroundState::Air);
+        damping.linear_damping = 1.0;
 
         for entity in colliding_entities.iter() {
             if ground_query.contains(entity) {
                 next_state.set(PlayerGroundState::Grounded);
+                damping.linear_damping = 3.0;
                 break;
             }
         }
