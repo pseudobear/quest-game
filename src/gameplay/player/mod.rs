@@ -10,6 +10,7 @@ use crate::gameplay::player::movement_systems::{
 use crate::gameplay::player::animation_systems::{
     idle_animation,
     walk_animation,
+    run_animation,
 };
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
@@ -48,29 +49,24 @@ impl Plugin for PlayerPlugin {
         app.add_sub_state::<PlayerGroundState>().add_sub_state::<PlayerAnimationState>()
            .add_systems(OnEnter(GameState::Playing), spawn_player)
            .add_systems(Update, (
-                detect_grounded
-                    .run_if(in_state(GameState::Playing)),
-                grounded_movement
-                    .run_if(in_state(GameState::Playing))
-                    .run_if(in_state(PlayerGroundState::Grounded))
-                    .run_if(in_state(PlayerAnimationState::Free))
-                    .after(detect_grounded),
-                air_movement
-                    .run_if(in_state(GameState::Playing))
-                    .run_if(in_state(PlayerGroundState::Air))
-                    .run_if(in_state(PlayerAnimationState::Free))
-                    .after(detect_grounded),
-                limit_velocity
-                    .run_if(in_state(GameState::Playing)),
-                idle_animation
-                    .run_if(in_state(GameState::Playing))
-                    .run_if(in_state(PlayerGroundState::Grounded))
-                    .after(detect_grounded),
-                walk_animation
-                    .run_if(in_state(GameState::Playing))
-                    .run_if(in_state(PlayerGroundState::Grounded))
-                    .after(detect_grounded),
-           )
+                detect_grounded,
+
+                (   // movement systems
+                    grounded_movement
+                        .run_if(in_state(PlayerGroundState::Grounded)),
+                    air_movement
+                        .run_if(in_state(PlayerGroundState::Air)),
+                ).run_if(in_state(PlayerAnimationState::Free)).after(detect_grounded),
+
+                (   // animation systems
+                    idle_animation,
+                    walk_animation,
+                    run_animation,
+                ).run_if(in_state(PlayerGroundState::Grounded)).after(grounded_movement),
+
+                limit_velocity,
+
+           ).run_if(in_state(GameState::Playing))
         );
     }
 }

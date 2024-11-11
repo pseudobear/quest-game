@@ -9,6 +9,8 @@ use crate::gameplay::player::{
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 
+pub const WALK_VELOCITY_PERCENTAGE: f32 = 0.5;
+
 pub fn idle_animation(
     mut next_state: ResMut<NextState<PlayerAnimationState>>,
     actions: Res<Actions>,
@@ -17,9 +19,11 @@ pub fn idle_animation(
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
-            if velocity.linvel == Vec2::ZERO && 
+            if velocity.linvel.length_squared() <= 0.2 && 
             animatable.active.unwrap_or(1) != 0 &&
                 !actions.jump {
+
+                println!("IDLE: {}", velocity.linvel.length_squared());
 
                 // play idle animation
                 animatable.trigger_animation(0);
@@ -38,13 +42,38 @@ pub fn walk_animation(
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
-            if velocity.linvel.length_squared() > 0.0 && 
-                velocity.linvel.length_squared() < MAX_GROUNDED_VELOCITY_SQUARED && 
+            if velocity.linvel.length_squared() > 0.2 && 
+                velocity.linvel.length_squared() < MAX_GROUNDED_VELOCITY_SQUARED * WALK_VELOCITY_PERCENTAGE && 
                 animatable.active.unwrap_or(0) != 1 &&
                 !actions.jump {
 
+                println!("WALK: {}", velocity.linvel.length_squared());
+
                 // play walk animation
                 animatable.trigger_animation(1);
+
+                next_state.set(PlayerAnimationState::Free);
+            }
+        }
+    }
+}
+
+pub fn run_animation(
+    mut next_state: ResMut<NextState<PlayerAnimationState>>,
+    actions: Res<Actions>,
+    mut animatable_query: Query<&mut Animatable, With<PlayerSprite>>,
+    velocity_query: Query<&Velocity, With<Player>>,
+) {
+    for velocity in velocity_query.iter() {
+        for mut animatable in &mut animatable_query {
+            if velocity.linvel.length_squared() >= MAX_GROUNDED_VELOCITY_SQUARED * WALK_VELOCITY_PERCENTAGE && 
+                animatable.active.unwrap_or(0) != 2 &&
+                !actions.jump {
+
+                println!("RUN: {}", velocity.linvel.length_squared());
+
+                // play run animation
+                animatable.trigger_animation(2);
 
                 next_state.set(PlayerAnimationState::Free);
             }

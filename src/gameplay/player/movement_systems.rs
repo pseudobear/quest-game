@@ -9,8 +9,8 @@ use bevy::prelude::*;
 const MAX_VELOCITY: f32 = 500.0;
 const MAX_VELOCITY_SQUARED: f32 = 250_000.0;
 
-const MAX_GROUNDED_VELOCITY: f32 = 150.0;
-pub const MAX_GROUNDED_VELOCITY_SQUARED: f32 = 22_500.0;
+const MAX_GROUNDED_VELOCITY: f32 = 100.0;
+pub const MAX_GROUNDED_VELOCITY_SQUARED: f32 = 10_000.0;
 
 pub fn grounded_movement(
     actions: Res<Actions>,
