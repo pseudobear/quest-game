@@ -13,7 +13,7 @@ impl Plugin for AnimationPlugin {
 #[derive(Component)]
 pub struct Animatable {
     pub animations: Vec<AnimationConfig>,
-    active: Option<usize>,
+    pub active: Option<usize>,
 }
 
 impl Animatable {
@@ -28,6 +28,7 @@ impl Animatable {
     pub fn trigger_animation(&mut self, index: usize) {
         self.active = Some(index);
         self.animations[index].frame_timer = AnimationConfig::timer_from_fps(self.animations[index].fps);
+        // ToDo: need to reset atlas here
     }
 }
 
@@ -74,6 +75,8 @@ fn execute_animations(
 
         // set correct layout
         atlas.layout = config.layout.clone();
+
+        //println!("{:?}", atlas.layout);
 
         // we track how long the current sprite has been displayed for
         config.frame_timer.tick(time.delta());

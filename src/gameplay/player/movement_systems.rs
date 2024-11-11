@@ -10,7 +10,7 @@ const MAX_VELOCITY: f32 = 500.0;
 const MAX_VELOCITY_SQUARED: f32 = 250_000.0;
 
 const MAX_GROUNDED_VELOCITY: f32 = 150.0;
-const MAX_GROUNDED_VELOCITY_SQUARED: f32 = 22_500.0;
+pub const MAX_GROUNDED_VELOCITY_SQUARED: f32 = 22_500.0;
 
 pub fn grounded_movement(
     actions: Res<Actions>,
@@ -54,7 +54,6 @@ pub fn air_movement(
         } else {
             external_force.force = actions.player_input.unwrap() * 40_000.0;
         }
-        println!("velocity {}", velocity.linvel);
     }
 }
 

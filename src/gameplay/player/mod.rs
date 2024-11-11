@@ -1,10 +1,15 @@
 mod movement_systems;
+mod animation_systems;
 
 use crate::loading::SwordsMasterSpriteAssets;
 use crate::gameplay::player::movement_systems::{
     grounded_movement,
     air_movement,
     detect_grounded,
+};
+use crate::gameplay::player::animation_systems::{
+    idle_animation,
+    walk_animation,
 };
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
@@ -57,6 +62,14 @@ impl Plugin for PlayerPlugin {
                     .after(detect_grounded),
                 limit_velocity
                     .run_if(in_state(GameState::Playing)),
+                idle_animation
+                    .run_if(in_state(GameState::Playing))
+                    .run_if(in_state(PlayerGroundState::Grounded))
+                    .after(detect_grounded),
+                walk_animation
+                    .run_if(in_state(GameState::Playing))
+                    .run_if(in_state(PlayerGroundState::Grounded))
+                    .after(detect_grounded),
            )
         );
     }
@@ -64,6 +77,9 @@ impl Plugin for PlayerPlugin {
 
 #[derive(Component)]
 pub struct Player;
+
+#[derive(Component)]
+pub struct PlayerSprite;
 
 fn spawn_player(
     mut commands: Commands, 
@@ -101,6 +117,7 @@ fn spawn_player(
             Damping { ..Default::default() },
             Velocity { ..Default::default() },
             CollidingEntities::default(),
+            Player
         ))
         .with_children(|children| {
             children.spawn((
@@ -116,7 +133,7 @@ fn spawn_player(
                     index: player_animatable.animations[0].first_sprite_index,
                 },
                 player_animatable,
+                PlayerSprite
             ));
-        })
-        .insert(Player);
+        });
 }
