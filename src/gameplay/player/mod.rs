@@ -104,7 +104,7 @@ fn spawn_player(
 ) {
 
     let mut player_animatable = create_player_animatable(&player_sprite);
-    player_animatable.trigger_animation(0);
+    player_animatable.trigger_animation(0, false);
 
     commands
         .spawn((

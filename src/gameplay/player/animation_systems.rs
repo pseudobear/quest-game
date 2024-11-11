@@ -1,4 +1,3 @@
-use crate::gameplay::actions::Actions;
 use crate::animations::Animatable;
 use crate::gameplay::player::movement_systems::{
     MAX_GROUNDED_VELOCITY_SQUARED,
@@ -13,6 +12,7 @@ use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 
 pub const WALK_VELOCITY_PERCENTAGE: f32 = 0.5;
+pub const JUMP_FALL_TRANSITION_VELOCITY: f32 = 1.0;
 
 pub fn idle_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
@@ -24,7 +24,7 @@ pub fn idle_animation(
             if velocity.linvel.length_squared() <= MINIMUM_MOVEMENT && animatable.active.unwrap_or(1) != 0 {
 
                 // play idle animation
-                animatable.trigger_animation(0);
+                animatable.trigger_animation(0, false);
 
                 next_state.set(PlayerMovementState::Free);
             }
@@ -44,7 +44,7 @@ pub fn walk_animation(
                 animatable.active.unwrap_or(0) != 1 {
 
                 // play walk animation
-                animatable.trigger_animation(1);
+                animatable.trigger_animation(1, false);
 
                 next_state.set(PlayerMovementState::Free);
             }
@@ -63,7 +63,7 @@ pub fn run_animation(
                 animatable.active.unwrap_or(0) != 2 {
 
                 // play run animation
-                animatable.trigger_animation(2);
+                animatable.trigger_animation(2, false);
 
                 next_state.set(PlayerMovementState::Free);
             }
@@ -78,11 +78,11 @@ pub fn jump_animation(
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
-            if velocity.linvel.y > 0.0 && 
+            if velocity.linvel.y > JUMP_FALL_TRANSITION_VELOCITY && 
                 animatable.active.unwrap_or(0) != 4 {
 
                 // play jump animation
-                animatable.trigger_animation(4);
+                animatable.trigger_animation(4, false);
 
                 next_state.set(PlayerMovementState::Free);
             }
@@ -103,11 +103,11 @@ pub fn fall_animation(
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
-            if velocity.linvel.y < 0.0 && 
+            if velocity.linvel.y < -JUMP_FALL_TRANSITION_VELOCITY && 
                 animatable.active.unwrap_or(0) != 6 {
 
                 // play jump animation
-                animatable.trigger_animation(6);
+                animatable.trigger_animation(6, false);
 
                 next_state.set(PlayerMovementState::Free);
             }

@@ -14,21 +14,28 @@ impl Plugin for AnimationPlugin {
 pub struct Animatable {
     pub animations: Vec<AnimationConfig>,
     pub active: Option<usize>,
+    locked: bool,
 }
 
 impl Animatable {
     pub fn new(animations: Vec<AnimationConfig>) -> Self {
         Self {
             animations: animations,
-            active: None
+            active: None,
+            locked: false
         }
     }
 
-    // activates animation given by index
-    pub fn trigger_animation(&mut self, index: usize) {
-        self.active = Some(index);
-        self.animations[index].frame_timer = AnimationConfig::timer_from_fps(self.animations[index].fps);
-        self.animations[index].reset_index();
+    /// activates animation given by index
+    /// if the animatable is locked, trigger_animation will not do anything. Use the lock parameter
+    /// to lock the animatable during the first loop of the animation
+    pub fn trigger_animation(&mut self, index: usize, lock: bool) {
+        if !self.locked {
+            self.active = Some(index);
+            self.locked = lock;
+            self.animations[index].frame_timer = AnimationConfig::timer_from_fps(self.animations[index].fps);
+            self.animations[index].reset_index();
+        }
     }
 }
 
@@ -87,19 +94,21 @@ fn execute_animations(
 
         // If it has been displayed for the user-defined amount of time (fps)...
         if config.frame_timer.just_finished() {
-            if config.atlas_index >= config.last_sprite_index {
-                // ...and it IS the last frame, then we move back to the first frame and stop.
+            if config.atlas_index < config.last_sprite_index {
+                // increment index
+                config.atlas_index += 1;
+                config.frame_timer = AnimationConfig::timer_from_fps(config.fps);
+                atlas.index = config.atlas_index;
+            } else {
+                // animation finished, unlock and reset (& repeat)
                 config.reset_index();
                 if config.repeat {
                     config.frame_timer = AnimationConfig::timer_from_fps(config.fps);
                 }
-            } else {
-                // ...and it is NOT the last frame, then we move to the next frame...
-                config.atlas_index += 1;
-                config.frame_timer = AnimationConfig::timer_from_fps(config.fps);
+                atlas.index = config.atlas_index;
+
+                animatable.locked = false;
             }
         }
-
-        atlas.index = config.atlas_index;
     }
 }
