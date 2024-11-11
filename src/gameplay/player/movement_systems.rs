@@ -102,7 +102,6 @@ pub fn grounded_turn_player(
 
             // Turn Right 
             if player_facing.face == Facing::Left && velocity.linvel.x > MINIMUM_MOVEMENT {
-                println!("   - ROTATED LEFT");
                 transform.rotation = Quat::default();
                 transform.translation = Vec3::new(17.0, 3.0, 0.0);
                 player_facing.face = Facing::Right
@@ -110,13 +109,10 @@ pub fn grounded_turn_player(
 
             // Turn Left
             if player_facing.face == Facing::Right && velocity.linvel.x < -MINIMUM_MOVEMENT {
-                println!("   - ROTATED RIGHT");
                 transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
                 transform.translation = Vec3::new(-17.0, 3.0, 0.0);
                 player_facing.face = Facing::Left
             }
-
-            println!("__{:?}__{:?}__", player_facing.face, transform.rotation);
         }
     }
 }
@@ -130,22 +126,18 @@ pub fn air_turn_player(
         for (mut player_facing, mut transform) in &mut player_facing_query {
 
             // Turn Right 
-            if player_facing.face == Facing::Left && external_force.force.x > MINIMUM_MOVEMENT {
-                println!("   - ROTATED LEFT");
+            if player_facing.face == Facing::Left && external_force.force.x > 0.0 {
                 transform.rotation = Quat::default();
                 transform.translation = Vec3::new(17.0, 3.0, 0.0);
                 player_facing.face = Facing::Right
             }
 
             // Turn Left
-            if player_facing.face == Facing::Right && external_force.force.x < -MINIMUM_MOVEMENT {
-                println!("   - ROTATED RIGHT");
+            if player_facing.face == Facing::Right && external_force.force.x < 0.0 {
                 transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
                 transform.translation = Vec3::new(-17.0, 3.0, 0.0);
                 player_facing.face = Facing::Left
             }
-
-            println!("__{:?}__{:?}__", player_facing.face, transform.rotation);
         }
     }
 }

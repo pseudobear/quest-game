@@ -1,7 +1,7 @@
 mod movement_systems;
 mod animation_systems;
 
-use crate::loading::SwordsMasterSpriteAssets;
+use crate::loading::swordsmaster::SwordsMasterSpriteAssets;
 use crate::gameplay::player::movement_systems::{
     grounded_movement,
     grounded_turn_player,
