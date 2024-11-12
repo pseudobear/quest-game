@@ -45,6 +45,15 @@ pub struct SwordsMasterSpriteAssets {
     #[asset(texture_atlas_layout(
         tile_size_x = 90,
         tile_size_y = 37,
+        columns = 7,
+        rows = 1,
+        offset_x = 0,
+        offset_y = 259
+    ))]
+    pub slash_1: Handle<TextureAtlasLayout>,
+    #[asset(texture_atlas_layout(
+        tile_size_x = 90,
+        tile_size_y = 37,
         columns = 3,
         rows = 1,
         offset_x = 0,

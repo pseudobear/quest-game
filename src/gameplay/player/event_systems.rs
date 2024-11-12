@@ -19,7 +19,7 @@ pub fn emit_ds_skill_activation(
                     skill: "basic_attack".to_string(),
                     entity: player_entity,
                     sprite_entity: player_sprite,
-                    animation_index: 3,
+                    animation_index: 7,
                     animation_lock: true,
                 });
             }
