@@ -1,5 +1,6 @@
 mod movement_systems;
 mod animation_systems;
+mod event_systems;
 
 use crate::loading::swordsmaster::SwordsMasterSpriteAssets;
 use crate::gameplay::player::movement_systems::{
@@ -17,18 +18,20 @@ use crate::gameplay::player::animation_systems::{
     fall_animation,
     jump_fall_transition_animation,
 };
+use crate::gameplay::player::event_systems::{
+    emit_ds_skill_activation,
+};
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
 use crate::animations::{ Animatable, AnimationConfig };
 use crate::gameplay::items::CharacterEquips;
 use crate::gameplay::items::weapons::{
-    BARE_FISTS
+    TESTING_SWORDS,
+    BARE_FISTS,
 };
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 use movement_systems::limit_velocity;
-
-use super::items::weapons::TESTING_SWORDS;
 
 
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
@@ -74,6 +77,7 @@ impl Plugin for PlayerPlugin {
            .add_systems(Update, (
                 detect_grounded,
                 limit_velocity,
+                emit_ds_skill_activation,
 
                 (   // movement systems
                     (grounded_movement, grounded_turn_player)

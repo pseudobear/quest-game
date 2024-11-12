@@ -1,5 +1,6 @@
 use crate::gameplay::skills::events::ActivateSkillEvent;
 use crate::gameplay::GameState;
+use crate::animations::Animatable;
 use bevy::prelude::*;
 
 pub struct DualSwordSkillsPlugin;
@@ -17,14 +18,16 @@ impl Plugin for DualSwordSkillsPlugin {
 
 fn ds_activate_basic_attack (
     mut ev_activate_skill: EventReader<ActivateSkillEvent>,
+    mut animatable_query: Query<&mut Animatable>
 ) {
     for ev in ev_activate_skill.read() {
         if ev.skill != "basic_attack" {
             continue;
         }
-        // get the animatable
+        println!("got basic attack");
 
-        // play the animation
+        let mut animatable = animatable_query.get_mut(ev.sprite_entity).unwrap();
+        animatable.trigger_animation(ev.animation_index, ev.animation_lock);
         
         // throw the sensor colliders
         
