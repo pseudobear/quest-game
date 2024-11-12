@@ -3,6 +3,7 @@ mod player;
 mod audio;
 mod maps;
 mod resources;
+mod items;
 use crate::GameState;
 use crate::gameplay::player::PlayerPlugin;
 use crate::gameplay::inputs::ActionsPlugin;

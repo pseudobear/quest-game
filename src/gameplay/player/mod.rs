@@ -20,9 +20,15 @@ use crate::gameplay::player::animation_systems::{
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
 use crate::animations::{ Animatable, AnimationConfig };
+use crate::gameplay::items::CharacterEquips;
+use crate::gameplay::items::weapons::{
+    BARE_FISTS
+};
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 use movement_systems::limit_velocity;
+
+use super::items::weapons::TESTING_SWORDS;
 
 
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
@@ -94,6 +100,9 @@ impl Plugin for PlayerPlugin {
 }
 
 #[derive(Component)]
+pub struct PlayerAttributes;
+
+#[derive(Component)]
 pub struct PlayerPhysics;
 
 #[derive(Component)]
@@ -129,6 +138,8 @@ fn spawn_player(
             PlayerPhysics
         ))
         .with_children(|children| {
+
+            // Animations and appearance
             children.spawn((
                 SpriteBundle {
                     texture: player_sprite.sheet.clone(),
@@ -144,6 +155,14 @@ fn spawn_player(
                 player_animatable,
                 PlayerFacing { ..Default::default() },
                 PlayerSprite
+            ));
+
+            // Gameplay attributes and inventory
+            children.spawn((
+                CharacterEquips { 
+                    weapon: TESTING_SWORDS
+                },
+                PlayerAttributes
             ));
         });
 }
