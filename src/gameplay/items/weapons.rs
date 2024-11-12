@@ -3,7 +3,7 @@ use bevy::prelude::*;
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 pub enum WeaponType {
-    DoubleSwords,
+    DualSwords,
     Rapier,
     SwordAndShield,
     Fists,
@@ -15,7 +15,7 @@ pub struct Weapon {
 
 // Double swords weapons
 pub const TESTING_SWORDS: Weapon = Weapon {
-    weapon_type: WeaponType::DoubleSwords
+    weapon_type: WeaponType::DualSwords
 };
 
 // Fist weapons

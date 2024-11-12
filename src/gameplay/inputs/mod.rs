@@ -19,6 +19,9 @@ impl Plugin for ActionsPlugin {
     }
 }
 
+
+// this should eventually contain skill inputs too (actions will handle keymapping)
+// for now, keys are hardcoded for skills
 #[derive(Default, Resource)]
 pub struct Actions {
     pub player_input: Option<Vec2>,

@@ -4,12 +4,15 @@ mod audio;
 mod maps;
 mod resources;
 mod items;
+mod skills;
 use crate::GameState;
 use crate::gameplay::player::PlayerPlugin;
 use crate::gameplay::inputs::ActionsPlugin;
 use crate::gameplay::audio::InternalAudioPlugin;
 use crate::gameplay::maps::MapsPlugin;
 use crate::gameplay::resources::ScreenBottomLeft;
+use crate::gameplay::items::ItemsPlugin;
+use crate::gameplay::skills::SkillsPlugin;
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 
@@ -45,6 +48,8 @@ impl Plugin for GameplayPlugin {
                 InternalAudioPlugin,
                 PlayerPlugin,
                 MapsPlugin,
+                ItemsPlugin,
+                SkillsPlugin,
             ))
            .add_systems(OnExit(GameState::Playing), cleanup_gameplay);
     }
