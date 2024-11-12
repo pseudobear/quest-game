@@ -4,7 +4,7 @@ use crate::gameplay::player::movement_systems::{
     MINIMUM_MOVEMENT,
 };
 use crate::gameplay::player::{
-    Player,
+    PlayerPhysics,
     PlayerSprite,
     PlayerMovementState,
 };
@@ -17,7 +17,7 @@ pub const JUMP_FALL_TRANSITION_VELOCITY: f32 = 30.0;
 pub fn idle_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<PlayerSprite>>,
-    velocity_query: Query<&Velocity, With<Player>>,
+    velocity_query: Query<&Velocity, With<PlayerPhysics>>,
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
@@ -35,7 +35,7 @@ pub fn idle_animation(
 pub fn walk_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<PlayerSprite>>,
-    velocity_query: Query<&Velocity, With<Player>>,
+    velocity_query: Query<&Velocity, With<PlayerPhysics>>,
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
@@ -55,7 +55,7 @@ pub fn walk_animation(
 pub fn run_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<PlayerSprite>>,
-    velocity_query: Query<&Velocity, With<Player>>,
+    velocity_query: Query<&Velocity, With<PlayerPhysics>>,
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
@@ -74,7 +74,7 @@ pub fn run_animation(
 pub fn jump_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<PlayerSprite>>,
-    velocity_query: Query<&Velocity, With<Player>>,
+    velocity_query: Query<&Velocity, With<PlayerPhysics>>,
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
@@ -93,7 +93,7 @@ pub fn jump_animation(
 pub fn jump_fall_transition_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<PlayerSprite>>,
-    velocity_query: Query<&Velocity, With<Player>>,
+    velocity_query: Query<&Velocity, With<PlayerPhysics>>,
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {
@@ -113,7 +113,7 @@ pub fn jump_fall_transition_animation(
 pub fn fall_animation(
     mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<PlayerSprite>>,
-    velocity_query: Query<&Velocity, With<Player>>,
+    velocity_query: Query<&Velocity, With<PlayerPhysics>>,
 ) {
     for velocity in velocity_query.iter() {
         for mut animatable in &mut animatable_query {

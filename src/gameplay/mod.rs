@@ -37,7 +37,7 @@ impl Plugin for GameplayPlugin {
         app.add_sub_state::<PauseState>()
            .insert_resource(ScreenBottomLeft { ..Default::default() })
            .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(35.0))  // account for scaling, x2.5
-           .add_plugins(RapierDebugRenderPlugin::default())
+           //.add_plugins(RapierDebugRenderPlugin::default())
            .add_systems(OnEnter(GameState::Playing), setup_gameplay)
            .add_plugins((
                 ActionsPlugin,

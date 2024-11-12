@@ -94,7 +94,7 @@ impl Plugin for PlayerPlugin {
 }
 
 #[derive(Component)]
-pub struct Player;
+pub struct PlayerPhysics;
 
 #[derive(Component)]
 pub struct PlayerSprite;
@@ -126,7 +126,7 @@ fn spawn_player(
             Damping { ..Default::default() },
             Velocity { ..Default::default() },
             CollidingEntities::default(),
-            Player
+            PlayerPhysics
         ))
         .with_children(|children| {
             children.spawn((

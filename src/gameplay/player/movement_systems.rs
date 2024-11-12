@@ -1,6 +1,6 @@
 use crate::gameplay::inputs::Actions;
 use crate::gameplay::player::{
-    Player,
+    PlayerPhysics,
     PlayerSprite,
     PlayerFacing,
     PlayerGroundState,
@@ -21,7 +21,7 @@ pub const MAX_GROUNDED_VELOCITY_SQUARED: f32 = 10_000.0;
 
 pub fn grounded_movement(
     actions: Res<Actions>,
-    mut player_query: Query<(&mut ExternalImpulse, &Velocity), With<Player>>,
+    mut player_query: Query<(&mut ExternalImpulse, &Velocity), With<PlayerPhysics>>,
 ) {
     for (mut external_impulse, velocity) in &mut player_query {
 
@@ -50,7 +50,7 @@ pub fn grounded_movement(
 
 pub fn air_movement(
     actions: Res<Actions>,
-    mut player_query: Query<(&mut ExternalImpulse, &mut ExternalForce, &Velocity), With<Player>>,
+    mut player_query: Query<(&mut ExternalImpulse, &mut ExternalForce, &Velocity), With<PlayerPhysics>>,
 ) {
     for (mut external_impulse, mut external_force, velocity) in &mut player_query {
         external_impulse.impulse = Vec2::ZERO;
@@ -64,7 +64,7 @@ pub fn air_movement(
     }
 }
 
-pub fn limit_velocity(mut player_query: Query<&mut Velocity, With<Player>>) {
+pub fn limit_velocity(mut player_query: Query<&mut Velocity, With<PlayerPhysics>>) {
     for mut velocity in &mut player_query {
         if velocity.linvel.length_squared() >= MAX_VELOCITY_SQUARED {
             velocity.linvel = velocity.linvel.normalize() * MAX_VELOCITY;
@@ -74,7 +74,7 @@ pub fn limit_velocity(mut player_query: Query<&mut Velocity, With<Player>>) {
 
 pub fn detect_grounded(
     mut next_state: ResMut<NextState<PlayerGroundState>>,
-    mut player_query: Query<(&CollidingEntities, &mut Damping), With<Player>>,
+    mut player_query: Query<(&CollidingEntities, &mut Damping), With<PlayerPhysics>>,
     ground_query: Query<Entity, With<Ground>>,
 ) {
     for (colliding_entities, mut damping) in &mut player_query {
@@ -94,7 +94,7 @@ pub fn detect_grounded(
 
 pub fn grounded_turn_player(
     mut player_facing_query: Query<(&mut PlayerFacing, &mut Transform), With<PlayerSprite>>,
-    player_query: Query<&Velocity, With<Player>>,
+    player_query: Query<&Velocity, With<PlayerPhysics>>,
 ) {
 
     for velocity in player_query.iter() {
@@ -119,7 +119,7 @@ pub fn grounded_turn_player(
 
 pub fn air_turn_player(
     mut player_facing_query: Query<(&mut PlayerFacing, &mut Transform), With<PlayerSprite>>,
-    player_query: Query<&ExternalForce, With<Player>>,
+    player_query: Query<&ExternalForce, With<PlayerPhysics>>,
 ) {
 
     for external_force in player_query.iter() {
