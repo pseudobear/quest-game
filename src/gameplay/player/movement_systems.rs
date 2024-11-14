@@ -1,9 +1,9 @@
 use crate::gameplay::inputs::Actions;
-use crate::gameplay::player::{
+use crate::gameplay::player::components::{
     PlayerPhysics,
     PlayerSprite,
-    PlayerGroundState,
     Facing,
+    GroundStatus,
 };
 use crate::gameplay::maps::Ground;
 use bevy_rapier2d::prelude::*;
@@ -72,18 +72,17 @@ pub fn limit_velocity(mut player_query: Query<&mut Velocity, With<PlayerPhysics>
 }
 
 pub fn detect_grounded(
-    mut next_state: ResMut<NextState<PlayerGroundState>>,
-    mut player_query: Query<(&CollidingEntities, &mut Damping), With<PlayerPhysics>>,
+    mut player_query: Query<(&CollidingEntities, &mut Damping, &mut GroundStatus), With<PlayerPhysics>>,
     ground_query: Query<Entity, With<Ground>>,
 ) {
-    for (colliding_entities, mut damping) in &mut player_query {
+    for (colliding_entities, mut damping, mut ground_state) in &mut player_query {
 
-        next_state.set(PlayerGroundState::Air);
+        *ground_state = GroundStatus::Air;
         damping.linear_damping = 1.0;
 
         for entity in colliding_entities.iter() {
             if ground_query.contains(entity) {
-                next_state.set(PlayerGroundState::Grounded);
+                *ground_state = GroundStatus::Grounded;
                 damping.linear_damping = 3.0;
                 break;
             }

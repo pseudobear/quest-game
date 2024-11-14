@@ -1,8 +1,18 @@
 mod movement_systems;
 mod animation_systems;
 mod event_systems;
+pub mod components;
 
 use crate::loading::swordsmaster::SwordsMasterSpriteAssets;
+use crate::gameplay::player::components::{
+    PlayerAttributes,
+    PlayerPhysics,
+    PlayerSprite,
+    Facing,
+    GroundStatus,
+    rc_grounded,
+    rc_air,
+};
 use crate::gameplay::player::movement_systems::{
     grounded_movement,
     grounded_turn_player,
@@ -33,15 +43,6 @@ use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 use movement_systems::limit_velocity;
 
-// ToDo: this specific state needs to be refactored into a component before we can implement other characters
-#[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
-#[source(GameState = GameState::Playing)]
-enum PlayerGroundState {
-    #[default]
-    Grounded,
-    Air,
-}
-
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
 #[source(GameState = GameState::Playing)]
 enum PlayerMovementState {
@@ -54,20 +55,13 @@ enum PlayerMovementState {
     Freeze,
 }
 
-#[derive(Component, Default, Clone, Eq, PartialEq, Debug, Hash)]
-pub enum Facing {
-    #[default]
-    Right,
-    Left,
-}
-
 pub struct PlayerPlugin;
 
 /// This plugin handles player related stuff like movement
 /// Player logic is only active during the State `GameState::Playing`
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_sub_state::<PlayerGroundState>().add_sub_state::<PlayerMovementState>()
+        app.add_sub_state::<PlayerMovementState>()
            .add_systems(OnEnter(GameState::Playing), spawn_player)
            .add_systems(Update, (
                 detect_grounded,
@@ -75,37 +69,26 @@ impl Plugin for PlayerPlugin {
                 emit_ds_skill_activation,
 
                 (   // movement systems
-                    (grounded_movement, grounded_turn_player)
-                        .run_if(in_state(PlayerGroundState::Grounded)),
-                    (air_movement, air_turn_player)
-                        .run_if(in_state(PlayerGroundState::Air)),
+                    (grounded_movement, grounded_turn_player).run_if(rc_grounded::<PlayerPhysics>),
+                    (air_movement, air_turn_player).run_if(rc_air::<PlayerPhysics>),
                 ).run_if(in_state(PlayerMovementState::Free)).after(detect_grounded),
 
                 (   // grounded animation systems
                     idle_animation,
                     walk_animation,
                     run_animation,
-                ).run_if(in_state(PlayerGroundState::Grounded)).after(grounded_movement),
+                ).run_if(rc_grounded::<PlayerPhysics>).after(grounded_movement),
 
                 (   // air animation systems
                     jump_animation,
                     jump_fall_transition_animation,
                     fall_animation,
-                ).run_if(in_state(PlayerGroundState::Air)).after(air_movement),
+                ).run_if(rc_air::<PlayerPhysics>).after(air_movement),
 
            ).run_if(in_state(GameState::Playing))
         );
     }
 }
-
-#[derive(Component)]
-pub struct PlayerAttributes;
-
-#[derive(Component)]
-pub struct PlayerPhysics;
-
-#[derive(Component)]
-pub struct PlayerSprite;
 
 fn spawn_player(
     mut commands: Commands, 
@@ -134,6 +117,7 @@ fn spawn_player(
             Damping { ..Default::default() },
             Velocity { ..Default::default() },
             CollidingEntities::default(),
+            GroundStatus::default(),
             PlayerPhysics,
         ))
         .with_children(|children| {
