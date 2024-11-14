@@ -1,3 +1,6 @@
+use crate::animations::Animatable;
+use crate::gameplay::items::CharacterEquips;
+use crate::gameplay::items::weapons::BARE_FISTS;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
@@ -74,6 +77,48 @@ impl Default for CharacterPhysicsBundle {
             colliding_entities: CollidingEntities::default(),
             ground_status: GroundStatus::default(),
             character_physics: CharacterPhysics,
+        }
+    }
+}
+
+#[derive(Bundle)]
+pub struct CharacterSpriteBundle {
+    pub sprite_bundle: SpriteBundle,
+    pub texture_atlas: TextureAtlas,
+    pub animatable: Animatable,
+    pub facing: Facing,
+    pub character_sprite: CharacterSprite,
+}
+
+impl CharacterSpriteBundle {
+    pub fn new(transform: Transform, texture: Handle<Image>, animatable: Animatable) -> Self {
+        Self {
+            sprite_bundle: SpriteBundle {
+                texture: texture,
+                transform: transform,
+                ..Default::default()
+            },
+            texture_atlas: TextureAtlas { ..Default::default() },
+            animatable: animatable,
+            facing: Facing::default(),
+            character_sprite: CharacterSprite,
+        }
+    }
+}
+
+#[derive(Bundle)]
+pub struct CharacterAttributesBundle {
+    pub character_equips: CharacterEquips,
+    pub character_attributes: CharacterAttributes,
+}
+
+impl Default for CharacterAttributesBundle {
+    fn default() -> Self {
+        Self {
+            character_equips: CharacterEquips {
+                weapon: BARE_FISTS
+            },
+            character_attributes: CharacterAttributes,
         }
     }
 }

@@ -7,12 +7,11 @@ use crate::loading::swordsmaster::SwordsMasterSpriteAssets;
 use crate::gameplay::player::components::{
     CharacterAttributes,
     CharacterPhysics,
-    CharacterSprite,
-    Facing,
-    GroundStatus,
     rc_grounded,
     rc_air,
     CharacterPhysicsBundle,
+    CharacterSpriteBundle,
+    CharacterAttributesBundle,
 };
 use crate::gameplay::player::movement_systems::{
     player_grounded_movement,
@@ -36,11 +35,7 @@ use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
 use crate::animations::{ Animatable, AnimationConfig };
 use crate::gameplay::items::CharacterEquips;
-use crate::gameplay::items::weapons::{
-    TESTING_SWORDS,
-    BARE_FISTS,
-};
-use bevy_rapier2d::prelude::*;
+use crate::gameplay::items::weapons::TESTING_SWORDS;
 use bevy::prelude::*;
 use movement_systems::limit_velocity;
 
@@ -110,32 +105,23 @@ fn spawn_player(
             CharacterPhysicsBundle { ..Default::default() }
         ))
         .with_children(|children| {
-
-            // Animations, appearance and hitbox
-            children.spawn((
-                SpriteBundle {
-                    texture: player_sprite.sheet.clone(),
-                    transform: Transform::from_translation(Vec3::new(
+            children.spawn(   // Animations, appearance and hitbox
+                CharacterSpriteBundle::new(
+                    Transform::from_translation(Vec3::new(
                         17.0, 3.0, 0.
                     )),
+                    player_sprite.sheet.clone(),
+                    player_animatable
+                ),
+            );
+            children.spawn(   // Gameplay attributes and inventory
+                CharacterAttributesBundle {
+                    character_equips: CharacterEquips { 
+                        weapon: TESTING_SWORDS
+                    },
                     ..Default::default()
-                },
-                TextureAtlas {
-                    layout: player_animatable.animations[0].atlas_layout.clone(),
-                    index: player_animatable.animations[0].first_sprite_index,
-                },
-                player_animatable,
-                Facing::default(),
-                CharacterSprite,
-            ));
-
-            // Gameplay attributes and inventory
-            children.spawn((
-                CharacterEquips { 
-                    weapon: TESTING_SWORDS
-                },
-                CharacterAttributes,
-            ));
+                }
+            );
         });
 }
 
