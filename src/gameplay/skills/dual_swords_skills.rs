@@ -29,7 +29,7 @@ impl Plugin for DualSwordSkillsPlugin {
 */
 pub fn create_dual_swords_hitbox_thrower() -> HitboxThrower {
 
-    let basic_attack_config = HitboxConfig::new(0, 6, 1, false, ds_basic_attack_frames());
+    let basic_attack_config = HitboxConfig::new(0, 6, 10, false, ds_basic_attack_frames());
 
     HitboxThrower::new(Vec::from([
         basic_attack_config
@@ -39,9 +39,13 @@ pub fn create_dual_swords_hitbox_thrower() -> HitboxThrower {
 
 fn ds_basic_attack_frames() -> Vec<HitboxFrame> {
     Vec::from([
-        HitboxFrame::new(1, 2, Vec::from([CuboidColliderSpec::new(
+        HitboxFrame::new(1, 1, Vec::from([CuboidColliderSpec::new(
             24.0, 8.0,
-            14.0, -8.0
+            14.0, -7.0
+        )])),
+        HitboxFrame::new(2, 2, Vec::from([CuboidColliderSpec::new(
+            24.0, 4.0,
+            14.0, -7.0
         )])),
     ])
 }
