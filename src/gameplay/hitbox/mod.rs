@@ -1,7 +1,12 @@
-mod hitbox_frame;
+pub mod hitbox_frame;
 use std::time::Duration;
-use crate::gameplay::hitbox::hitbox_frame::HitboxFrame;
+use crate::gameplay::hitbox::hitbox_frame::{
+    HitboxFrame,
+    Hitbox,
+    CuboidColliderSpec,
+};
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 
 pub struct HitboxPlugin;
 
@@ -43,6 +48,8 @@ impl HitboxThrower {
 
 #[derive(Clone, Debug)]
 pub struct HitboxConfig {
+    first_index: usize,
+    last_index: usize,
     fps: u8,
     pub hitbox_frames: Vec<HitboxFrame>,
     frame_index: usize,
@@ -51,8 +58,10 @@ pub struct HitboxConfig {
 }
 
 impl HitboxConfig {
-    pub fn new(fps: u8, repeat: bool, hitbox_frames: Vec<HitboxFrame>) -> Self {
+    pub fn new(first_index: usize, last_index: usize, fps: u8, repeat: bool, hitbox_frames: Vec<HitboxFrame>) -> Self {
         Self {
+            first_index: first_index,
+            last_index: last_index,
             fps: fps,
             hitbox_frames: hitbox_frames,
             frame_index: 0,
@@ -66,16 +75,26 @@ impl HitboxConfig {
     }
 
     fn reset_index(&mut self) {
-        self.frame_index = 0;
+        self.frame_index = self.first_index;
+    }
+
+    pub fn get_frame_for_index(&self, index: usize) -> Option<HitboxFrame> {
+        for frame in self.hitbox_frames.iter() {
+            if frame.index_start <= index && index <= frame.index_stop {
+                return Some(frame.clone());
+            }
+        }
+        None
     }
 }
 
 // This system bumps active HitboxConfig indices, spawn and despawn colliders appropriately
 fn execute_hitboxes(
     time: Res<Time>,
-    mut query: Query<&mut HitboxThrower>,
+    mut query: Query<(Entity, &mut HitboxThrower)>,
+    mut commands: Commands
 ) {
-    for mut hitbox_thrower in &mut query {
+    for (entity, mut hitbox_thrower) in &mut query {
         let config: &mut HitboxConfig;
         if let Some(active_idx) = hitbox_thrower.active {
             config = &mut hitbox_thrower.hitboxes[active_idx];
@@ -88,14 +107,24 @@ fn execute_hitboxes(
 
         // If it has been displayed for the user-defined amount of time (fps)...
         if config.frame_timer.just_finished() {
-            if config.frame_index < config.hitbox_frames.len() {
+            println!("{}",config.frame_index);
+            if config.frame_index < config.last_index {
 
                 // increment index
                 config.frame_index += 1;
                 config.frame_timer = HitboxConfig::timer_from_fps(config.fps);
 
-                // ToDo: set correct collider 
-                //
+                if let Some(current_frame) = config.get_frame_for_index(config.frame_index) {
+                    for spec in current_frame.collider_specs.iter() {
+                        commands.spawn((
+                            Sensor,
+                            spec.get_collider(),
+                            spec.get_transform(),
+                            ColliderMassProperties::Mass(0.0),
+                            Hitbox {expiry_index: current_frame.index_stop}
+                        )).set_parent(entity);
+                    }
+                }
 
             } else {
 
@@ -104,9 +133,6 @@ fn execute_hitboxes(
                     config.reset_index();
                     config.frame_timer = HitboxConfig::timer_from_fps(config.fps);
                 }
-
-                // ToDo: set correct collider 
-                //
 
                 hitbox_thrower.active = None;
                 hitbox_thrower.locked = false;

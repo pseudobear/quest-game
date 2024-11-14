@@ -1,6 +1,13 @@
 use crate::gameplay::skills::events::ActivateSkillEvent;
 use crate::gameplay::GameState;
-use crate::gameplay::hitbox::HitboxThrower;
+use crate::gameplay::hitbox::{
+    HitboxThrower,
+    HitboxConfig,
+};
+use crate::gameplay::hitbox::hitbox_frame::{
+    HitboxFrame,
+    CuboidColliderSpec,
+};
 use crate::animations::Animatable;
 use bevy::prelude::*;
 
@@ -18,17 +25,26 @@ impl Plugin for DualSwordSkillsPlugin {
 }
 
 /* Hitboxes List:
-
+0: slash_1 (basic attack)
 */
 pub fn create_dual_swords_hitbox_thrower() -> HitboxThrower {
-    let hitbox_thrower = HitboxThrower::new(Vec::from([
-        // fill this out with hitbox configs, probably would want to move this to skills specifically
-        // skills make their own hitbox thrower builders to be imported by anything that needs it?
-    ]));
 
-    return hitbox_thrower;
+    let basic_attack_config = HitboxConfig::new(0, 6, 10, false, ds_basic_attack_frames());
+
+    HitboxThrower::new(Vec::from([
+        basic_attack_config
+    ]))
 }
 
+
+fn ds_basic_attack_frames() -> Vec<HitboxFrame> {
+    Vec::from([
+        HitboxFrame::new(1, 2, Vec::from([CuboidColliderSpec::new(
+            24.0, 8.0,
+            10.0, -5.0
+        )])),
+    ])
+}
 // ToDo: make these systems run after whatever is writing the event to avoid frame gap
 
 fn ds_activate_basic_attack (
@@ -40,7 +56,6 @@ fn ds_activate_basic_attack (
         if ev.skill != "basic_attack" {
             continue;
         }
-        println!("got basic attack");
 
         let mut animatable = animatable_query.get_mut(ev.sprite_entity).unwrap();
         animatable.trigger_animation(ev.animation_index, ev.animation_lock);
