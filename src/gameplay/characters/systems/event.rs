@@ -1,5 +1,5 @@
 use crate::gameplay::skills::events::ActivateSkillEvent;
-use crate::gameplay::player::components::{
+use crate::gameplay::characters::components::{
     CharacterPhysics,
     CharacterSprite,
 };

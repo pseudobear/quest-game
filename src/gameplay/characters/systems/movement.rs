@@ -1,5 +1,5 @@
 use crate::gameplay::inputs::PlayerActions;
-use crate::gameplay::player::components::{
+use crate::gameplay::characters::components::{
     CharacterPhysics,
     GroundStatus,
 };

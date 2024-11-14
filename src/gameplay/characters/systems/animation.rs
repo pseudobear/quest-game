@@ -1,10 +1,10 @@
 use crate::animations::Animatable;
-use crate::gameplay::player::movement_systems::{
+use crate::gameplay::characters::systems::movement::{
     MAX_GROUNDED_VELOCITY_SQUARED,
     MINIMUM_MOVEMENT,
 };
-use crate::gameplay::player::PlayerMovementState;
-use crate::gameplay::player::components::{
+use crate::gameplay::characters::PlayerMovementState;
+use crate::gameplay::characters::components::{
     CharacterPhysics,
     CharacterSprite,
     Facing,

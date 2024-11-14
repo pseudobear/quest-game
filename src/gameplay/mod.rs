@@ -1,5 +1,5 @@
 mod inputs;
-mod player;
+mod characters;
 mod audio;
 mod maps;
 mod resources;
@@ -7,7 +7,7 @@ mod items;
 mod skills;
 mod hitbox;
 use crate::GameState;
-use crate::gameplay::player::PlayerPlugin;
+use crate::gameplay::characters::PlayerPlugin;
 use crate::gameplay::inputs::ActionsPlugin;
 use crate::gameplay::audio::InternalAudioPlugin;
 use crate::gameplay::maps::MapsPlugin;

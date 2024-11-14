@@ -1,10 +1,8 @@
-mod movement_systems;
-mod animation_systems;
-mod event_systems;
+mod systems;
 pub mod components;
 
 use crate::loading::swordsmaster::SwordsMasterSpriteAssets;
-use crate::gameplay::player::components::{
+use crate::gameplay::characters::components::{
     CharacterAttributes,
     CharacterPhysics,
     rc_grounded,
@@ -13,12 +11,13 @@ use crate::gameplay::player::components::{
     CharacterSpriteBundle,
     CharacterAttributesBundle,
 };
-use crate::gameplay::player::movement_systems::{
+use crate::gameplay::characters::systems::movement::{
     player_grounded_movement,
     player_air_movement,
     detect_grounded,
+    limit_velocity,
 };
-use crate::gameplay::player::animation_systems::{
+use crate::gameplay::characters::systems::animation::{
     idle_animation,
     walk_animation,
     run_animation,
@@ -28,7 +27,7 @@ use crate::gameplay::player::animation_systems::{
     air_turn_character,
     grounded_turn_character,
 };
-use crate::gameplay::player::event_systems::{
+use crate::gameplay::characters::systems::event::{
     emit_ds_skill_activation,
 };
 use crate::gameplay::resources::ScreenBottomLeft;
@@ -37,7 +36,6 @@ use crate::animations::{ Animatable, AnimationConfig };
 use crate::gameplay::items::CharacterEquips;
 use crate::gameplay::items::weapons::TESTING_SWORDS;
 use bevy::prelude::*;
-use movement_systems::limit_velocity;
 
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
 #[source(GameState = GameState::Playing)]
