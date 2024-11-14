@@ -54,16 +54,11 @@ enum PlayerMovementState {
     Freeze,
 }
 
-#[derive(Default, Clone, Eq, PartialEq, Debug, Hash)]
-enum Facing {
+#[derive(Component, Default, Clone, Eq, PartialEq, Debug, Hash)]
+pub enum Facing {
     #[default]
     Right,
     Left,
-}
-
-#[derive(Component, Default, Debug)]
-pub struct PlayerFacing {
-    face: Facing
 }
 
 pub struct PlayerPlugin;
@@ -157,7 +152,7 @@ fn spawn_player(
                     index: player_animatable.animations[0].first_sprite_index,
                 },
                 player_animatable,
-                PlayerFacing { ..Default::default() },
+                Facing::default(),
                 PlayerSprite,
             ));
 

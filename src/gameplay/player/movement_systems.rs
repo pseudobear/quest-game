@@ -2,7 +2,6 @@ use crate::gameplay::inputs::Actions;
 use crate::gameplay::player::{
     PlayerPhysics,
     PlayerSprite,
-    PlayerFacing,
     PlayerGroundState,
     Facing,
 };
@@ -50,9 +49,9 @@ pub fn grounded_movement(
 
 pub fn air_movement(
     actions: Res<Actions>,
-    mut player_query: Query<(&mut ExternalImpulse, &mut ExternalForce, &Velocity), With<PlayerPhysics>>,
+    mut player_query: Query<(&mut ExternalImpulse, &mut ExternalForce), With<PlayerPhysics>>,
 ) {
-    for (mut external_impulse, mut external_force, velocity) in &mut player_query {
+    for (mut external_impulse, mut external_force) in &mut player_query {
         external_impulse.impulse = Vec2::ZERO;
 
         // Handle no directional input
@@ -93,50 +92,50 @@ pub fn detect_grounded(
 }
 
 pub fn grounded_turn_player(
-    mut player_facing_query: Query<(&mut PlayerFacing, &mut Transform), With<PlayerSprite>>,
+    mut player_facing_query: Query<(&mut Facing, &mut Transform), With<PlayerSprite>>,
     player_query: Query<&Velocity, With<PlayerPhysics>>,
 ) {
 
     for velocity in player_query.iter() {
-        for (mut player_facing, mut transform) in &mut player_facing_query {
+        for (mut facing, mut transform) in &mut player_facing_query {
 
             // Turn Right 
-            if player_facing.face == Facing::Left && velocity.linvel.x > MINIMUM_MOVEMENT {
+            if *facing == Facing::Left && velocity.linvel.x > MINIMUM_MOVEMENT {
                 transform.rotation = Quat::default();
                 transform.translation = Vec3::new(17.0, 3.0, 0.0);
-                player_facing.face = Facing::Right
+                *facing = Facing::Right
             }
 
             // Turn Left
-            if player_facing.face == Facing::Right && velocity.linvel.x < -MINIMUM_MOVEMENT {
+            if *facing == Facing::Right && velocity.linvel.x < -MINIMUM_MOVEMENT {
                 transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
                 transform.translation = Vec3::new(-17.0, 3.0, 0.0);
-                player_facing.face = Facing::Left
+                *facing = Facing::Left
             }
         }
     }
 }
 
 pub fn air_turn_player(
-    mut player_facing_query: Query<(&mut PlayerFacing, &mut Transform), With<PlayerSprite>>,
+    mut player_facing_query: Query<(&mut Facing, &mut Transform), With<PlayerSprite>>,
     player_query: Query<&ExternalForce, With<PlayerPhysics>>,
 ) {
 
     for external_force in player_query.iter() {
-        for (mut player_facing, mut transform) in &mut player_facing_query {
+        for (mut facing, mut transform) in &mut player_facing_query {
 
             // Turn Right 
-            if player_facing.face == Facing::Left && external_force.force.x > 0.0 {
+            if *facing == Facing::Left && external_force.force.x > 0.0 {
                 transform.rotation = Quat::default();
                 transform.translation = Vec3::new(17.0, 3.0, 0.0);
-                player_facing.face = Facing::Right
+                *facing = Facing::Right
             }
 
             // Turn Left
-            if player_facing.face == Facing::Right && external_force.force.x < 0.0 {
+            if *facing == Facing::Right && external_force.force.x < 0.0 {
                 transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
                 transform.translation = Vec3::new(-17.0, 3.0, 0.0);
-                player_facing.face = Facing::Left
+                *facing = Facing::Left
             }
         }
     }
