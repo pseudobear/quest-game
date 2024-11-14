@@ -5,6 +5,7 @@ mod maps;
 mod resources;
 mod items;
 mod skills;
+mod hitbox;
 use crate::GameState;
 use crate::gameplay::player::PlayerPlugin;
 use crate::gameplay::inputs::ActionsPlugin;
@@ -13,6 +14,7 @@ use crate::gameplay::maps::MapsPlugin;
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::gameplay::items::ItemsPlugin;
 use crate::gameplay::skills::SkillsPlugin;
+use crate::gameplay::hitbox::HitboxPlugin;
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 
@@ -41,7 +43,7 @@ impl Plugin for GameplayPlugin {
         app.add_sub_state::<PauseState>()
            .insert_resource(ScreenBottomLeft { ..Default::default() })
            .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(35.0))  // account for scaling, x2.5
-           //.add_plugins(RapierDebugRenderPlugin::default())
+           .add_plugins(RapierDebugRenderPlugin::default())
            .add_systems(OnEnter(GameState::Playing), setup_gameplay)
            .add_plugins((
                 ActionsPlugin,
@@ -50,6 +52,7 @@ impl Plugin for GameplayPlugin {
                 MapsPlugin,
                 ItemsPlugin,
                 SkillsPlugin,
+                HitboxPlugin,
             ))
            .add_systems(OnExit(GameState::Playing), cleanup_gameplay);
     }
