@@ -6,7 +6,10 @@ use crate::gameplay::GameState;
 use crate::gameplay::items::CharacterEquips;
 use crate::gameplay::items::weapons::WeaponType;
 use crate::gameplay::hitbox::HitboxThrower;
-use crate::gameplay::skills::events::ActivateSkillEvent;
+use crate::gameplay::skills::events::{
+    ActivateSkillEvent,
+    EndSkillEvent,
+};
 use crate::gameplay::skills::dual_swords_skills::{
     DualSwordSkillsPlugin,
     create_dual_swords_hitbox_thrower
@@ -25,6 +28,7 @@ pub struct SkillsPlugin;
 impl Plugin for SkillsPlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<ActivateSkillEvent>()
+           .add_event::<EndSkillEvent>()
            .add_plugins((
                 FistSkillsPlugin,
                 DualSwordSkillsPlugin,

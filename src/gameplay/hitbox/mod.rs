@@ -5,6 +5,7 @@ use crate::gameplay::hitbox::hitbox_frame::{
     HitboxFrame,
     Hitbox,
 };
+use crate::gameplay::skills::events::EndSkillEvent;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
@@ -50,6 +51,7 @@ impl HitboxThrower {
 
 #[derive(Clone, Debug)]
 pub struct HitboxConfig {
+    skill_name: String,
     first_index: usize,
     last_index: usize,
     fps: u8,
@@ -60,8 +62,9 @@ pub struct HitboxConfig {
 }
 
 impl HitboxConfig {
-    pub fn new(first_index: usize, last_index: usize, fps: u8, repeat: bool, hitbox_frames: Vec<HitboxFrame>) -> Self {
+    pub fn new(skill_name: String, first_index: usize, last_index: usize, fps: u8, repeat: bool, hitbox_frames: Vec<HitboxFrame>) -> Self {
         Self {
+            skill_name: skill_name,
             first_index: first_index,
             last_index: last_index,
             fps: fps,
@@ -93,11 +96,12 @@ impl HitboxConfig {
 // This system bumps active HitboxConfig indices, spawn and despawn colliders appropriately
 fn execute_hitboxes(
     time: Res<Time>,
-    mut hitbox_thrower_query: Query<(Entity, &mut HitboxThrower)>,
+    mut hitbox_thrower_query: Query<(&Parent, Entity, &mut HitboxThrower)>,
     hitbox_query: Query<(Entity, &Hitbox)>,
+    mut ev_end_skill: EventWriter<EndSkillEvent>,
     mut commands: Commands
 ) {
-    for (entity, mut hitbox_thrower) in &mut hitbox_thrower_query {
+    for (parent, entity, mut hitbox_thrower) in &mut hitbox_thrower_query {
         let config: &mut HitboxConfig;
         if let Some(active_idx) = hitbox_thrower.active {
             config = &mut hitbox_thrower.hitboxes[active_idx];
@@ -105,10 +109,8 @@ fn execute_hitboxes(
             return;
         }
 
-        // we track how long the current sprite has been displayed for
         config.frame_timer.tick(time.delta());
 
-        // If it has been displayed for the user-defined amount of time (fps)...
         if config.frame_timer.just_finished() {
             println!("{}",config.frame_index);
 
@@ -143,7 +145,14 @@ fn execute_hitboxes(
                 if config.repeat {
                     config.reset_index();
                     config.frame_timer = HitboxConfig::timer_from_fps(config.fps);
+                    ev_end_skill.send(EndSkillEvent{
+                        entity: parent.get(),
+                        skill: config.skill_name.clone(),
+                    });
                 }
+
+                // REPEATS DO NOT WORK RIGHT NOW
+                // NEED TO FIND A WAY TO HANDLE ENDING SKILL
 
                 hitbox_thrower.active = None;
                 hitbox_thrower.locked = false;
