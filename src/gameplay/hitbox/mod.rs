@@ -1,9 +1,9 @@
 pub mod hitbox_frame;
 use std::time::Duration;
+use crate::gameplay::GameState;
 use crate::gameplay::hitbox::hitbox_frame::{
     HitboxFrame,
     Hitbox,
-    CuboidColliderSpec,
 };
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
@@ -12,7 +12,9 @@ pub struct HitboxPlugin;
 
 impl Plugin for HitboxPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, execute_hitboxes);
+        app.add_systems(Update, (
+            execute_hitboxes
+        ).run_if(in_state(GameState::Playing)));
     }
 }
 
@@ -91,10 +93,11 @@ impl HitboxConfig {
 // This system bumps active HitboxConfig indices, spawn and despawn colliders appropriately
 fn execute_hitboxes(
     time: Res<Time>,
-    mut query: Query<(Entity, &mut HitboxThrower)>,
+    mut hitbox_thrower_query: Query<(Entity, &mut HitboxThrower)>,
+    hitbox_query: Query<(Entity, &Hitbox)>,
     mut commands: Commands
 ) {
-    for (entity, mut hitbox_thrower) in &mut query {
+    for (entity, mut hitbox_thrower) in &mut hitbox_thrower_query {
         let config: &mut HitboxConfig;
         if let Some(active_idx) = hitbox_thrower.active {
             config = &mut hitbox_thrower.hitboxes[active_idx];
@@ -108,6 +111,14 @@ fn execute_hitboxes(
         // If it has been displayed for the user-defined amount of time (fps)...
         if config.frame_timer.just_finished() {
             println!("{}",config.frame_index);
+
+            // despawn expired hitboxes
+            for (entity, hitbox) in hitbox_query.iter() {
+                if config.frame_index >= hitbox.expiry_index {
+                    commands.entity(entity).despawn_recursive();
+                }
+            }
+
             if config.frame_index < config.last_index {
 
                 // increment index
