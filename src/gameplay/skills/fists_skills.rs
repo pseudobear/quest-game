@@ -5,13 +5,13 @@ use crate::animations::Animatable;
 use bevy::prelude::*;
 
 
-pub struct DualSwordSkillsPlugin;
+pub struct FistSkillsPlugin;
 
-impl Plugin for DualSwordSkillsPlugin {
+impl Plugin for FistSkillsPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, 
             (
-                ds_activate_basic_attack
+                fists_activate_basic_attack
             ).run_if(in_state(GameState::Playing))
         );
     }
@@ -20,7 +20,7 @@ impl Plugin for DualSwordSkillsPlugin {
 /* Hitboxes List:
 
 */
-pub fn create_dual_swords_hitbox_thrower() -> HitboxThrower {
+pub fn create_fists_hitbox_thrower() -> HitboxThrower {
     let hitbox_thrower = HitboxThrower::new(Vec::from([
         // fill this out with hitbox configs, probably would want to move this to skills specifically
         // skills make their own hitbox thrower builders to be imported by anything that needs it?
@@ -31,7 +31,7 @@ pub fn create_dual_swords_hitbox_thrower() -> HitboxThrower {
 
 // ToDo: make these systems run after whatever is writing the event to avoid frame gap
 
-fn ds_activate_basic_attack (
+fn fists_activate_basic_attack (
     mut ev_activate_skill: EventReader<ActivateSkillEvent>,
     mut animatable_query: Query<&mut Animatable>,
     mut hitbox_thrower_query: Query<&mut HitboxThrower>

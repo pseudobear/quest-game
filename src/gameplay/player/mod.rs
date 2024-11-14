@@ -139,11 +139,11 @@ fn spawn_player(
             Damping { ..Default::default() },
             Velocity { ..Default::default() },
             CollidingEntities::default(),
-            PlayerPhysics
+            PlayerPhysics,
         ))
         .with_children(|children| {
 
-            // Animations and appearance
+            // Animations, appearance and hitbox
             children.spawn((
                 SpriteBundle {
                     texture: player_sprite.sheet.clone(),
@@ -158,7 +158,7 @@ fn spawn_player(
                 },
                 player_animatable,
                 PlayerFacing { ..Default::default() },
-                PlayerSprite
+                PlayerSprite,
             ));
 
             // Gameplay attributes and inventory
@@ -166,7 +166,7 @@ fn spawn_player(
                 CharacterEquips { 
                     weapon: TESTING_SWORDS
                 },
-                PlayerAttributes
+                PlayerAttributes,
             ));
         });
 }

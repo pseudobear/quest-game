@@ -21,6 +21,8 @@ pub fn emit_ds_skill_activation(
                     sprite_entity: player_sprite,
                     animation_index: 7,
                     animation_lock: true,
+                    hitbox_index: 0,
+                    hitbox_lock: true,
                 });
             }
         }
