@@ -12,6 +12,7 @@ use crate::gameplay::player::components::{
     GroundStatus,
     rc_grounded,
     rc_air,
+    CharacterPhysicsBundle,
 };
 use crate::gameplay::player::movement_systems::{
     player_grounded_movement,
@@ -101,24 +102,12 @@ fn spawn_player(
 
     commands
         .spawn((
-            RigidBody::Dynamic,
             TransformBundle::from(Transform::from_xyz(
                 10.0 + screen_bottom_left.x as f32 + 20.0,
                 32.0 + screen_bottom_left.y as f32 + 12.0,
                 2.5
             )),
-            Collider::capsule_y(6.0, 6.0),
-            GravityScale(2.0),
-            LockedAxes::ROTATION_LOCKED,
-            ActiveEvents::COLLISION_EVENTS,
-            // markers to access rigidbody attributes
-            ExternalForce { ..Default::default() },
-            ExternalImpulse { ..Default::default() },
-            Damping { ..Default::default() },
-            Velocity { ..Default::default() },
-            CollidingEntities::default(),
-            GroundStatus::default(),
-            CharacterPhysics,
+            CharacterPhysicsBundle { ..Default::default() }
         ))
         .with_children(|children| {
 
