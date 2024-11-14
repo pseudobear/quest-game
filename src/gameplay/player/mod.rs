@@ -14,10 +14,8 @@ use crate::gameplay::player::components::{
     rc_air,
 };
 use crate::gameplay::player::movement_systems::{
-    grounded_movement,
-    grounded_turn_player,
-    air_movement,
-    air_turn_player,
+    player_grounded_movement,
+    player_air_movement,
     detect_grounded,
 };
 use crate::gameplay::player::animation_systems::{
@@ -27,6 +25,8 @@ use crate::gameplay::player::animation_systems::{
     jump_animation,
     fall_animation,
     jump_fall_transition_animation,
+    air_turn_character,
+    grounded_turn_character,
 };
 use crate::gameplay::player::event_systems::{
     emit_ds_skill_activation,
@@ -69,21 +69,21 @@ impl Plugin for PlayerPlugin {
                 emit_ds_skill_activation,
 
                 (   // movement systems
-                    (grounded_movement, grounded_turn_player).run_if(rc_grounded::<CharacterPhysics>),
-                    (air_movement, air_turn_player).run_if(rc_air::<CharacterPhysics>),
+                    (player_grounded_movement, grounded_turn_character).run_if(rc_grounded::<CharacterPhysics>),
+                    (player_air_movement, air_turn_character).run_if(rc_air::<CharacterPhysics>),
                 ).run_if(in_state(PlayerMovementState::Free)).after(detect_grounded),
 
                 (   // grounded animation systems
                     idle_animation,
                     walk_animation,
                     run_animation,
-                ).run_if(rc_grounded::<CharacterPhysics>).after(grounded_movement),
+                ).run_if(rc_grounded::<CharacterPhysics>).after(player_grounded_movement),
 
                 (   // air animation systems
                     jump_animation,
                     jump_fall_transition_animation,
                     fall_animation,
-                ).run_if(rc_air::<CharacterPhysics>).after(air_movement),
+                ).run_if(rc_air::<CharacterPhysics>).after(player_air_movement),
 
            ).run_if(in_state(GameState::Playing))
         );

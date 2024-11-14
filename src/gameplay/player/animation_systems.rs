@@ -7,6 +7,7 @@ use crate::gameplay::player::PlayerMovementState;
 use crate::gameplay::player::components::{
     CharacterPhysics,
     CharacterSprite,
+    Facing,
 };
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
@@ -125,6 +126,56 @@ pub fn fall_animation(
                 animatable.trigger_animation(6, false);
 
                 next_state.set(PlayerMovementState::Free);
+            }
+        }
+    }
+}
+
+pub fn grounded_turn_character(
+    mut player_facing_query: Query<(&mut Facing, &mut Transform), With<CharacterSprite>>,
+    player_query: Query<&Velocity, With<CharacterPhysics>>,
+) {
+
+    for velocity in player_query.iter() {
+        for (mut facing, mut transform) in &mut player_facing_query {
+
+            // Turn Right 
+            if *facing == Facing::Left && velocity.linvel.x > MINIMUM_MOVEMENT {
+                transform.rotation = Quat::default();
+                transform.translation = Vec3::new(17.0, 3.0, 0.0);
+                *facing = Facing::Right
+            }
+
+            // Turn Left
+            if *facing == Facing::Right && velocity.linvel.x < -MINIMUM_MOVEMENT {
+                transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
+                transform.translation = Vec3::new(-17.0, 3.0, 0.0);
+                *facing = Facing::Left
+            }
+        }
+    }
+}
+
+pub fn air_turn_character(
+    mut player_facing_query: Query<(&mut Facing, &mut Transform), With<CharacterSprite>>,
+    player_query: Query<&ExternalForce, With<CharacterPhysics>>,
+) {
+
+    for external_force in player_query.iter() {
+        for (mut facing, mut transform) in &mut player_facing_query {
+
+            // Turn Right 
+            if *facing == Facing::Left && external_force.force.x > 0.0 {
+                transform.rotation = Quat::default();
+                transform.translation = Vec3::new(17.0, 3.0, 0.0);
+                *facing = Facing::Right
+            }
+
+            // Turn Left
+            if *facing == Facing::Right && external_force.force.x < 0.0 {
+                transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
+                transform.translation = Vec3::new(-17.0, 3.0, 0.0);
+                *facing = Facing::Left
             }
         }
     }
