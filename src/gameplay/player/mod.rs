@@ -33,7 +33,7 @@ use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 use movement_systems::limit_velocity;
 
-
+// ToDo: this specific state needs to be refactored into a component before we can implement other characters
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
 #[source(GameState = GameState::Playing)]
 enum PlayerGroundState {

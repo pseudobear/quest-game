@@ -11,8 +11,9 @@ use bevy::prelude::*;
 pub fn spawn_oob_colliders(
     world: &mut World
 ) {
-
+    // ToDo: implement
 }
+
 /// Spawns rapier collidables for the obstacles of a level, on adding obstacles
 ///
 /// Instead, by flagging the wall tiles and spawning the collisions later,
