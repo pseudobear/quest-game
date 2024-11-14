@@ -37,10 +37,9 @@ fn fists_activate_basic_attack (
     mut hitbox_thrower_query: Query<&mut HitboxThrower>
 ) {
     for ev in ev_activate_skill.read() {
-        if ev.skill != "basic_attack" {
+        if ev.skill != "fists_basic_attack" {
             continue;
         }
-        println!("got basic attack");
 
         let mut animatable = animatable_query.get_mut(ev.sprite_entity).unwrap();
         animatable.trigger_animation(ev.animation_index, ev.animation_lock);

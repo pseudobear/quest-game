@@ -5,9 +5,9 @@ pub mod components;
 
 use crate::loading::swordsmaster::SwordsMasterSpriteAssets;
 use crate::gameplay::player::components::{
-    PlayerAttributes,
-    PlayerPhysics,
-    PlayerSprite,
+    CharacterAttributes,
+    CharacterPhysics,
+    CharacterSprite,
     Facing,
     GroundStatus,
     rc_grounded,
@@ -69,21 +69,21 @@ impl Plugin for PlayerPlugin {
                 emit_ds_skill_activation,
 
                 (   // movement systems
-                    (grounded_movement, grounded_turn_player).run_if(rc_grounded::<PlayerPhysics>),
-                    (air_movement, air_turn_player).run_if(rc_air::<PlayerPhysics>),
+                    (grounded_movement, grounded_turn_player).run_if(rc_grounded::<CharacterPhysics>),
+                    (air_movement, air_turn_player).run_if(rc_air::<CharacterPhysics>),
                 ).run_if(in_state(PlayerMovementState::Free)).after(detect_grounded),
 
                 (   // grounded animation systems
                     idle_animation,
                     walk_animation,
                     run_animation,
-                ).run_if(rc_grounded::<PlayerPhysics>).after(grounded_movement),
+                ).run_if(rc_grounded::<CharacterPhysics>).after(grounded_movement),
 
                 (   // air animation systems
                     jump_animation,
                     jump_fall_transition_animation,
                     fall_animation,
-                ).run_if(rc_air::<PlayerPhysics>).after(air_movement),
+                ).run_if(rc_air::<CharacterPhysics>).after(air_movement),
 
            ).run_if(in_state(GameState::Playing))
         );
@@ -118,7 +118,7 @@ fn spawn_player(
             Velocity { ..Default::default() },
             CollidingEntities::default(),
             GroundStatus::default(),
-            PlayerPhysics,
+            CharacterPhysics,
         ))
         .with_children(|children| {
 
@@ -137,7 +137,7 @@ fn spawn_player(
                 },
                 player_animatable,
                 Facing::default(),
-                PlayerSprite,
+                CharacterSprite,
             ));
 
             // Gameplay attributes and inventory
@@ -145,7 +145,7 @@ fn spawn_player(
                 CharacterEquips { 
                     weapon: TESTING_SWORDS
                 },
-                PlayerAttributes,
+                CharacterAttributes,
             ));
         });
 }

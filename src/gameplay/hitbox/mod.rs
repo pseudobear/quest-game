@@ -112,7 +112,6 @@ fn execute_hitboxes(
         config.frame_timer.tick(time.delta());
 
         if config.frame_timer.just_finished() {
-            println!("{}",config.frame_index);
 
             // despawn expired hitboxes
             for (entity, hitbox) in hitbox_query.iter() {

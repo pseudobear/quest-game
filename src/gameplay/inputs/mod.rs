@@ -10,7 +10,7 @@ pub struct ActionsPlugin;
 // Actions can then be used as a resource in other systems to act on the player input.
 impl Plugin for ActionsPlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<Actions>().add_systems(
+        app.init_resource::<PlayerActions>().add_systems(
             Update, (
                 set_player_input.run_if(in_state(GameState::Playing)),
                 set_jump_input.run_if(in_state(GameState::Playing)),
@@ -23,13 +23,13 @@ impl Plugin for ActionsPlugin {
 // this should eventually contain skill inputs too (actions will handle keymapping)
 // for now, keys are hardcoded for skills
 #[derive(Default, Resource)]
-pub struct Actions {
+pub struct PlayerActions {
     pub player_input: Option<Vec2>,
     pub jump: bool,
 }
 
 pub fn set_player_input(
-    mut actions: ResMut<Actions>,
+    mut actions: ResMut<PlayerActions>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
 ) {
     let player_input = Vec2::new(
@@ -47,7 +47,7 @@ pub fn set_player_input(
 }
 
 pub fn set_jump_input(
-    mut actions: ResMut<Actions>,
+    mut actions: ResMut<PlayerActions>,
     keyboard_input: Res<ButtonInput<KeyCode>>
 ) {
     actions.jump = keyboard_input.just_pressed(KeyCode::Space);

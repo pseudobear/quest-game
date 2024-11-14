@@ -16,13 +16,13 @@ pub enum Facing {
 }
 
 #[derive(Component)]
-pub struct PlayerAttributes;
+pub struct CharacterAttributes;
 
 #[derive(Component)]
-pub struct PlayerPhysics;
+pub struct CharacterPhysics;
 
 #[derive(Component)]
-pub struct PlayerSprite;
+pub struct CharacterSprite;
 
 pub fn rc_grounded<T: Component>(ground_status_query: Query<&GroundStatus, With<T>>) -> bool {
     if let Ok(status) = ground_status_query.get_single() {
