@@ -3,13 +3,9 @@ pub mod components;
 
 use crate::loading::swordsmaster::SwordsMasterSpriteAssets;
 use crate::gameplay::characters::components::{
-    CharacterAttributes,
-    CharacterPhysics,
     CharacterPhysicsBundle,
     CharacterSpriteBundle,
     CharacterAttributesBundle,
-    rc_grounded,
-    rc_air,
 };
 use crate::gameplay::characters::systems::movement::{
     player_grounded_movement,

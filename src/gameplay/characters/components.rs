@@ -28,22 +28,6 @@ pub struct CharacterPhysics;
 #[derive(Component)]
 pub struct CharacterSprite;
 
-pub fn rc_grounded<T: Component>(ground_status_query: Query<&GroundStatus, With<T>>) -> bool {
-    if let Ok(status) = ground_status_query.get_single() {
-        *status == GroundStatus::Grounded
-    } else {
-        false
-    }
-}
-
-pub fn rc_air<T: Component>(ground_status_query: Query<&GroundStatus, With<T>>) -> bool {
-    if let Ok(status) = ground_status_query.get_single() {
-        *status == GroundStatus::Air
-    } else {
-        false
-    }
-}
-
 #[derive(Bundle)]
 pub struct CharacterPhysicsBundle {
     pub rigid_body: RigidBody,
