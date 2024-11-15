@@ -5,11 +5,11 @@ use crate::loading::swordsmaster::SwordsMasterSpriteAssets;
 use crate::gameplay::characters::components::{
     CharacterAttributes,
     CharacterPhysics,
-    rc_grounded,
-    rc_air,
     CharacterPhysicsBundle,
     CharacterSpriteBundle,
     CharacterAttributesBundle,
+    rc_grounded,
+    rc_air,
 };
 use crate::gameplay::characters::systems::movement::{
     player_grounded_movement,
@@ -49,6 +49,9 @@ enum PlayerMovementState {
     Freeze,
 }
 
+#[derive(Component)]
+pub struct PlayerPhysics;
+
 pub struct PlayerPlugin;
 
 /// This plugin handles player related stuff like movement
@@ -63,21 +66,21 @@ impl Plugin for PlayerPlugin {
                 emit_ds_skill_activation,
 
                 (   // movement systems
-                    (player_grounded_movement, grounded_turn_character).run_if(rc_grounded::<CharacterPhysics>),
-                    (player_air_movement, air_turn_character).run_if(rc_air::<CharacterPhysics>),
+                    (player_grounded_movement::<PlayerPhysics>, grounded_turn_character),
+                    (player_air_movement::<PlayerPhysics>, air_turn_character),
                 ).run_if(in_state(PlayerMovementState::Free)).after(detect_grounded),
 
                 (   // grounded animation systems
                     idle_animation,
                     walk_animation,
                     run_animation,
-                ).run_if(rc_grounded::<CharacterPhysics>).after(player_grounded_movement),
+                ).after(player_grounded_movement::<PlayerPhysics>),
 
                 (   // air animation systems
                     jump_animation,
                     jump_fall_transition_animation,
                     fall_animation,
-                ).run_if(rc_air::<CharacterPhysics>).after(player_air_movement),
+                ).after(player_air_movement::<PlayerPhysics>),
 
            ).run_if(in_state(GameState::Playing))
         );
@@ -100,7 +103,8 @@ fn spawn_player(
                 32.0 + screen_bottom_left.y as f32 + 12.0,
                 2.5
             )),
-            CharacterPhysicsBundle { ..Default::default() }
+            CharacterPhysicsBundle { ..Default::default() },
+            PlayerPhysics,
         ))
         .with_children(|children| {
             children.spawn(   // Animations, appearance and hitbox

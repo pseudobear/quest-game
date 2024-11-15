@@ -13,15 +13,18 @@ pub const MINIMUM_MOVEMENT: f32 = 0.2;
 const MAX_VELOCITY: f32 = 500.0;
 const MAX_VELOCITY_SQUARED: f32 = 250_000.0;
 
-const MAX_GROUNDED_VELOCITY: f32 = 100.0;
+// const MAX_GROUNDED_VELOCITY: f32 = 100.0;
 pub const MAX_GROUNDED_VELOCITY_SQUARED: f32 = 10_000.0;
 
-pub fn player_grounded_movement(
+pub fn player_grounded_movement<PlayerPhysics: Component>(
     actions: Res<PlayerActions>,
-    mut player_query: Query<(&mut ExternalImpulse, &Velocity), With<CharacterPhysics>>,
+    mut physics_query: Query<(&mut ExternalImpulse, &Velocity, &GroundStatus), With<PlayerPhysics>>,
 ) {
-    for (mut external_impulse, velocity) in &mut player_query {
-
+    for (mut external_impulse, velocity, ground_status) in &mut physics_query {
+        if *ground_status == GroundStatus::Air {
+            continue;
+        }
+        
         // Handle no directional input
         if actions.player_input.is_none() {
             // slow down in opposite direction 
@@ -45,11 +48,15 @@ pub fn player_grounded_movement(
     }
 }
 
-pub fn player_air_movement(
+pub fn player_air_movement<PlayerPhysics: Component>(
     actions: Res<PlayerActions>,
-    mut player_query: Query<(&mut ExternalImpulse, &mut ExternalForce), With<CharacterPhysics>>,
+    mut physics_query: Query<(&mut ExternalImpulse, &mut ExternalForce, &GroundStatus), With<PlayerPhysics>>,
 ) {
-    for (mut external_impulse, mut external_force) in &mut player_query {
+    for (mut external_impulse, mut external_force, ground_status) in &mut physics_query {
+        if *ground_status == GroundStatus::Grounded {
+            continue;
+        }
+
         external_impulse.impulse = Vec2::ZERO;
 
         // Handle no directional input
