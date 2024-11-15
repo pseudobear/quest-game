@@ -3,7 +3,6 @@ use crate::gameplay::characters::systems::movement::{
     MAX_GROUNDED_VELOCITY_SQUARED,
     MINIMUM_MOVEMENT,
 };
-use crate::gameplay::characters::PlayerMovementState;
 use crate::gameplay::characters::components::{
     CharacterPhysics,
     CharacterSprite,
@@ -17,7 +16,6 @@ pub const WALK_VELOCITY_PERCENTAGE: f32 = 0.5;
 pub const JUMP_FALL_TRANSITION_VELOCITY: f32 = 30.0;
 
 pub fn idle_animation(
-    mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<CharacterSprite>>,
     physics_query: Query<(&Velocity, &GroundStatus), With<CharacterPhysics>>,
 ) {
@@ -30,15 +28,12 @@ pub fn idle_animation(
 
                 // play idle animation
                 animatable.trigger_animation(0, false);
-
-                next_state.set(PlayerMovementState::Free);
             }
         }
     }
 }
 
 pub fn walk_animation(
-    mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<CharacterSprite>>,
     physics_query: Query<(&Velocity, &GroundStatus), With<CharacterPhysics>>,
 ) {
@@ -53,15 +48,12 @@ pub fn walk_animation(
 
                 // play walk animation
                 animatable.trigger_animation(1, false);
-
-                next_state.set(PlayerMovementState::Free);
             }
         }
     }
 }
 
 pub fn run_animation(
-    mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<CharacterSprite>>,
     physics_query: Query<(&Velocity, &GroundStatus), With<CharacterPhysics>>,
 ) {
@@ -75,15 +67,12 @@ pub fn run_animation(
 
                 // play run animation
                 animatable.trigger_animation(2, false);
-
-                next_state.set(PlayerMovementState::Free);
             }
         }
     }
 }
 
 pub fn jump_animation(
-    mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<CharacterSprite>>,
     physics_query: Query<(&Velocity, &GroundStatus), With<CharacterPhysics>>,
 ) {
@@ -97,15 +86,12 @@ pub fn jump_animation(
 
                 // play jump animation
                 animatable.trigger_animation(4, false);
-
-                next_state.set(PlayerMovementState::Free);
             }
         }
     }
 }
 
 pub fn jump_fall_transition_animation(
-    mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<CharacterSprite>>,
     physics_query: Query<(&Velocity, &GroundStatus), With<CharacterPhysics>>,
 ) {
@@ -120,15 +106,12 @@ pub fn jump_fall_transition_animation(
 
                 // play jump animation
                 animatable.trigger_animation(5, false);  // don't lock, but don't play fall while this is playing
-
-                next_state.set(PlayerMovementState::Free);
             }
         }
     }
 }
 
 pub fn fall_animation(
-    mut next_state: ResMut<NextState<PlayerMovementState>>,
     mut animatable_query: Query<&mut Animatable, With<CharacterSprite>>,
     physics_query: Query<(&Velocity, &GroundStatus), With<CharacterPhysics>>,
 ) {
@@ -143,8 +126,6 @@ pub fn fall_animation(
 
                 // play jump animation
                 animatable.trigger_animation(6, false);
-
-                next_state.set(PlayerMovementState::Free);
             }
         }
     }

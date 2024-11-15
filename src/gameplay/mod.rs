@@ -7,7 +7,7 @@ mod items;
 mod skills;
 mod hitbox;
 use crate::GameState;
-use crate::gameplay::characters::PlayerPlugin;
+use crate::gameplay::characters::CharacterPlugin;
 use crate::gameplay::inputs::ActionsPlugin;
 use crate::gameplay::audio::InternalAudioPlugin;
 use crate::gameplay::maps::MapsPlugin;
@@ -48,7 +48,7 @@ impl Plugin for GameplayPlugin {
            .add_plugins((
                 ActionsPlugin,
                 InternalAudioPlugin,
-                PlayerPlugin,
+                CharacterPlugin,
                 MapsPlugin,
                 ItemsPlugin,
                 SkillsPlugin,
