@@ -1,12 +1,12 @@
 use crate::gameplay::skills::events::ActivateSkillEvent;
-use crate::gameplay::player::components::{
+use crate::gameplay::characters::components::{
     CharacterPhysics,
     CharacterSprite,
 };
 use bevy::prelude::*;
 
 
-pub fn emit_ds_skill_activation(
+pub fn player_emit_ds_skill_activation(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut ev_activate_skill: EventWriter<ActivateSkillEvent>,
     player_entity_query: Query<Entity, With<CharacterPhysics>>,

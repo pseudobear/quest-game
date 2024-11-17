@@ -1,47 +1,22 @@
-mod movement_systems;
-mod animation_systems;
-mod event_systems;
-pub mod components;
-
 use crate::loading::swordsmaster::SwordsMasterSpriteAssets;
-use crate::gameplay::player::components::{
-    CharacterAttributes,
-    CharacterPhysics,
-    CharacterSprite,
-    Facing,
-    GroundStatus,
-    rc_grounded,
-    rc_air,
+use crate::gameplay::characters::components::{
+    CharacterPhysicsBundle,
+    CharacterSpriteBundle,
+    CharacterAttributesBundle,
 };
-use crate::gameplay::player::movement_systems::{
+use crate::gameplay::characters::systems::movement::{
     player_grounded_movement,
     player_air_movement,
-    detect_grounded,
 };
-use crate::gameplay::player::animation_systems::{
-    idle_animation,
-    walk_animation,
-    run_animation,
-    jump_animation,
-    fall_animation,
-    jump_fall_transition_animation,
-    air_turn_character,
-    grounded_turn_character,
-};
-use crate::gameplay::player::event_systems::{
-    emit_ds_skill_activation,
+use crate::gameplay::characters::systems::event::{
+    player_emit_ds_skill_activation,
 };
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
 use crate::animations::{ Animatable, AnimationConfig };
 use crate::gameplay::items::CharacterEquips;
-use crate::gameplay::items::weapons::{
-    TESTING_SWORDS,
-    BARE_FISTS,
-};
-use bevy_rapier2d::prelude::*;
+use crate::gameplay::items::weapons::TESTING_SWORDS;
 use bevy::prelude::*;
-use movement_systems::limit_velocity;
 
 #[derive(SubStates, Default, Clone, Eq, PartialEq, Debug, Hash)]
 #[source(GameState = GameState::Playing)]
@@ -55,6 +30,9 @@ enum PlayerMovementState {
     Freeze,
 }
 
+#[derive(Component)]
+pub struct PlayerPhysics;
+
 pub struct PlayerPlugin;
 
 /// This plugin handles player related stuff like movement
@@ -64,27 +42,11 @@ impl Plugin for PlayerPlugin {
         app.add_sub_state::<PlayerMovementState>()
            .add_systems(OnEnter(GameState::Playing), spawn_player)
            .add_systems(Update, (
-                detect_grounded,
-                limit_velocity,
-                emit_ds_skill_activation,
-
+                player_emit_ds_skill_activation,
                 (   // movement systems
-                    (player_grounded_movement, grounded_turn_character).run_if(rc_grounded::<CharacterPhysics>),
-                    (player_air_movement, air_turn_character).run_if(rc_air::<CharacterPhysics>),
-                ).run_if(in_state(PlayerMovementState::Free)).after(detect_grounded),
-
-                (   // grounded animation systems
-                    idle_animation,
-                    walk_animation,
-                    run_animation,
-                ).run_if(rc_grounded::<CharacterPhysics>).after(player_grounded_movement),
-
-                (   // air animation systems
-                    jump_animation,
-                    jump_fall_transition_animation,
-                    fall_animation,
-                ).run_if(rc_air::<CharacterPhysics>).after(player_air_movement),
-
+                    player_grounded_movement::<PlayerPhysics>,
+                    player_air_movement::<PlayerPhysics>,
+                ).run_if(in_state(PlayerMovementState::Free)),
            ).run_if(in_state(GameState::Playing))
         );
     }
@@ -101,52 +63,32 @@ fn spawn_player(
 
     commands
         .spawn((
-            RigidBody::Dynamic,
             TransformBundle::from(Transform::from_xyz(
                 10.0 + screen_bottom_left.x as f32 + 20.0,
                 32.0 + screen_bottom_left.y as f32 + 12.0,
                 2.5
             )),
-            Collider::capsule_y(6.0, 6.0),
-            GravityScale(2.0),
-            LockedAxes::ROTATION_LOCKED,
-            ActiveEvents::COLLISION_EVENTS,
-            // markers to access rigidbody attributes
-            ExternalForce { ..Default::default() },
-            ExternalImpulse { ..Default::default() },
-            Damping { ..Default::default() },
-            Velocity { ..Default::default() },
-            CollidingEntities::default(),
-            GroundStatus::default(),
-            CharacterPhysics,
+            CharacterPhysicsBundle { ..Default::default() },
+            PlayerPhysics,
         ))
         .with_children(|children| {
-
-            // Animations, appearance and hitbox
-            children.spawn((
-                SpriteBundle {
-                    texture: player_sprite.sheet.clone(),
-                    transform: Transform::from_translation(Vec3::new(
+            children.spawn(   // Animations, appearance and hitbox
+                CharacterSpriteBundle::new(
+                    Transform::from_translation(Vec3::new(
                         17.0, 3.0, 0.
                     )),
+                    player_sprite.sheet.clone(),
+                    player_animatable
+                ),
+            );
+            children.spawn(   // Gameplay attributes and inventory
+                CharacterAttributesBundle {
+                    character_equips: CharacterEquips { 
+                        weapon: TESTING_SWORDS
+                    },
                     ..Default::default()
-                },
-                TextureAtlas {
-                    layout: player_animatable.animations[0].atlas_layout.clone(),
-                    index: player_animatable.animations[0].first_sprite_index,
-                },
-                player_animatable,
-                Facing::default(),
-                CharacterSprite,
-            ));
-
-            // Gameplay attributes and inventory
-            children.spawn((
-                CharacterEquips { 
-                    weapon: TESTING_SWORDS
-                },
-                CharacterAttributes,
-            ));
+                }
+            );
         });
 }
 
