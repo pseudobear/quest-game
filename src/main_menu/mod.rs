@@ -1,6 +1,6 @@
 mod start_menu;
 mod options;
-mod button;
+mod buttons;
 
 use crate::GameState;
 use crate::main_menu::start_menu::StartMenuPlugin;
@@ -40,21 +40,5 @@ fn setup_menu(mut commands: Commands) {
 fn cleanup_menu(mut commands: Commands, menu: Query<Entity, With<MainMenu>>) {
     for entity in menu.iter() {
         commands.entity(entity).despawn_recursive();
-    }
-}
-
-
-#[derive(Component)]
-struct ButtonColors {
-    normal: Color,
-    hovered: Color,
-}
-
-impl Default for ButtonColors {
-    fn default() -> Self {
-        ButtonColors {
-            normal: Color::linear_rgb(-1.15, 0.15, 0.15),
-            hovered: Color::linear_rgb(-1.25, 0.25, 0.25),
-        }
     }
 }

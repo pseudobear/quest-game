@@ -1,5 +1,3 @@
-
-use crate::main_menu::ButtonColors;
 use bevy::prelude::*;
 
 const BUTTON_PADDING: f32 = 5.;
@@ -30,4 +28,19 @@ pub fn menu_button_text(text: &str) -> TextBundle {
             ..default()
         }
     )
+}
+
+#[derive(Component)]
+pub struct ButtonColors {
+    pub normal: Color,
+    pub hovered: Color,
+}
+
+impl Default for ButtonColors {
+    fn default() -> Self {
+        ButtonColors {
+            normal: Color::linear_rgb(-2.15, 0.15, 0.15),
+            hovered: Color::linear_rgb(-2.25, 0.25, 0.25),
+        }
+    }
 }
