@@ -6,6 +6,7 @@ mod resources;
 mod items;
 mod skills;
 mod hitbox;
+mod ui;
 use crate::GameState;
 use crate::gameplay::characters::CharacterPlugin;
 use crate::gameplay::inputs::ActionsPlugin;
@@ -15,6 +16,7 @@ use crate::gameplay::resources::ScreenBottomLeft;
 use crate::gameplay::items::ItemsPlugin;
 use crate::gameplay::skills::SkillsPlugin;
 use crate::gameplay::hitbox::HitboxPlugin;
+use crate::gameplay::ui::GameUiPlugin;
 use bevy_rapier2d::prelude::*;
 use bevy::prelude::*;
 
@@ -53,6 +55,7 @@ impl Plugin for GameplayPlugin {
                 ItemsPlugin,
                 SkillsPlugin,
                 HitboxPlugin,
+                GameUiPlugin,
             ))
            .add_systems(OnExit(GameState::Playing), cleanup_gameplay);
     }

@@ -6,6 +6,7 @@ use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy::winit::WinitWindows;
 use bevy::DefaultPlugins;
+use bevy_tweening::TweeningPlugin;
 use quest_game::GamePlugin; 
 use std::io::Cursor;
 use winit::window::Icon;
@@ -35,6 +36,7 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_plugins(GamePlugin)
+        .add_plugins(TweeningPlugin)
         .add_systems(Startup, set_window_icon)
         .run();
 }
