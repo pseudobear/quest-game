@@ -29,7 +29,7 @@ fn setup_game_ui(mut commands: Commands) {
                 width: Val::Percent(100.0),
                 height: Val::Percent(100.0),
                 flex_direction: FlexDirection::Row,
-                align_items: AlignItems::End,
+                align_items: AlignItems::Start,
                 justify_content: JustifyContent::Center,
                 ..default()
             },
@@ -44,7 +44,7 @@ fn setup_game_ui(mut commands: Commands) {
                 width: Val::Percent(100.0),
                 height: Val::Percent(100.0),
                 flex_direction: FlexDirection::Row,
-                align_items: AlignItems::Start,
+                align_items: AlignItems::End,
                 justify_content: JustifyContent::Center,
                 ..default()
             },
