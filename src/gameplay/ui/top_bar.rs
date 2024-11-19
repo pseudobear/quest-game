@@ -19,6 +19,7 @@ pub struct GameUiTopBarCenter;
 #[derive(Component)]
 pub struct GameUiTopBarRight;
 
+
 pub struct TopBarPlugin;
 
 // This plugin is responsible to control the game audio
