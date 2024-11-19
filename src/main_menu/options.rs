@@ -1,7 +1,7 @@
 use crate::GameState;
-use crate::main_menu::ButtonColors;
+use crate::main_menu::buttons::ButtonColors;
 use crate::main_menu::MainMenuState;
-use crate::main_menu::button::*;
+use crate::main_menu::buttons::*;
 use bevy::prelude::*;
 
 pub struct OptionsMenuPlugin;

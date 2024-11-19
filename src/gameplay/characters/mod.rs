@@ -47,5 +47,3 @@ impl Plugin for CharacterPlugin {
         );
     }
 }
-
-// Todo: Confirm if that jumping bug exists pre-refactor 
