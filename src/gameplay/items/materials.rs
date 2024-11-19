@@ -5,5 +5,6 @@ use bevy::prelude::*;
 pub enum MaterialType{}
 
 pub struct Material {
-    pub material_type: MaterialType
+    pub material_type: MaterialType,
+    pub num_stacked: u8,
 }

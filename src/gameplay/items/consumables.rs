@@ -5,5 +5,6 @@ use bevy::prelude::*;
 pub enum ConsumableType{}
 
 pub struct Consumable {
-    pub consumable_type: ConsumableType
+    pub consumable_type: ConsumableType,
+    pub num_stacked: u8,
 }

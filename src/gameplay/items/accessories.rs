@@ -5,5 +5,5 @@ use bevy::prelude::*;
 pub enum AccessoryType{}
 
 pub struct Accessory {
-    pub accessory_type: AccessoryType 
+    pub accessory_type: AccessoryType
 }
