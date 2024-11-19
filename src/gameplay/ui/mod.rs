@@ -36,7 +36,6 @@ fn setup_game_ui(mut commands: Commands) {
                 margin: UiRect{ top: Val::Px(10.0), ..Default::default() },
                 ..default()
             },
-            background_color: BackgroundColor(Color::WHITE),
             ..default()
         },
         GameUi,
@@ -55,7 +54,6 @@ fn setup_game_ui(mut commands: Commands) {
                 margin: UiRect{ bottom: Val::Px(10.0), ..Default::default() },
                 ..default()
             },
-            background_color: BackgroundColor(Color::WHITE),
             ..default()
         },
         GameUi,

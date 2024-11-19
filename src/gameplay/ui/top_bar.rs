@@ -41,7 +41,6 @@ fn setup_top_bar(mut commands: Commands, top_bar: Query<Entity, With<GameUiTopBa
                 justify_content: JustifyContent::SpaceBetween,
                 ..default()
             },
-            background_color: BackgroundColor(Color::BLACK),
             ..default()
         },
         GameUiTopBarLeft,
@@ -56,7 +55,6 @@ fn setup_top_bar(mut commands: Commands, top_bar: Query<Entity, With<GameUiTopBa
                 justify_content: JustifyContent::SpaceEvenly,
                 ..default()
             },
-            background_color: BackgroundColor(Color::BLACK),
             ..default()
         },
         GameUiTopBarCenter,
@@ -71,7 +69,6 @@ fn setup_top_bar(mut commands: Commands, top_bar: Query<Entity, With<GameUiTopBa
                 justify_content: JustifyContent::SpaceBetween,
                 ..default()
             },
-            background_color: BackgroundColor(Color::BLACK),
             ..default()
         },
         GameUiTopBarRight,

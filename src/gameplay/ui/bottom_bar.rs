@@ -42,7 +42,6 @@ fn setup_bottom_bar(mut commands: Commands, bottom_bar: Query<Entity, With<GameU
                 justify_content: JustifyContent::SpaceBetween,
                 ..default()
             },
-            background_color: BackgroundColor(Color::BLACK),
             ..default()
         },
         GameUiBottomBarLeft,
@@ -57,7 +56,6 @@ fn setup_bottom_bar(mut commands: Commands, bottom_bar: Query<Entity, With<GameU
                 justify_content: JustifyContent::SpaceEvenly,
                 ..default()
             },
-            background_color: BackgroundColor(Color::BLACK),
             ..default()
         },
         GameUiBottomBarCenter,
@@ -72,7 +70,6 @@ fn setup_bottom_bar(mut commands: Commands, bottom_bar: Query<Entity, With<GameU
                 justify_content: JustifyContent::SpaceBetween,
                 ..default()
             },
-            background_color: BackgroundColor(Color::BLACK),
             ..default()
         },
         GameUiBottomBarRight,
