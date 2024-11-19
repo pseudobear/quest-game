@@ -26,13 +26,17 @@ fn setup_game_ui(mut commands: Commands) {
     commands.spawn((
         NodeBundle {
             style: Style {
-                width: Val::Percent(100.0),
-                height: Val::Percent(100.0),
+                width: Val::Percent(98.0),
+                height: Val::Percent(12.0),
+                align_self: AlignSelf::Start,
+                justify_self: JustifySelf::Center,
                 flex_direction: FlexDirection::Row,
                 align_items: AlignItems::Start,
-                justify_content: JustifyContent::Center,
+                justify_content: JustifyContent::SpaceBetween,
+                margin: UiRect{ top: Val::Px(10.0), ..Default::default() },
                 ..default()
             },
+            background_color: BackgroundColor(Color::WHITE),
             ..default()
         },
         GameUi,
@@ -41,13 +45,17 @@ fn setup_game_ui(mut commands: Commands) {
     commands.spawn((
         NodeBundle {
             style: Style {
-                width: Val::Percent(100.0),
-                height: Val::Percent(100.0),
+                width: Val::Percent(98.0),
+                height: Val::Percent(12.0),
+                align_self: AlignSelf::End,
+                justify_self: JustifySelf::Center,
                 flex_direction: FlexDirection::Row,
                 align_items: AlignItems::End,
-                justify_content: JustifyContent::Center,
+                justify_content: JustifyContent::SpaceBetween,
+                margin: UiRect{ bottom: Val::Px(10.0), ..Default::default() },
                 ..default()
             },
+            background_color: BackgroundColor(Color::WHITE),
             ..default()
         },
         GameUi,
