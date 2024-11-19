@@ -7,6 +7,7 @@ use crate::gameplay::characters::components::{
 use crate::gameplay::characters::systems::movement::{
     player_grounded_movement,
     player_air_movement,
+    detect_grounded,
 };
 use crate::gameplay::characters::systems::event::{
     player_emit_ds_skill_activation,
@@ -46,7 +47,7 @@ impl Plugin for PlayerPlugin {
                 (   // movement systems
                     player_grounded_movement::<PlayerPhysics>,
                     player_air_movement::<PlayerPhysics>,
-                ).run_if(in_state(PlayerMovementState::Free)),
+                ).run_if(in_state(PlayerMovementState::Free)).after(detect_grounded),
            ).run_if(in_state(GameState::Playing))
         );
     }
