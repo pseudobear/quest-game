@@ -1,4 +1,3 @@
-mod button;
 mod top_bar;
 mod bottom_bar;
 mod elements;

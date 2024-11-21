@@ -4,11 +4,13 @@ mod loading;
 mod main_menu;
 mod gameplay;
 mod animations;
+mod ui;
 
 use crate::loading::LoadingPlugin;
 use crate::main_menu::MainMenuPlugin;
 use crate::gameplay::GameplayPlugin;
 use crate::animations::AnimationPlugin;
+use crate::ui::UiPlugin;
 
 use bevy::app::App;
 #[cfg(debug_assertions)]
@@ -38,6 +40,7 @@ impl Plugin for GamePlugin {
             MainMenuPlugin,
             GameplayPlugin,
             AnimationPlugin,
+            UiPlugin,
         ));
 
         #[cfg(debug_assertions)]
