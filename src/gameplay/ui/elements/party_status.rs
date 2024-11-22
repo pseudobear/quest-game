@@ -1,3 +1,7 @@
+use crate::ui::bars::{
+    Bar,
+    spawn_bar,
+};
 use bevy::prelude::*;
 
 
@@ -32,7 +36,16 @@ pub fn setup_player_status_group(commands: &mut Commands, parent: Entity) -> Ent
     return party_status_group;
 }
 
-// TODO: build a progress bar bundle, 
 pub fn spawn_character_status(commands: &mut Commands, parent_node: Entity) {
+    let mut health_bar = Bar::new_single(
+        Vec2::new(300.0, 50.0),
+        Color::linear_rgb(255., 0., 0.),
+        Color::linear_rgb(10., 10., 200.),
+    );
 
+    health_bar.add_section(5, Color::linear_rgb(0.,0.,255.));
+    health_bar.set_progress(0.95);
+    
+
+    spawn_bar(commands, health_bar, parent_node);
 }
