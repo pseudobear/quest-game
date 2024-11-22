@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use crate::gameplay::GameState;
 use crate::gameplay::ui::setup_game_ui;
-use crate::gameplay::ui::button::{
+use crate::ui::buttons::{
     ui_button,
     ButtonColors,
     ui_button_text,

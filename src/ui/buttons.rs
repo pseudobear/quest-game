@@ -4,6 +4,37 @@ const BUTTON_PADDING: f32 = 5.;
 const FONT_SIZE: f32 = 40.0;
 const FONT_COLOR: Color = Color::linear_rgb(0.9, 0.9, 0.9);
 
+pub struct UiButtonPlugin;
+
+impl Plugin for UiButtonPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Update, hover_button);
+    }
+}
+
+fn hover_button(
+    mut interaction_query: Query<
+        (
+            &Interaction,
+            &mut BackgroundColor,
+            &ButtonColors,
+        ),
+        (Changed<Interaction>, With<Button>),
+    >,
+) {
+    for (interaction, mut color, button_colors) in &mut interaction_query {
+        match *interaction {
+            Interaction::Hovered => {
+                *color = button_colors.hovered.into();
+            }
+            Interaction::None => {
+                *color = button_colors.normal.into();
+            }
+            _ => {}
+        }
+    }
+}
+
 pub fn ui_button(width: f32, height: f32) -> ButtonBundle {
     ButtonBundle {
         style: Style {

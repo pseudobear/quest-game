@@ -1,7 +1,14 @@
 use crate::GameState;
-use crate::main_menu::buttons::ButtonColors;
-use crate::main_menu::MainMenuState;
-use crate::main_menu::buttons::*;
+use crate::main_menu::{
+    MainMenuState,
+    ChangeGameState,
+    ChangeMenuState,
+};
+use crate::ui::buttons::{
+    ui_button,
+    ui_button_text,
+    ButtonColors,
+};
 use bevy::prelude::*;
 
 pub struct StartMenuPlugin;
@@ -11,7 +18,6 @@ pub struct StartMenuPlugin;
 impl Plugin for StartMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(MainMenuState::StartMenu), setup_menu)
-           .add_systems(Update, click_play_button.run_if(in_state(MainMenuState::StartMenu)))
            .add_systems(OnExit(MainMenuState::StartMenu), cleanup_menu);
     }
 }
@@ -40,66 +46,26 @@ fn setup_menu(mut commands: Commands) {
             let button_colors = ButtonColors::default();
             children
                 .spawn((
-                    menu_button(140.0, 50.0),
+                    ui_button(140.0, 50.0),
                     button_colors,
                     ChangeGameState(GameState::Playing),  // attach component to specify interaction with button
                 ))
                 .with_children(|parent| {
-                    parent.spawn(menu_button_text("play"));
+                    parent.spawn(ui_button_text("play"));
                 });
         })
         .with_children(|children| {
             let button_colors = ButtonColors::default();
             children
                 .spawn((
-                    menu_button(140.0, 50.0),
+                    ui_button(140.0, 50.0),
                     button_colors,
                     ChangeMenuState(MainMenuState::OptionsMenu),
                 ))
                 .with_children(|parent| {
-                    parent.spawn(menu_button_text("options"));
+                    parent.spawn(ui_button_text("options"));
                 });
         });
-}
-
-#[derive(Component)]
-struct ChangeGameState(GameState);
-
-#[derive(Component)]
-struct ChangeMenuState(MainMenuState);
-
-fn click_play_button(
-    mut next_game_state: ResMut<NextState<GameState>>,
-    mut next_menu_state: ResMut<NextState<MainMenuState>>,
-    mut interaction_query: Query<
-        (
-            &Interaction,
-            &mut BackgroundColor,
-            &ButtonColors,
-            Option<&ChangeGameState>,
-            Option<&ChangeMenuState>,
-        ),
-        (Changed<Interaction>, With<Button>),
-    >,
-) {
-    for (interaction, mut color, button_colors, change_game_state, change_menu_state) in &mut interaction_query {
-        match *interaction {
-            Interaction::Pressed => {
-                if let Some(state) = change_game_state {
-                    next_game_state.set(state.0.clone());
-                } 
-                if let Some(state) = change_menu_state {
-                    next_menu_state.set(state.0.clone());
-                } 
-            }
-            Interaction::Hovered => {
-                *color = button_colors.hovered.into();
-            }
-            Interaction::None => {
-                *color = button_colors.normal.into();
-            }
-        }
-    }
 }
 
 fn cleanup_menu(mut commands: Commands, start_menu: Query<Entity, With<StartMenu>>) {

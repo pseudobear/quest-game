@@ -1,10 +1,16 @@
 use bevy::prelude::*;
+use crate::gameplay::characters::player;
 use crate::gameplay::GameState;
 use crate::gameplay::ui::setup_game_ui;
-use crate::gameplay::ui::button::{
+use crate::gameplay::ui::elements::party_status::{
+    setup_player_status_group
+};
+use crate::ui::buttons::{
     ui_button,
     ButtonColors,
 };
+
+use super::elements::party_status::spawn_character_status;
 
 
 #[derive(Component)]
@@ -36,9 +42,9 @@ fn setup_top_bar(mut commands: Commands, top_bar: Query<Entity, With<GameUiTopBa
             style: Style {
                 width: Val::Percent(25.0),
                 height: Val::Percent(100.0),
-                flex_direction: FlexDirection::Row,
+                flex_direction: FlexDirection::Column,
                 align_items: AlignItems::Start,
-                justify_content: JustifyContent::SpaceBetween,
+                justify_content: JustifyContent::Start,
                 ..default()
             },
             ..default()
@@ -80,16 +86,16 @@ fn setup_top_bar(mut commands: Commands, top_bar: Query<Entity, With<GameUiTopBa
     populate_right_group(&mut commands, right_group);
 }
 
-fn populate_left_group(commands: &mut Commands, left_group: Entity) {
+fn populate_left_group(mut commands: &mut Commands, left_group: Entity) {
     let test_button = commands.spawn((
         ui_button(140.0, 50.0),
         ButtonColors::default(),
     )).id();
-    let test_button_left = commands.spawn((
-        ui_button(140.0, 50.0),
-        ButtonColors::default(),
-    )).id();
-    commands.entity(left_group).push_children(&[test_button, test_button_left]);
+
+    let player_status_group = setup_player_status_group(&mut commands, left_group);
+    spawn_character_status(&mut commands, player_status_group);
+
+    commands.entity(left_group).push_children(&[test_button]);
 }
 
 fn populate_center_group(commands: &mut Commands, center_group: Entity) {

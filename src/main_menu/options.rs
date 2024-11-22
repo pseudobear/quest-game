@@ -1,7 +1,13 @@
 use crate::GameState;
-use crate::main_menu::buttons::ButtonColors;
-use crate::main_menu::MainMenuState;
-use crate::main_menu::buttons::*;
+use crate::main_menu::{
+    MainMenuState,
+    ChangeGameState,
+};
+use crate::ui::buttons::{
+    ui_button,
+    ui_button_text,
+    ButtonColors,
+};
 use bevy::prelude::*;
 
 pub struct OptionsMenuPlugin;
@@ -11,7 +17,6 @@ pub struct OptionsMenuPlugin;
 impl Plugin for OptionsMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(MainMenuState::OptionsMenu), setup_menu)
-           .add_systems(Update, click_play_button.run_if(in_state(MainMenuState::OptionsMenu)))
            .add_systems(OnExit(MainMenuState::OptionsMenu), cleanup_menu);
     }
 }
@@ -40,46 +45,14 @@ fn setup_menu(mut commands: Commands) {
             let button_colors = ButtonColors::default();
             children
                 .spawn((
-                    menu_button(140.0, 50.0),
+                    ui_button(140.0, 50.0),
                     button_colors,
-                    ChangeState(GameState::Playing),  // attach component to specify interaction with button
+                    ChangeGameState(GameState::Playing),  // attach component to specify interaction with button
                 ))
                 .with_children(|parent| {
-                    parent.spawn(menu_button_text("play, but from options :)"));
+                    parent.spawn(ui_button_text("play, but from options :)"));
                 });
         });
-}
-
-#[derive(Component)]
-struct ChangeState(GameState);
-
-fn click_play_button(
-    mut next_state: ResMut<NextState<GameState>>,
-    mut interaction_query: Query<
-        (
-            &Interaction,
-            &mut BackgroundColor,
-            &ButtonColors,
-            Option<&ChangeState>,
-        ),
-        (Changed<Interaction>, With<Button>),
-    >,
-) {
-    for (interaction, mut color, button_colors, change_state) in &mut interaction_query {
-        match *interaction {
-            Interaction::Pressed => {
-                if let Some(state) = change_state {
-                    next_state.set(state.0.clone());
-                } 
-            }
-            Interaction::Hovered => {
-                *color = button_colors.hovered.into();
-            }
-            Interaction::None => {
-                *color = button_colors.normal.into();
-            }
-        }
-    }
 }
 
 fn cleanup_menu(mut commands: Commands, start_menus: Query<Entity, With<StartMenu>>) {

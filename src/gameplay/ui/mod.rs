@@ -1,6 +1,6 @@
-mod button;
 mod top_bar;
 mod bottom_bar;
+mod elements;
 
 use crate::gameplay::ui::bottom_bar::{ GameUiBottomBar, BottomBarPlugin};
 use crate::gameplay::ui::top_bar::{ GameUiTopBar, TopBarPlugin };
@@ -27,7 +27,7 @@ fn setup_game_ui(mut commands: Commands) {
         NodeBundle {
             style: Style {
                 width: Val::Percent(98.0),
-                height: Val::Percent(12.0),
+                height: Val::Percent(50.0),
                 align_self: AlignSelf::Start,
                 justify_self: JustifySelf::Center,
                 flex_direction: FlexDirection::Row,
@@ -45,7 +45,7 @@ fn setup_game_ui(mut commands: Commands) {
         NodeBundle {
             style: Style {
                 width: Val::Percent(98.0),
-                height: Val::Percent(12.0),
+                height: Val::Percent(50.0),
                 align_self: AlignSelf::End,
                 justify_self: JustifySelf::Center,
                 flex_direction: FlexDirection::Row,
