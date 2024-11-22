@@ -134,7 +134,11 @@ impl Bar {
         self
     }
 
-    pub fn is_finished(&self) -> bool {
+    pub fn is_empty(&self) -> bool {
+        self.progress <= 0.0
+    }
+
+    pub fn is_full(&self) -> bool {
         self.progress >= 1.0
     }
 
