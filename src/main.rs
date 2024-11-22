@@ -6,6 +6,7 @@ use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy::winit::WinitWindows;
 use bevy::DefaultPlugins;
+use bevy_pkv::PkvStore;
 use bevy_tweening::TweeningPlugin;
 use quest_game::GamePlugin; 
 use std::io::Cursor;
@@ -15,6 +16,7 @@ fn main() {
     App::new()
         .insert_resource(Msaa::Off)
         .insert_resource(ClearColor(Color::linear_rgb(0.4, 0.4, 0.4)))
+        .insert_resource(PkvStore::new("QUEST_GAME_TESTING", "QuestGame"))
         .add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {
