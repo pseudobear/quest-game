@@ -47,7 +47,6 @@ fn setup_top_bar(mut commands: Commands, top_bar: Query<Entity, With<GameUiTopBa
                 justify_content: JustifyContent::Start,
                 ..default()
             },
-            background_color: BackgroundColor(Color::WHITE),
             ..default()
         },
         GameUiTopBarLeft,

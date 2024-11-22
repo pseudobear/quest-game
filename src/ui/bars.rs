@@ -33,12 +33,19 @@ fn update_bar(
     } 
 }
 
-pub fn spawn_bar(commands: &mut Commands, bar: Bar, parent: Entity) {
+pub fn spawn_bar(
+    commands: &mut Commands,
+    bar: Bar,
+    parent: Entity,
+    margin_vert: Val,
+    margin_hor: Val,
+) {
     let bar = commands.spawn((
         NodeBundle {
             style: Style {
                 width: Val::Px(bar.dimensions.x),
                 height: Val::Px(bar.dimensions.y),
+                margin: UiRect::axes(margin_hor, margin_vert),
                 ..default()
             },
             background_color: bar.empty_color.into(),
