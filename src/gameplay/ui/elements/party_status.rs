@@ -43,6 +43,9 @@ pub fn setup_player_status_group(commands: &mut Commands, parent: Entity) -> Ent
     return party_status_group;
 }
 
+/// TODO: spawn for given player and implement update to sync this to HP once it exists
+/// Also need to attach identifier components to each of the entities to allow it to be updated
+/// with the correct values and despawned when character leaves party
 pub fn spawn_character_status(commands: &mut Commands, parent_node: Entity) {
     let mut health_bar = Bar::new_single(
         Vec2::new(STATUS_BAR_LENGTH, STATUS_BAR_HEIGHT),
