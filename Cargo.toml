@@ -69,6 +69,8 @@ rand = { version = "0.8.3" }
 webbrowser = { version = "1", features = ["hardened"] }
 bevy_rapier2d = { version = "0.27.0", features = ["debug-render-2d"] }
 bevy_tweening = "0.11"
+bevy_pkv = "0.11.1"
+serde = "1.0.215"
 
 # keep the following in sync with Bevy's dependencies
 winit = { version = "0.30", default-features = false }

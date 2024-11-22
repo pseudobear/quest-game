@@ -1,8 +1,9 @@
 use crate::gameplay::items::Item;
 use bevy::prelude::*;
+use serde::{Deserialize, Serialize};
 
 
-#[derive(Resource)]
+#[derive(Resource, Serialize, Deserialize)]
 pub struct PlayerInventory {
     inventory: Vec<Item>,
     used_space: usize,

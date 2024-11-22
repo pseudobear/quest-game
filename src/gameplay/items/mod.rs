@@ -12,6 +12,7 @@ use crate::gameplay::items::consumables::Consumable;
 use crate::gameplay::items::materials::Material;
 use crate::gameplay::items::player_inventory::PlayerInventoryPlugin;
 use bevy::prelude::*;
+use serde::{Deserialize, Serialize};
 
 
 pub struct ItemsPlugin;
@@ -26,6 +27,7 @@ impl Plugin for ItemsPlugin {
     }
 }
 
+#[derive(Serialize, Deserialize)]
 pub enum Item {
     Weapon(Weapon),
     Armor(Armor),
