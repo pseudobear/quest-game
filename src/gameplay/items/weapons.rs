@@ -8,7 +8,7 @@ pub enum WeaponType {
     Fists,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Weapon {
     pub weapon_type: WeaponType
 }

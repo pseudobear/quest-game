@@ -27,7 +27,7 @@ impl Plugin for ItemsPlugin {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Item {
     Weapon(Weapon),
     Armor(Armor),
