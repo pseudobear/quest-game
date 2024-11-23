@@ -1,12 +1,14 @@
 use bevy::prelude::*;
+use serde::{Deserialize, Serialize};
 
 
-#[derive(Clone, Eq, PartialEq, Debug, Hash)]
+#[derive(Clone, Eq, PartialEq, Debug, Hash, Serialize, Deserialize)]
 pub enum WeaponType {
     DualSwords,
     Fists,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Weapon {
     pub weapon_type: WeaponType
 }
