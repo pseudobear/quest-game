@@ -87,15 +87,8 @@ fn setup_top_bar(mut commands: Commands, top_bar: Query<Entity, With<GameUiTopBa
 }
 
 fn populate_left_group(mut commands: &mut Commands, left_group: Entity) {
-    let test_button = commands.spawn((
-        ui_button(140.0, 50.0),
-        ButtonColors::default(),
-    )).id();
-
     let player_status_group = setup_player_status_group(&mut commands, left_group);
     spawn_character_status(&mut commands, player_status_group);
-
-    commands.entity(left_group).push_children(&[test_button]);
 }
 
 fn populate_center_group(commands: &mut Commands, center_group: Entity) {
