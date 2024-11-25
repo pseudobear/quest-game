@@ -50,15 +50,25 @@ impl Plugin for PlayerInventoryPlugin {
     fn build(&self, app: &mut App) {
         // TODO: init this with persistent state stored either in file system or in server
         app.init_resource::<PlayerInventory>()
+           .add_systems(Startup, initialize_inventory)
            .add_systems(Update, store_inventory_to_pkv.run_if(in_state(GameState::Playing)));
     }
+}
+
+fn initialize_inventory(
+    pkv: ResMut<PkvStore>,
+    mut player_inventory: ResMut<PlayerInventory>
+) {
+    *player_inventory = PlayerInventory::deserialize_hex(
+        &pkv.get::<String>("PlayerInventory").unwrap()
+    ).unwrap();
 }
 
 fn store_inventory_to_pkv(
     mut pkv: ResMut<PkvStore>,
     player_inventory: Res<PlayerInventory>
 ) {
-    if player_inventory.is_changed() {
+    if player_inventory.is_changed() && !player_inventory.is_added() {
         let serialized_inventory = player_inventory.serialize();
 
         // compute hash of serialized inventory for integrity checking
