@@ -37,6 +37,7 @@ pub struct CharacterPhysicsBundle {
     pub gravity_scale: GravityScale,
     pub locked_axes: LockedAxes,
     pub active_events: ActiveEvents,
+    pub solver_group: SolverGroups,
     // markers to access rigidbody attributes
     pub external_force: ExternalForce,
     pub external_impulse: ExternalImpulse,
@@ -55,6 +56,7 @@ impl Default for CharacterPhysicsBundle {
             gravity_scale: GravityScale(2.0),
             locked_axes: LockedAxes::ROTATION_LOCKED,
             active_events: ActiveEvents::COLLISION_EVENTS,
+            solver_group: SolverGroups::new(Group::GROUP_1, Group::GROUP_1.complement()),
             // markers to access rigidbody attributes
             external_force: ExternalForce { ..Default::default() },
             external_impulse: ExternalImpulse { ..Default::default() },
