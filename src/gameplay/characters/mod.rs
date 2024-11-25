@@ -1,8 +1,10 @@
 mod systems;
+pub mod enemies;
 pub mod player;
 pub mod components;
 
 use crate::gameplay::characters::player::PlayerPlugin;
+use crate::gameplay::characters::enemies::EnemyPlugin;
 use crate::gameplay::characters::systems::movement::{
     detect_grounded,
     limit_velocity,
@@ -26,7 +28,10 @@ pub struct CharacterPlugin;
 /// Player logic is only active during the State `GameState::Playing`
 impl Plugin for CharacterPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins(PlayerPlugin)
+        app.add_plugins((
+            PlayerPlugin,
+            EnemyPlugin,
+        ))
            .add_systems(Update, 
             (
                 detect_grounded,
