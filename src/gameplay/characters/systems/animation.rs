@@ -16,19 +16,20 @@ pub const WALK_VELOCITY_PERCENTAGE: f32 = 0.5;
 pub const JUMP_FALL_TRANSITION_VELOCITY: f32 = 30.0;
 
 pub fn idle_animation(
-    mut animatable_query: Query<&mut Animatable, With<CharacterSprite>>,
     physics_query: Query<(&Velocity, &GroundStatus), With<CharacterPhysics>>,
+    mut animatable_query: Query<(&mut Animatable, &Parent), With<CharacterSprite>>,
 ) {
-    for (velocity, ground_status) in physics_query.iter() {
+    for (mut animatable, parent) in &mut animatable_query {
+        let (velocity, ground_status) = physics_query.get(parent.get()).unwrap();
+
         if *ground_status == GroundStatus::Air {
             continue;
         }
-        for mut animatable in &mut animatable_query {
-            if velocity.linvel.length_squared() <= MINIMUM_MOVEMENT && animatable.active.unwrap_or(1) != 0 {
 
-                // play idle animation
-                animatable.trigger_animation(0, false);
-            }
+        if velocity.linvel.length_squared() <= MINIMUM_MOVEMENT && animatable.active.unwrap_or(1) != 0 {
+
+            // play idle animation
+            animatable.trigger_animation(0, false);
         }
     }
 }
@@ -132,28 +133,29 @@ pub fn fall_animation(
 }
 
 pub fn grounded_turn_character(
-    mut player_facing_query: Query<(&mut Facing, &mut Transform), With<CharacterSprite>>,
+    mut facing_query: Query<(&mut Facing, &mut Transform, &Parent), With<CharacterSprite>>,
     physics_query: Query<(&Velocity, &GroundStatus), With<CharacterPhysics>>,
 ) {
-    for (velocity, ground_status) in physics_query.iter() {
+    for (mut facing, mut transform, parent) in &mut facing_query {
+
+        let (velocity, ground_status) = physics_query.get(parent.get()).unwrap();
+
         if *ground_status == GroundStatus::Air {
             continue;
         }
-        for (mut facing, mut transform) in &mut player_facing_query {
 
-            // Turn Right 
-            if *facing == Facing::Left && velocity.linvel.x > MINIMUM_MOVEMENT {
-                transform.rotation = Quat::default();
-                transform.translation = Vec3::new(17.0, 3.0, 0.0);
-                *facing = Facing::Right
-            }
+        // Turn Right 
+        if *facing == Facing::Left && velocity.linvel.x > MINIMUM_MOVEMENT {
+            transform.rotation = Quat::default();
+            transform.translation = Vec3::new(17.0, 3.0, 0.0);
+            *facing = Facing::Right
+        }
 
-            // Turn Left
-            if *facing == Facing::Right && velocity.linvel.x < -MINIMUM_MOVEMENT {
-                transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
-                transform.translation = Vec3::new(-17.0, 3.0, 0.0);
-                *facing = Facing::Left
-            }
+        // Turn Left
+        if *facing == Facing::Right && velocity.linvel.x < -MINIMUM_MOVEMENT {
+            transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
+            transform.translation = Vec3::new(-17.0, 3.0, 0.0);
+            *facing = Facing::Left
         }
     }
 }
