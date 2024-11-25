@@ -10,7 +10,7 @@ use crate::gameplay::characters::systems::movement::{
     detect_grounded,
 };
 use crate::gameplay::characters::systems::event::{
-    player_emit_ds_skill_activation,
+    emit_ds_skill_activation,
 };
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
@@ -34,6 +34,9 @@ enum PlayerMovementState {
 #[derive(Component)]
 pub struct PlayerPhysics;
 
+#[derive(Component)]
+pub struct PlayerSprite;
+
 pub struct PlayerPlugin;
 
 /// This plugin handles player related stuff like movement
@@ -43,7 +46,7 @@ impl Plugin for PlayerPlugin {
         app.add_sub_state::<PlayerMovementState>()
            .add_systems(OnEnter(GameState::Playing), spawn_player)
            .add_systems(Update, (
-                player_emit_ds_skill_activation,
+                emit_ds_skill_activation::<PlayerPhysics, PlayerSprite>,
                 (   // movement systems
                     player_grounded_movement::<PlayerPhysics>,
                     player_air_movement::<PlayerPhysics>,
@@ -73,15 +76,17 @@ fn spawn_player(
             PlayerPhysics,
         ))
         .with_children(|children| {
-            children.spawn(   // Animations, appearance and hitbox
+            children.spawn((   // Animations, appearance and hitbox
                 CharacterSpriteBundle::new(
                     Transform::from_translation(Vec3::new(
                         17.0, 3.0, 0.
                     )),
                     player_sprite.sheet.clone(),
-                    player_animatable
+                    player_animatable,
+                    Vec3::new(17.0, 3.0, 0.0)
                 ),
-            );
+                PlayerSprite
+            ));
             children.spawn(   // Gameplay attributes and inventory
                 CharacterAttributesBundle {
                     character_equips: CharacterEquips { 

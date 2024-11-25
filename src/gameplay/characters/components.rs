@@ -26,7 +26,9 @@ pub struct CharacterAttributes;
 pub struct CharacterPhysics;
 
 #[derive(Component)]
-pub struct CharacterSprite;
+pub struct CharacterSprite {
+    pub centering_transform: Vec3
+}
 
 #[derive(Bundle)]
 pub struct CharacterPhysicsBundle {
@@ -35,6 +37,7 @@ pub struct CharacterPhysicsBundle {
     pub gravity_scale: GravityScale,
     pub locked_axes: LockedAxes,
     pub active_events: ActiveEvents,
+    pub solver_group: SolverGroups,
     // markers to access rigidbody attributes
     pub external_force: ExternalForce,
     pub external_impulse: ExternalImpulse,
@@ -53,6 +56,7 @@ impl Default for CharacterPhysicsBundle {
             gravity_scale: GravityScale(2.0),
             locked_axes: LockedAxes::ROTATION_LOCKED,
             active_events: ActiveEvents::COLLISION_EVENTS,
+            solver_group: SolverGroups::new(Group::GROUP_1, Group::GROUP_1.complement()),
             // markers to access rigidbody attributes
             external_force: ExternalForce { ..Default::default() },
             external_impulse: ExternalImpulse { ..Default::default() },
@@ -75,7 +79,12 @@ pub struct CharacterSpriteBundle {
 }
 
 impl CharacterSpriteBundle {
-    pub fn new(transform: Transform, texture: Handle<Image>, animatable: Animatable) -> Self {
+    pub fn new(
+        transform: Transform,
+        texture: Handle<Image>,
+        animatable: Animatable,
+        centering_transform: Vec3,
+    ) -> Self {
         Self {
             sprite_bundle: SpriteBundle {
                 texture: texture,
@@ -85,7 +94,7 @@ impl CharacterSpriteBundle {
             texture_atlas: TextureAtlas { ..Default::default() },
             animatable: animatable,
             facing: Facing::default(),
-            character_sprite: CharacterSprite,
+            character_sprite: CharacterSprite { centering_transform: centering_transform },
         }
     }
 }

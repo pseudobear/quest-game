@@ -1,24 +1,21 @@
 use crate::gameplay::skills::events::ActivateSkillEvent;
-use crate::gameplay::characters::components::{
-    CharacterPhysics,
-    CharacterSprite,
-};
 use bevy::prelude::*;
 
 
-pub fn player_emit_ds_skill_activation(
+pub fn emit_ds_skill_activation<SourcePhysics: Component, SourceSprite: Component>(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut ev_activate_skill: EventWriter<ActivateSkillEvent>,
-    player_entity_query: Query<Entity, With<CharacterPhysics>>,
-    player_sprite_query: Query<Entity, With<CharacterSprite>>,
+    physics_entity_query: Query<Entity, With<SourcePhysics>>,
+    sprite_entity_query: Query<Entity, With<SourceSprite>>,
 ) {
-    for player_entity in player_entity_query.iter() {
-        for player_sprite in player_sprite_query.iter() {
+    // iterate in case the player controls multiple
+    for physics_entity in physics_entity_query.iter() {
+        for sprite_entity in sprite_entity_query.iter() {
             if keyboard_input.just_pressed(KeyCode::KeyZ) {
                 ev_activate_skill.send(ActivateSkillEvent {
                     skill: "ds_basic_attack".to_string(),
-                    entity: player_entity,
-                    sprite_entity: player_sprite,
+                    entity: physics_entity,
+                    sprite_entity: sprite_entity,
                     animation_index: 7,
                     animation_lock: true,
                     hitbox_index: 0,

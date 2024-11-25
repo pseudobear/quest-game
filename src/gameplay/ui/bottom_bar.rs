@@ -1,6 +1,11 @@
 use bevy::prelude::*;
 use crate::gameplay::GameState;
 use crate::gameplay::ui::setup_game_ui;
+use crate::gameplay::ui::elements::hotkeys::{
+    spawn_hotkey,
+    spawn_hotkey_group,
+    HOTKEYS_PER_ROW,
+};
 use crate::ui::buttons::{
     ui_button,
     ButtonColors,
@@ -49,7 +54,7 @@ fn setup_bottom_bar(mut commands: Commands, bottom_bar: Query<Entity, With<GameU
     let center_group = commands.spawn((
         NodeBundle {
             style: Style {
-                width: Val::Percent(25.0),
+                width: Val::Percent(35.0),
                 height: Val::Percent(100.0),
                 flex_direction: FlexDirection::Row,
                 align_items: AlignItems::End,
@@ -63,11 +68,11 @@ fn setup_bottom_bar(mut commands: Commands, bottom_bar: Query<Entity, With<GameU
     let right_group = commands.spawn((
         NodeBundle {
             style: Style {
-                width: Val::Percent(25.0),
+                width: Val::Percent(40.0),
                 height: Val::Percent(100.0),
                 flex_direction: FlexDirection::Row,
                 align_items: AlignItems::End,
-                justify_content: JustifyContent::SpaceBetween,
+                justify_content: JustifyContent::End,
                 ..default()
             },
             ..default()
@@ -93,24 +98,14 @@ fn populate_left_group(commands: &mut Commands, left_group: Entity) {
     commands.entity(left_group).push_children(&[test_button, test_button_left]);
 }
 
-fn populate_center_group(commands: &mut Commands, center_group: Entity) {
-    let test_button = commands.spawn((
-        ui_button(140.0, 50.0),
-        ButtonColors::default(),
-    )).id();
-    commands.entity(center_group).push_children(&[test_button]);
-}
+fn populate_center_group(commands: &mut Commands, center_group: Entity) {}
 
 fn populate_right_group(commands: &mut Commands, right_group: Entity) {
-    let test_button = commands.spawn((
-        ui_button(140.0, 50.0),
-        ButtonColors::default(),
-    )).id();
-    let test_button_left = commands.spawn((
-        ui_button(140.0, 50.0),
-        ButtonColors::default(),
-    )).id();
-    commands.entity(right_group).push_children(&[test_button, test_button_left]);
+    let (top_row, bot_row) = spawn_hotkey_group(commands, right_group);
+    for i in 1..HOTKEYS_PER_ROW {
+        spawn_hotkey(commands, top_row);
+        spawn_hotkey(commands, bot_row);
+    }
 }
 
 fn cleanup_bottom_bar(mut commands: Commands, bottom_bar: Query<Entity, With<GameUiBottomBar>>) {
