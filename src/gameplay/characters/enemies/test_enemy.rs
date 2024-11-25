@@ -10,6 +10,7 @@ use crate::animations::{ Animatable, AnimationConfig };
 use crate::gameplay::items::CharacterEquips;
 use crate::gameplay::items::weapons::TESTING_SWORDS;
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 
 
 pub fn spawn_test_enemy(
@@ -28,17 +29,21 @@ pub fn spawn_test_enemy(
                 32.0 + screen_bottom_left.y as f32 + 12.0,
                 2.5
             )),
-            CharacterPhysicsBundle { ..Default::default() },
+            CharacterPhysicsBundle { 
+                collider: Collider::capsule_y(17., 12.),
+                ..Default::default()
+            },
             BossPhysics,
         ))
         .with_children(|children| {
             children.spawn(   // Animations, appearance and hitbox
                 CharacterSpriteBundle::new(
                     Transform::from_translation(Vec3::new(
-                        17.0, 3.0, 0.
+                        4.0, 8.0, 0.
                     )),
                     enemy_sprite.sheet.clone(),
-                    enemy_animatable
+                    enemy_animatable,
+                    Vec3::new(4.0, 8.0, 0.0)
                 ),
             );
             children.spawn(   // Gameplay attributes and inventory

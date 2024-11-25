@@ -82,7 +82,8 @@ fn spawn_player(
                         17.0, 3.0, 0.
                     )),
                     player_sprite.sheet.clone(),
-                    player_animatable
+                    player_animatable,
+                    Vec3::new(17.0, 3.0, 0.0)
                 ),
                 PlayerSprite
             ));

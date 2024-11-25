@@ -26,7 +26,9 @@ pub struct CharacterAttributes;
 pub struct CharacterPhysics;
 
 #[derive(Component)]
-pub struct CharacterSprite;
+pub struct CharacterSprite {
+    pub centering_transform: Vec3
+}
 
 #[derive(Bundle)]
 pub struct CharacterPhysicsBundle {
@@ -75,7 +77,12 @@ pub struct CharacterSpriteBundle {
 }
 
 impl CharacterSpriteBundle {
-    pub fn new(transform: Transform, texture: Handle<Image>, animatable: Animatable) -> Self {
+    pub fn new(
+        transform: Transform,
+        texture: Handle<Image>,
+        animatable: Animatable,
+        centering_transform: Vec3,
+    ) -> Self {
         Self {
             sprite_bundle: SpriteBundle {
                 texture: texture,
@@ -85,7 +92,7 @@ impl CharacterSpriteBundle {
             texture_atlas: TextureAtlas { ..Default::default() },
             animatable: animatable,
             facing: Facing::default(),
-            character_sprite: CharacterSprite,
+            character_sprite: CharacterSprite { centering_transform: centering_transform },
         }
     }
 }

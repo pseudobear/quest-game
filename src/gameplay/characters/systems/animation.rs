@@ -138,10 +138,10 @@ pub fn fall_animation(
 }
 
 pub fn grounded_turn_character(
-    mut facing_query: Query<(&mut Facing, &mut Transform, &Parent), With<CharacterSprite>>,
+    mut facing_query: Query<(&mut Facing, &mut Transform, &CharacterSprite, &Parent)>,
     physics_query: Query<(&Velocity, &GroundStatus), With<CharacterPhysics>>,
 ) {
-    for (mut facing, mut transform, parent) in &mut facing_query {
+    for (mut facing, mut transform, character_sprite, parent) in &mut facing_query {
 
         let (velocity, ground_status) = physics_query.get(parent.get()).unwrap();
 
@@ -152,24 +152,24 @@ pub fn grounded_turn_character(
         // Turn Right 
         if *facing == Facing::Left && velocity.linvel.x > MINIMUM_MOVEMENT {
             transform.rotation = Quat::default();
-            transform.translation = Vec3::new(17.0, 3.0, 0.0);
+            transform.translation = character_sprite.centering_transform;
             *facing = Facing::Right
         }
 
         // Turn Left
         if *facing == Facing::Right && velocity.linvel.x < -MINIMUM_MOVEMENT {
             transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
-            transform.translation = Vec3::new(-17.0, 3.0, 0.0);
+            transform.translation = character_sprite.centering_transform * Vec3::NEG_X;
             *facing = Facing::Left
         }
     }
 }
 
 pub fn air_turn_character(
-    mut facing_query: Query<(&mut Facing, &mut Transform, &Parent), With<CharacterSprite>>,
+    mut facing_query: Query<(&mut Facing, &mut Transform, &CharacterSprite, &Parent)>,
     physics_query: Query<(&ExternalForce, &GroundStatus), With<CharacterPhysics>>,
 ) {
-    for (mut facing, mut transform, parent) in &mut facing_query {
+    for (mut facing, mut transform, character_sprite, parent) in &mut facing_query {
         let (external_force, ground_status) = physics_query.get(parent.get()).unwrap();
 
         if *ground_status == GroundStatus::Grounded {
@@ -179,14 +179,14 @@ pub fn air_turn_character(
         // Turn Right 
         if *facing == Facing::Left && external_force.force.x > 0.0 {
             transform.rotation = Quat::default();
-            transform.translation = Vec3::new(17.0, 3.0, 0.0);
+            transform.translation = character_sprite.centering_transform;
             *facing = Facing::Right
         }
 
         // Turn Left
         if *facing == Facing::Right && external_force.force.x < 0.0 {
             transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
-            transform.translation = Vec3::new(-17.0, 3.0, 0.0);
+            transform.translation = character_sprite.centering_transform * Vec3::NEG_X;
             *facing = Facing::Left
         }
     }
