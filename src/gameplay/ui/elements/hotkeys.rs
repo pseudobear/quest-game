@@ -83,6 +83,7 @@ pub fn spawn_hotkey(commands: &mut Commands, parent: Entity) {
     let hotkey = commands.spawn((
         ui_button_with_margin(HOTKEY_SIZE_PX, HOTKEY_SIZE_PX, HOTKEY_MARGIN_PX),
         ButtonColors::default(),
+        HotKeyUi,
     )).id();
 
     commands.entity(parent).add_child(hotkey);
