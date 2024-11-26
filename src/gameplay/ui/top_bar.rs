@@ -1,10 +1,7 @@
 use bevy::prelude::*;
-use crate::gameplay::characters::player;
 use crate::gameplay::GameState;
 use crate::gameplay::ui::setup_game_ui;
-use crate::gameplay::ui::elements::party_status::{
-    setup_player_status_group
-};
+use crate::gameplay::ui::elements::party_status::setup_player_status_group;
 use crate::ui::buttons::{
     ui_button,
     ButtonColors,

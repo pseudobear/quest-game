@@ -90,7 +90,7 @@ fn setup_bottom_bar(
     commands.entity(bottom_bar.single()).push_children(&[left_group, center_group, right_group]);
 
     populate_left_group(&mut commands, left_group);
-    populate_center_group(&mut commands, center_group, window_systems.0.clone());
+    populate_center_group(&mut commands, center_group, window_systems.clone());
     populate_right_group(&mut commands, right_group);
 }
 
@@ -126,7 +126,7 @@ fn populate_center_group(
 
 fn populate_right_group(commands: &mut Commands, right_group: Entity) {
     let (top_row, bot_row) = spawn_hotkey_group(commands, right_group);
-    for i in 0..HOTKEYS_PER_ROW {
+    for _ in 0..HOTKEYS_PER_ROW {
         spawn_hotkey(commands, top_row);
         spawn_hotkey(commands, bot_row);
     }

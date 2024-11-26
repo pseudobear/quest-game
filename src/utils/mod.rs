@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy::ecs::system::SystemId;
 
 
-#[derive(Component)]
+#[derive(Component, Deref, DerefMut)]
 pub struct OneShotCallback(pub SystemId);
 
 pub struct UtilsPlugin;
@@ -20,7 +20,7 @@ fn trigger_one_shot_callbacks_on_button(
     for (interaction, callback) in interaction_query.iter() {
         match *interaction {
             Interaction::Pressed => {
-                commands.run_system(callback.0);
+                commands.run_system(**callback);
             }
             _ => {}
         }
