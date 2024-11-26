@@ -1,6 +1,9 @@
+use std::collections::HashMap;
 use bevy::prelude::*;
+use bevy::ecs::system::SystemId;
 use crate::gameplay::GameState;
 use crate::gameplay::ui::setup_game_ui;
+use crate::gameplay::ui::windows::UiWindowSystems;
 use crate::gameplay::ui::elements::hotkeys::{
     spawn_hotkey,
     spawn_hotkey_group,
@@ -9,8 +12,9 @@ use crate::gameplay::ui::elements::hotkeys::{
 use crate::ui::buttons::{
     ui_button,
     ButtonColors,
-    ui_button_text,
+    ui_button_text_font_size,
 };
+use crate::utils::OneShotCallback;
 
 
 #[derive(Component)]
@@ -36,7 +40,11 @@ impl Plugin for BottomBarPlugin {
     }
 }
 
-fn setup_bottom_bar(mut commands: Commands, bottom_bar: Query<Entity, With<GameUiBottomBar>>) {
+fn setup_bottom_bar(
+    mut commands: Commands,
+    bottom_bar: Query<Entity, With<GameUiBottomBar>>,
+    window_systems: Res<UiWindowSystems>
+) {
     let left_group = commands.spawn((
         NodeBundle {
             style: Style {
@@ -82,7 +90,7 @@ fn setup_bottom_bar(mut commands: Commands, bottom_bar: Query<Entity, With<GameU
     commands.entity(bottom_bar.single()).push_children(&[left_group, center_group, right_group]);
 
     populate_left_group(&mut commands, left_group);
-    populate_center_group(&mut commands, center_group);
+    populate_center_group(&mut commands, center_group, window_systems.0.clone());
     populate_right_group(&mut commands, right_group);
 }
 
@@ -98,7 +106,23 @@ fn populate_left_group(commands: &mut Commands, left_group: Entity) {
     commands.entity(left_group).push_children(&[test_button, test_button_left]);
 }
 
-fn populate_center_group(commands: &mut Commands, center_group: Entity) {}
+fn populate_center_group(
+    commands: &mut Commands,
+    center_group: Entity,
+    window_systems: HashMap<String, SystemId>
+) {
+    let test_button = commands.spawn((
+        ui_button(50.0, 50.0),
+        ButtonColors::default(),
+        OneShotCallback(window_systems["open_inventory"]),
+    ))
+    .with_children(|parent| {
+        parent.spawn(ui_button_text_font_size("Inv", 20.));
+    })
+    .id();
+
+    commands.entity(center_group).push_children(&[test_button]);
+}
 
 fn populate_right_group(commands: &mut Commands, right_group: Entity) {
     let (top_row, bot_row) = spawn_hotkey_group(commands, right_group);

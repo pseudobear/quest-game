@@ -1,9 +1,11 @@
 mod top_bar;
 mod bottom_bar;
 mod elements;
+mod windows;
 
 use crate::gameplay::ui::bottom_bar::{ GameUiBottomBar, BottomBarPlugin};
 use crate::gameplay::ui::top_bar::{ GameUiTopBar, TopBarPlugin };
+use crate::gameplay::ui::windows::UiWindowsPlugin;
 use crate::gameplay::GameState;
 use bevy::prelude::*;
 
@@ -16,7 +18,11 @@ pub struct GameUiPlugin;
 // This plugin is responsible to control the game audio
 impl Plugin for GameUiPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((TopBarPlugin, BottomBarPlugin))
+        app.add_plugins((
+                TopBarPlugin,
+                BottomBarPlugin,
+                UiWindowsPlugin,
+            ))
            .add_systems(OnEnter(GameState::Playing), setup_game_ui)
            .add_systems(OnExit(GameState::Playing), cleanup_game_ui);
     }
