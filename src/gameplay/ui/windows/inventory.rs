@@ -2,8 +2,8 @@ use crate::ui::windows::spawn_ui_window;
 use bevy::prelude::*;
 
 
-const INVENTORY_SIZE_X: f32 = 200.;
-const INVENTORY_SIZE_Y: f32 = 100.;
+const INVENTORY_SIZE_X: f32 = 500.;
+const INVENTORY_SIZE_Y: f32 = 300.;
 
 #[derive(Component, Default)]
 pub struct InventoryWindow;

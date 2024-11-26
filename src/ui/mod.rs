@@ -49,7 +49,7 @@ fn move_dragging(
     mut dragging_query: Query<&mut Style, With<Dragging>>,
     mut evr_cursor: EventReader<CursorMoved>
 ) {
-    if let Ok(mut style) = dragging_query.get_single_mut() {
+    for mut style in &mut dragging_query {
         for ev in evr_cursor.read() {
             let cursor_delta = ev.delta.unwrap_or_default();
 

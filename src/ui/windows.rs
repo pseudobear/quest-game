@@ -7,7 +7,7 @@ const WINDOW_FRAME_OFFSET: f32 = 6.0;
 const WINDOW_TITLE_BAR_SIZE: f32 = 20.0;
 
 const WINDOW_FRAME_COLOR: Color = Color::WHITE;
-const WINDOW_INNER_COLOR: Color = Color::linear_rgb(0.01, 0.05, 0.1);
+const WINDOW_INNER_COLOR: Color = Color::linear_rgb(0.0, 0.01, 0.03);
 
 const CLOSE_BUTTON_SIZE: f32 = 17.0;
 
