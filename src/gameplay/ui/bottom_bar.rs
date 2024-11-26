@@ -126,7 +126,7 @@ fn populate_center_group(
 
 fn populate_right_group(commands: &mut Commands, right_group: Entity) {
     let (top_row, bot_row) = spawn_hotkey_group(commands, right_group);
-    for i in 1..HOTKEYS_PER_ROW {
+    for i in 0..HOTKEYS_PER_ROW {
         spawn_hotkey(commands, top_row);
         spawn_hotkey(commands, bot_row);
     }

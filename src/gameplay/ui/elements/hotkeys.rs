@@ -7,7 +7,7 @@ use bevy::prelude::*;
 
 const HOTKEY_SIZE_PX: f32 = 40.0;
 const HOTKEY_MARGIN_PX: f32 = 5.0;
-pub const HOTKEYS_PER_ROW: u8 = 10;
+pub const HOTKEYS_PER_ROW: u8 = 6;
 
 const HOTKEY_TEXT_SIZE: f32 = 12.0;
 

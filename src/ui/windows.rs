@@ -54,7 +54,7 @@ pub fn spawn_ui_window<WindowComponentTag: Component>(
                 justify_content: JustifyContent::SpaceBetween,
                 padding: UiRect::all(Val::Px(WINDOW_FRAME_OFFSET / 2.)),
                 left: Val::Px(400.0),
-                top: Val::Px(500.0),
+                top: Val::Px(200.0),
                 ..default()
             },
             background_color: WINDOW_FRAME_COLOR.into(),
