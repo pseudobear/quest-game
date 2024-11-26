@@ -1,8 +1,7 @@
 mod inventory;
 
 use std::collections::HashMap;
-use crate::gameplay::ui::windows::inventory::{ InventoryOpened, open_inventory, inventory };
-use crate::gameplay::GameState;
+use crate::gameplay::ui::windows::inventory::{ open_inventory };
 use bevy::prelude::*;
 use bevy::ecs::system::SystemId;
 
@@ -27,10 +26,6 @@ pub struct UiWindowsPlugin;
 
 impl Plugin for UiWindowsPlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<UiWindowSystems>()
-           .init_resource::<InventoryOpened>()
-           .add_systems(Update, (
-                inventory,
-           ).run_if(in_state(GameState::Playing)));
+        app.init_resource::<UiWindowSystems>();
     }
 }

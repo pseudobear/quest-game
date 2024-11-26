@@ -15,7 +15,7 @@ impl Plugin for UtilsPlugin {
 
 fn trigger_one_shot_callbacks_on_button(
     mut commands: Commands,
-    interaction_query: Query<(&Interaction, &OneShotCallback), With<Button>>
+    interaction_query: Query<(&Interaction, &OneShotCallback), (Changed<Interaction>, With<Button>)>
 ) {
     for (interaction, callback) in interaction_query.iter() {
         match *interaction {

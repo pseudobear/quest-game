@@ -1,9 +1,11 @@
 pub mod swordsmaster;
 pub mod test_enemy;
+pub mod ui;
 
 use crate::GameState;
 use swordsmaster::SwordsMasterSpriteAssets;
 use test_enemy::TestEnemySpriteAssets;
+use ui::UiSpriteAssets;
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 use bevy_ecs_ldtk::assets::LdtkProject;
@@ -24,7 +26,9 @@ impl Plugin for LoadingPlugin {
                 .load_collection::<MapAssets>()
                 // sprites
                 .load_collection::<SwordsMasterSpriteAssets>()
-                .load_collection::<TestEnemySpriteAssets>(),
+                .load_collection::<TestEnemySpriteAssets>()
+                // ui assets
+                .load_collection::<UiSpriteAssets>()
         );
     }
 }
