@@ -7,7 +7,6 @@ use bevy::window::PrimaryWindow;
 use bevy::winit::WinitWindows;
 use bevy::DefaultPlugins;
 use bevy_pkv::PkvStore;
-use bevy_egui::EguiPlugin;
 use bevy_tweening::TweeningPlugin;
 use quest_game::GamePlugin; 
 use std::io::Cursor;
@@ -40,7 +39,6 @@ fn main() {
         )
         .add_plugins(GamePlugin)
         .add_plugins(TweeningPlugin)
-        .add_plugins(EguiPlugin)
         .add_systems(Startup, set_window_icon)
         .run();
 }
