@@ -1,4 +1,5 @@
 use crate::ui::buttons::ButtonColors;
+use crate::ui::Draggable;
 use bevy::prelude::*;
 
 // how much larger is the frame compared to the inner (both x and y)
@@ -52,13 +53,15 @@ pub fn spawn_ui_window<WindowComponentTag: Component>(
                 align_items: AlignItems::Center,
                 justify_content: JustifyContent::SpaceBetween,
                 padding: UiRect::all(Val::Px(WINDOW_FRAME_OFFSET / 2.)),
-                left: Val::Percent(50.0),
-                top: Val::Percent(50.0),
+                left: Val::Px(400.0),
+                top: Val::Px(500.0),
                 ..default()
             },
             background_color: WINDOW_FRAME_COLOR.into(),
             ..default()
         },
+        Interaction::None,
+        Draggable,
         WindowComponentTag::default(),
     )).id();
 
