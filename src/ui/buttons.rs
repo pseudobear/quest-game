@@ -80,6 +80,17 @@ pub fn ui_button_text(text: &str) -> TextBundle {
     )
 }
 
+pub fn ui_button_text_font_size(text: &str, font_size: f32) -> TextBundle {
+    TextBundle::from_section(
+        text,
+        TextStyle {
+            font_size: font_size,
+            color: FONT_COLOR,
+            ..default()
+        }
+    )
+}
+
 #[derive(Component)]
 pub struct ButtonColors {
     pub normal: Color,

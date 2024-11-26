@@ -9,8 +9,9 @@ use crate::gameplay::ui::elements::hotkeys::{
 use crate::ui::buttons::{
     ui_button,
     ButtonColors,
-    ui_button_text,
+    ui_button_text_font_size,
 };
+use crate::utils::OneShotCallback;
 
 
 #[derive(Component)]
@@ -98,7 +99,18 @@ fn populate_left_group(commands: &mut Commands, left_group: Entity) {
     commands.entity(left_group).push_children(&[test_button, test_button_left]);
 }
 
-fn populate_center_group(commands: &mut Commands, center_group: Entity) {}
+fn populate_center_group(commands: &mut Commands, center_group: Entity) {
+    let test_button = commands.spawn((
+        ui_button(50.0, 50.0),
+        ButtonColors::default(),
+    ))
+    .with_children(|parent| {
+        parent.spawn(ui_button_text_font_size("Inv", 20.));
+    })
+    .id();
+
+    commands.entity(center_group).push_children(&[test_button]);
+}
 
 fn populate_right_group(commands: &mut Commands, right_group: Entity) {
     let (top_row, bot_row) = spawn_hotkey_group(commands, right_group);
