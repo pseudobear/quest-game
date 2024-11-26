@@ -3,7 +3,7 @@ use bevy::ecs::system::SystemId;
 
 
 #[derive(Component)]
-pub struct OneShotCallback(SystemId);
+pub struct OneShotCallback(pub SystemId);
 
 pub struct UtilsPlugin;
 
