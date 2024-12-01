@@ -7,6 +7,7 @@ use bevy_kira_audio::prelude::*;
 pub struct InternalAudioPlugin;
 
 // This plugin is responsible to control the game audio
+// TODO: redo all of this
 impl Plugin for InternalAudioPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(AudioPlugin)
