@@ -1,4 +1,5 @@
 mod systems;
+mod stats;
 pub mod enemies;
 pub mod player;
 pub mod components;

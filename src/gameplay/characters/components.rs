@@ -1,6 +1,7 @@
 use crate::animations::Animatable;
 use crate::gameplay::items::CharacterEquips;
 use crate::gameplay::items::weapons::BARE_FISTS;
+use crate::gameplay::characters::stats::CharacterStats;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
@@ -18,9 +19,6 @@ pub enum Facing {
     Right,
     Left,
 }
-
-#[derive(Component)]
-pub struct CharacterAttributes;
 
 #[derive(Component)]
 pub struct CharacterPhysics;
@@ -102,7 +100,7 @@ impl CharacterSpriteBundle {
 #[derive(Bundle)]
 pub struct CharacterAttributesBundle {
     pub character_equips: CharacterEquips,
-    pub character_attributes: CharacterAttributes,
+    pub character_stats: CharacterStats,
 }
 
 impl Default for CharacterAttributesBundle {
@@ -111,7 +109,7 @@ impl Default for CharacterAttributesBundle {
             character_equips: CharacterEquips {
                 weapon: BARE_FISTS
             },
-            character_attributes: CharacterAttributes,
+            character_stats: CharacterStats,
         }
     }
 }
