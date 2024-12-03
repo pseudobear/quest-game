@@ -8,6 +8,7 @@ use bevy::winit::WinitWindows;
 use bevy::DefaultPlugins;
 use bevy_pkv::PkvStore;
 use bevy_tweening::TweeningPlugin;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use quest_game::GamePlugin; 
 use std::io::Cursor;
 use winit::window::Icon;
@@ -39,6 +40,7 @@ fn main() {
         )
         .add_plugins(GamePlugin)
         .add_plugins(TweeningPlugin)
+        //.add_plugins(WorldInspectorPlugin::new())
         .add_systems(Startup, set_window_icon)
         .run();
 }
