@@ -61,7 +61,7 @@ fn initialize_inventory(
 ) {
     *player_inventory = PlayerInventory::deserialize_hex(
         &pkv.get::<String>("PlayerInventory").unwrap()
-    ).unwrap();
+    ).unwrap_or_default();
 }
 
 fn store_inventory_to_pkv(
