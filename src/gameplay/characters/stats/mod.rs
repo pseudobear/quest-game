@@ -10,5 +10,8 @@ impl Plugin for StatsPlugin {
     }
 }
 
-#[derive(Component)]
-pub struct CharacterStats;
+#[derive(Component, Default)]
+pub struct CharacterStats {
+    pub health: u32,
+    pub mana: u32,
+}

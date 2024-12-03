@@ -109,7 +109,7 @@ impl Default for CharacterAttributesBundle {
             character_equips: CharacterEquips {
                 weapon: BARE_FISTS
             },
-            character_stats: CharacterStats,
+            character_stats: CharacterStats { ..Default::default() },
         }
     }
 }
