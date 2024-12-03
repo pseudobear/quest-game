@@ -59,9 +59,9 @@ fn initialize_inventory(
     pkv: ResMut<PkvStore>,
     mut player_inventory: ResMut<PlayerInventory>
 ) {
-    *player_inventory = PlayerInventory::deserialize_hex(
-        &pkv.get::<String>("PlayerInventory").unwrap()
-    ).unwrap_or_default();
+    if let Ok(inventory_hex) = pkv.get::<String>("PlayerInventory") {
+        *player_inventory = PlayerInventory::deserialize_hex(&inventory_hex).unwrap();
+    }
 }
 
 fn store_inventory_to_pkv(
