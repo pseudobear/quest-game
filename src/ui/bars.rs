@@ -39,7 +39,7 @@ pub fn spawn_bar(
     parent: Entity,
     margin_vert: Val,
     margin_hor: Val,
-) {
+) -> Entity {
     let bar = commands.spawn((
         NodeBundle {
             style: Style {
@@ -70,6 +70,8 @@ pub fn spawn_bar(
         }
     }).id();
     commands.entity(parent).add_child(bar);
+
+    return bar;
 }
 
 #[derive(Component)]
