@@ -9,9 +9,14 @@ use bevy::prelude::*;
 
 
 pub fn spawn_oob_colliders(
-    world: &mut World
+    mut commands: Commands,
+    layer_query: Query<&LayerMetadata, Added<LayerMetadata>>,
 ) {
-    // ToDo: implement
+    // we just need one LayerMetadata
+    if let Some(layer_data) = layer_query.iter().next() {
+        println!("LAYER METADATA");
+        println!("{:?}", layer_data);
+    }
 }
 
 /// Spawns rapier collidables for the obstacles of a level, on adding obstacles

@@ -3,7 +3,10 @@ mod testing_map;
 
 use crate::GameState;
 use crate::gameplay::maps::testing_map::TestingMapPlugin;
-use crate::gameplay::maps::systems::spawn_wall_collision;
+use crate::gameplay::maps::systems::{
+    spawn_wall_collision,
+    spawn_oob_colliders
+};
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
@@ -44,7 +47,10 @@ impl Plugin for MapsPlugin {
                 TestingMapPlugin,
             ))
            .add_systems(OnEnter(GameState::Playing), setup_maps)
-           .add_systems(Update, spawn_wall_collision.run_if(in_state(GameState::Playing)))
+           .add_systems(Update, (
+                spawn_wall_collision,
+                spawn_oob_colliders
+           ).run_if(in_state(GameState::Playing)))
            .add_systems(OnExit(GameState::Playing), cleanup_maps);
     }
 }

@@ -94,6 +94,7 @@ impl HitboxConfig {
 }
 
 // This system bumps active HitboxConfig indices, spawn and despawn colliders appropriately
+// TODO: get this working when we have multiple characters on the screen (hitboxes need ownership from hitbox thrower)
 fn execute_hitboxes(
     time: Res<Time>,
     mut hitbox_thrower_query: Query<(&Parent, Entity, &mut HitboxThrower)>,

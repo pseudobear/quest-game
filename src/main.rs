@@ -40,7 +40,7 @@ fn main() {
         )
         .add_plugins(GamePlugin)
         .add_plugins(TweeningPlugin)
-        //.add_plugins(WorldInspectorPlugin::new())
+        .add_plugins(WorldInspectorPlugin::new())
         .add_systems(Startup, set_window_icon)
         .run();
 }
