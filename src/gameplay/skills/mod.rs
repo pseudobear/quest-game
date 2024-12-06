@@ -2,6 +2,7 @@ mod dual_swords_skills;
 mod fists_skills;
 pub mod events;
 
+use std::time::Duration;
 use crate::gameplay::GameState;
 use crate::gameplay::items::CharacterEquips;
 use crate::gameplay::items::weapons::WeaponType;
@@ -34,6 +35,31 @@ impl Plugin for SkillsPlugin {
                 DualSwordSkillsPlugin,
            ))
            .add_systems(Update, switch_weapon_type.run_if(in_state(GameState::Playing)));
+    }
+}
+
+#[derive(Component, Debug)]
+pub struct SkillCooldown {
+    pub skill: String,
+    timer: Timer,
+}
+
+impl std::ops::Deref for SkillCooldown {
+    type Target = String; 
+
+    fn deref(&self) -> &String {
+        &self.skill
+    }
+}
+
+impl SkillCooldown {
+    /// Creates a new SkillCooldown with the relevant name and a new timer with a duration set
+    /// in seconds. This will tick and reset independantly of the system 
+    fn new(skill_name: &str, duration: f32) -> Self {
+        Self {
+            skill: skill_name.into(),
+            timer: Timer::new(Duration::from_secs_f32(duration), TimerMode::Once)
+        }
     }
 }
 

@@ -1,4 +1,5 @@
-use crate::gameplay::skills::events::ActivateSkillEvent;
+use crate::gameplay::skills::events::{ ActivateSkillEvent, EndSkillEvent };
+use crate::gameplay::skills::SkillCooldown;
 use crate::gameplay::GameState;
 use crate::gameplay::hitbox::{
     HitboxThrower,
@@ -69,5 +70,19 @@ fn ds_activate_basic_attack (
         let mut hitbox_thrower = hitbox_thrower_query.get_mut(ev.sprite_entity).unwrap();
         hitbox_thrower.trigger_hitbox(ev.hitbox_index, ev.hitbox_lock);
         
+    }
+}
+
+fn ds_end_basic_attack (
+    mut commands: Commands,
+    mut ev_end_skill: EventReader<EndSkillEvent>,
+) {
+    for ev in ev_end_skill.read() {
+        if ev.skill != "ds_basic_attack" {
+            continue;
+        }
+        commands.entity(ev.sprite_entity).insert(
+            SkillCooldown::new("ds_basic_attack", 3.0)
+        );
     }
 }
