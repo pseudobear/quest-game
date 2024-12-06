@@ -146,7 +146,8 @@ fn execute_hitboxes(
                     config.reset_index();
                     config.frame_timer = HitboxConfig::timer_from_fps(config.fps);
                     ev_end_skill.send(EndSkillEvent{
-                        entity: parent.get(),
+                        physics_entity: parent.get(),
+                        sprite_entity: entity,
                         skill: config.skill_name.clone(),
                     });
                 }
