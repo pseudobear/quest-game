@@ -20,7 +20,7 @@ impl Plugin for HitboxPlugin {
 }
 
 
-#[derive(Component)]
+#[derive(Component, Debug)]
 pub struct HitboxThrower {
     pub hitboxes: Vec<HitboxConfig>,
     pub active: Option<usize>,
@@ -107,7 +107,7 @@ fn execute_hitboxes(
         if let Some(active_idx) = hitbox_thrower.active {
             config = &mut hitbox_thrower.hitboxes[active_idx];
         } else {
-            return;
+            continue;
         }
 
         config.frame_timer.tick(time.delta());
