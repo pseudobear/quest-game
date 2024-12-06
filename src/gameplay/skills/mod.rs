@@ -11,10 +11,8 @@ use crate::gameplay::skills::events::{
     ActivateSkillEvent,
     EndSkillEvent,
 };
-use crate::gameplay::skills::dual_swords_skills::{
-    DualSwordSkillsPlugin,
-    create_dual_swords_hitbox_thrower
-};
+use crate::gameplay::skills::dual_swords_skills::DualSwordSkillsPlugin;
+use crate::gameplay::skills::dual_swords_skills::hitbox::create_dual_swords_hitbox_thrower;
 use crate::gameplay::skills::fists_skills::{
     FistSkillsPlugin,
     create_fists_hitbox_thrower
