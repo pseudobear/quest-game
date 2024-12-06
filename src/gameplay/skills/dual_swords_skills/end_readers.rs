@@ -11,7 +11,7 @@ pub fn ds_end_basic_attack (
             continue;
         }
         commands.entity(ev.sprite_entity).insert(
-            SkillCooldown::new("ds_basic_attack", 3.0)
+            SkillCooldown::new("ds_basic_attack", 1.0)
         );
     }
 }

@@ -32,7 +32,10 @@ impl Plugin for SkillsPlugin {
                 FistSkillsPlugin,
                 DualSwordSkillsPlugin,
            ))
-           .add_systems(Update, switch_weapon_type.run_if(in_state(GameState::Playing)));
+           .add_systems(Update, (
+                switch_weapon_type,
+                tick_skill_cooldowns,
+           ).run_if(in_state(GameState::Playing)));
     }
 }
 
@@ -57,6 +60,28 @@ impl SkillCooldown {
         Self {
             skill: skill_name.into(),
             timer: Timer::new(Duration::from_secs_f32(duration), TimerMode::Once)
+        }
+    }
+
+    fn tick(&mut self, duration: Duration) {
+        self.timer.tick(duration);
+    }
+
+    fn is_finished(&self) -> bool {
+        self.timer.finished()
+    }
+}
+
+fn tick_skill_cooldowns(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut cooldown_query: Query<(Entity, &mut SkillCooldown)>
+) {
+    for (entity, mut cooldown) in &mut cooldown_query {
+        cooldown.tick(time.delta());
+        
+        if cooldown.is_finished() {
+            commands.entity(entity).remove::<SkillCooldown>();
         }
     }
 }
