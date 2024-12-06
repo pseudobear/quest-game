@@ -74,6 +74,9 @@ pub struct CharacterSpriteBundle {
     pub animatable: Animatable,
     pub facing: Facing,
     pub character_sprite: CharacterSprite,
+    // Character Attributes
+    pub character_equips: CharacterEquips,
+    pub character_stats: CharacterStats,
 }
 
 impl CharacterSpriteBundle {
@@ -93,22 +96,7 @@ impl CharacterSpriteBundle {
             animatable: animatable,
             facing: Facing::default(),
             character_sprite: CharacterSprite { centering_transform: centering_transform },
-        }
-    }
-}
-
-#[derive(Bundle)]
-pub struct CharacterAttributesBundle {
-    pub character_equips: CharacterEquips,
-    pub character_stats: CharacterStats,
-}
-
-impl Default for CharacterAttributesBundle {
-    fn default() -> Self {
-        Self {
-            character_equips: CharacterEquips {
-                weapon: BARE_FISTS
-            },
+            character_equips: CharacterEquips { weapon: BARE_FISTS },
             character_stats: CharacterStats { ..Default::default() },
         }
     }

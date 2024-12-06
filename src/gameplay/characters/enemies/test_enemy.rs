@@ -2,13 +2,10 @@ use crate::loading::test_enemy::TestEnemySpriteAssets;
 use crate::gameplay::characters::components::{
     CharacterPhysicsBundle,
     CharacterSpriteBundle,
-    CharacterAttributesBundle,
 };
 use crate::gameplay::characters::enemies::BossPhysics;
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::animations::{ Animatable, AnimationConfig };
-use crate::gameplay::items::CharacterEquips;
-use crate::gameplay::items::weapons::TESTING_SWORDS;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
@@ -36,7 +33,7 @@ pub fn spawn_test_enemy(
             BossPhysics,
         ))
         .with_children(|children| {
-            children.spawn(   // Animations, appearance and hitbox
+            children.spawn(   // Animations, appearance, hitbox and attributes
                 CharacterSpriteBundle::new(
                     Transform::from_translation(Vec3::new(
                         4.0, 8.0, 0.
@@ -45,14 +42,6 @@ pub fn spawn_test_enemy(
                     enemy_animatable,
                     Vec3::new(4.0, 8.0, 0.0)
                 ),
-            );
-            children.spawn(   // Gameplay attributes and inventory
-                CharacterAttributesBundle {
-                    character_equips: CharacterEquips { 
-                        weapon: TESTING_SWORDS
-                    },
-                    ..Default::default()
-                }
             );
         });
 }

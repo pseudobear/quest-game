@@ -2,7 +2,6 @@ use crate::loading::swordsmaster::SwordsMasterSpriteAssets;
 use crate::gameplay::characters::components::{
     CharacterPhysicsBundle,
     CharacterSpriteBundle,
-    CharacterAttributesBundle,
 };
 use crate::gameplay::characters::systems::movement::{
     player_grounded_movement,
@@ -76,7 +75,7 @@ fn spawn_player(
             PlayerPhysics,
         ))
         .with_children(|children| {
-            children.spawn((   // Animations, appearance and hitbox
+            children.spawn((   // Animations, appearance, hitbox and attributes
                 CharacterSpriteBundle::new(
                     Transform::from_translation(Vec3::new(
                         17.0, 3.0, 0.
@@ -87,14 +86,6 @@ fn spawn_player(
                 ),
                 PlayerSprite
             ));
-            children.spawn(   // Gameplay attributes and inventory
-                CharacterAttributesBundle {
-                    character_equips: CharacterEquips { 
-                        weapon: TESTING_SWORDS
-                    },
-                    ..Default::default()
-                }
-            );
         });
 }
 
