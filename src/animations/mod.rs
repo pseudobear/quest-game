@@ -83,7 +83,7 @@ fn execute_animations(
         if let Some(active_idx) = animatable.active {
             config = &mut animatable.animations[active_idx];
         } else {
-            return;
+            continue;
         }
 
         // set correct atlas configs
