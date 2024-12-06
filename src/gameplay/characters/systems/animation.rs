@@ -153,14 +153,14 @@ pub fn grounded_turn_character(
         if *facing == Facing::Left && velocity.linvel.x > MINIMUM_MOVEMENT {
             transform.rotation = Quat::default();
             transform.translation = character_sprite.centering_transform;
-            *facing = Facing::Right
+            *facing = Facing::Right;
         }
 
         // Turn Left
         if *facing == Facing::Right && velocity.linvel.x < -MINIMUM_MOVEMENT {
             transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
-            transform.translation = character_sprite.centering_transform * Vec3::NEG_X;
-            *facing = Facing::Left
+            transform.translation = character_sprite.centering_transform * Vec3::new(-1., 1., 1.);
+            *facing = Facing::Left;
         }
     }
 }
@@ -180,14 +180,14 @@ pub fn air_turn_character(
         if *facing == Facing::Left && external_force.force.x > 0.0 {
             transform.rotation = Quat::default();
             transform.translation = character_sprite.centering_transform;
-            *facing = Facing::Right
+            *facing = Facing::Right;
         }
 
         // Turn Left
         if *facing == Facing::Right && external_force.force.x < 0.0 {
             transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
-            transform.translation = character_sprite.centering_transform * Vec3::NEG_X;
-            *facing = Facing::Left
+            transform.translation = character_sprite.centering_transform * Vec3::new(-1., 1., 1.);
+            *facing = Facing::Left;
         }
     }
 }
