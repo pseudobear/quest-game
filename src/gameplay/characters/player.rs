@@ -85,7 +85,9 @@ fn spawn_player(
                     Vec3::new(17.0, 3.0, 0.0)
                 ),
                 PlayerSprite
-            ));
+            )).insert(CharacterEquips {
+                weapon: TESTING_SWORDS
+            });
         });
 }
 

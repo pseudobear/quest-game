@@ -69,8 +69,5 @@ fn ds_activate_basic_attack (
         let mut hitbox_thrower = hitbox_thrower_query.get_mut(ev.sprite_entity).unwrap();
         hitbox_thrower.trigger_hitbox(ev.hitbox_index, ev.hitbox_lock);
         
-        // lock the movement state to momentum 
-
-        // emit a EndSkill event when finished
     }
 }
