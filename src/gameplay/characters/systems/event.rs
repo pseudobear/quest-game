@@ -16,7 +16,7 @@ pub fn emit_ds_skill_activation<SourcePhysics: Component, SourceSprite: Componen
             if keyboard_input.just_pressed(KeyCode::KeyZ) && equips.weapon.weapon_type == WeaponType::DualSwords {
                 ev_activate_skill.send(ActivateSkillEvent {
                     skill: "ds_basic_attack".to_string(),
-                    entity: physics_entity,
+                    physics_entity: physics_entity,
                     sprite_entity: sprite_entity,
                     animation_index: 7,
                     animation_lock: true,

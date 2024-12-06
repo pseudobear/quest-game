@@ -2,6 +2,7 @@ mod dual_swords_skills;
 mod fists_skills;
 pub mod events;
 
+use std::time::Duration;
 use crate::gameplay::GameState;
 use crate::gameplay::items::CharacterEquips;
 use crate::gameplay::items::weapons::WeaponType;
@@ -10,10 +11,8 @@ use crate::gameplay::skills::events::{
     ActivateSkillEvent,
     EndSkillEvent,
 };
-use crate::gameplay::skills::dual_swords_skills::{
-    DualSwordSkillsPlugin,
-    create_dual_swords_hitbox_thrower
-};
+use crate::gameplay::skills::dual_swords_skills::DualSwordSkillsPlugin;
+use crate::gameplay::skills::dual_swords_skills::hitbox::create_dual_swords_hitbox_thrower;
 use crate::gameplay::skills::fists_skills::{
     FistSkillsPlugin,
     create_fists_hitbox_thrower
@@ -33,7 +32,57 @@ impl Plugin for SkillsPlugin {
                 FistSkillsPlugin,
                 DualSwordSkillsPlugin,
            ))
-           .add_systems(Update, switch_weapon_type.run_if(in_state(GameState::Playing)));
+           .add_systems(Update, (
+                switch_weapon_type,
+                tick_skill_cooldowns,
+           ).run_if(in_state(GameState::Playing)));
+    }
+}
+
+#[derive(Component, Debug)]
+pub struct SkillCooldown {
+    pub skill: String,
+    timer: Timer,
+}
+
+impl std::ops::Deref for SkillCooldown {
+    type Target = String; 
+
+    fn deref(&self) -> &String {
+        &self.skill
+    }
+}
+
+impl SkillCooldown {
+    /// Creates a new SkillCooldown with the relevant name and a new timer with a duration set
+    /// in seconds. This will tick and reset independantly of the system 
+    fn new(skill_name: &str, duration: f32) -> Self {
+        Self {
+            skill: skill_name.into(),
+            timer: Timer::new(Duration::from_secs_f32(duration), TimerMode::Once)
+        }
+    }
+
+    fn tick(&mut self, duration: Duration) {
+        self.timer.tick(duration);
+    }
+
+    fn is_finished(&self) -> bool {
+        self.timer.finished()
+    }
+}
+
+fn tick_skill_cooldowns(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut cooldown_query: Query<(Entity, &mut SkillCooldown)>
+) {
+    for (entity, mut cooldown) in &mut cooldown_query {
+        cooldown.tick(time.delta());
+        
+        if cooldown.is_finished() {
+            commands.entity(entity).remove::<SkillCooldown>();
+        }
     }
 }
 

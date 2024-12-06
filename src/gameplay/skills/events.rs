@@ -3,7 +3,7 @@ use bevy::prelude::*;
 
 #[derive(Event)]
 pub struct ActivateSkillEvent {
-    pub entity: Entity,
+    pub physics_entity: Entity,
     pub sprite_entity: Entity, 
     pub skill: String,
     pub animation_index: usize,
@@ -14,6 +14,7 @@ pub struct ActivateSkillEvent {
 
 #[derive(Event)]
 pub struct EndSkillEvent {
-    pub entity: Entity,
+    pub physics_entity: Entity,
+    pub sprite_entity: Entity,
     pub skill: String,
 }
