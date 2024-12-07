@@ -1,7 +1,10 @@
+use std::collections::HashMap;
+
 use crate::animations::Animatable;
 use crate::gameplay::items::CharacterEquips;
 use crate::gameplay::items::weapons::BARE_FISTS;
 use crate::gameplay::characters::stats::CharacterStats;
+use crate::gameplay::skills::SkillCooldowns;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
@@ -74,6 +77,7 @@ pub struct CharacterSpriteBundle {
     pub animatable: Animatable,
     pub facing: Facing,
     pub character_sprite: CharacterSprite,
+    pub skill_cooldowns: SkillCooldowns,
     // Character Attributes
     pub character_equips: CharacterEquips,
     pub character_stats: CharacterStats,
@@ -96,6 +100,7 @@ impl CharacterSpriteBundle {
             animatable: animatable,
             facing: Facing::default(),
             character_sprite: CharacterSprite { centering_transform: centering_transform },
+            skill_cooldowns: SkillCooldowns(HashMap::new()),
             character_equips: CharacterEquips { weapon: BARE_FISTS },
             character_stats: CharacterStats { ..Default::default() },
         }

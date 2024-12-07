@@ -1,17 +1,15 @@
 use crate::gameplay::skills::events::EndSkillEvent;
-use crate::gameplay::skills::SkillCooldown;
+use crate::gameplay::skills::SkillCooldowns;
 use bevy::prelude::*;
 
 pub fn ds_end_basic_attack (
-    mut commands: Commands,
     mut ev_end_skill: EventReader<EndSkillEvent>,
+    mut skill_cooldowns_query: Query<&mut SkillCooldowns>
 ) {
     for ev in ev_end_skill.read() {
         if ev.skill != "ds_basic_attack" {
             continue;
         }
-        commands.entity(ev.sprite_entity).insert(
-            SkillCooldown::new("ds_basic_attack", 1.0)
-        );
+        skill_cooldowns_query.get_mut(ev.sprite_entity).unwrap().add_cooldown("ds_basic_attack", 1.0);
     }
 }
