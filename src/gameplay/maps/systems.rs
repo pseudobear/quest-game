@@ -16,6 +16,49 @@ pub fn spawn_oob_colliders(
     if let Some(layer_data) = layer_query.iter().next() {
         println!("LAYER METADATA");
         println!("{:?}", layer_data);
+        let grid_size = layer_data.grid_size as f32;
+        let height = layer_data.c_hei as f32;
+        let width = layer_data.c_wid as f32;
+
+        // left wall
+        commands.spawn((
+            Collider::cuboid(
+                grid_size / 2.0,
+                height * grid_size / 2.0,
+            ),
+            TransformBundle::from(Transform::from_xyz(
+                -(grid_size / 2.0),
+                height * grid_size / 2.0,
+                2.5,
+            )),
+            ActiveEvents::COLLISION_EVENTS,
+        ));
+        // right wall
+        commands.spawn((
+            Collider::cuboid(
+                grid_size / 2.0,
+                height * grid_size / 2.0,
+            ),
+            TransformBundle::from(Transform::from_xyz(
+                grid_size * (width + 0.5),
+                height * grid_size / 2.0,
+                2.5,
+            )),
+            ActiveEvents::COLLISION_EVENTS,
+        ));
+        // ceiling
+        commands.spawn((
+            Collider::cuboid(
+                width * grid_size / 2.0,
+                grid_size / 2.0,
+            ),
+            TransformBundle::from(Transform::from_xyz(
+                width * grid_size / 2.0,
+                (height+0.5) * grid_size,
+                2.5,
+            )),
+            ActiveEvents::COLLISION_EVENTS,
+        ));
     }
 }
 
@@ -24,9 +67,9 @@ pub fn spawn_oob_colliders(
 /// Instead, by flagging the wall tiles and spawning the collisions later,
 /// we can minimize the amount of colliding entities.
 ///
-/// 1. Create hashmap of rectangles made from grid coords keyed on Y coord 
+/// 1. Create hashmap of rectangles made from grid coords keyed on Y coord
 /// 2. iterate through each key to generate sets of adjacent obstacles
-/// 4. spawn colliders for each 
+/// 4. spawn colliders for each
 pub fn spawn_wall_collision(
     world: &mut World,
     obstacle_query: &mut QueryState<&GridCoords, Added<Obstacle>>,
@@ -83,7 +126,7 @@ pub fn spawn_wall_collision(
     for rect in final_colliders {
         world.spawn((
             Collider::cuboid(
-                ((rect.right - rect.left) / 2) as f32, 
+                ((rect.right - rect.left) / 2) as f32,
                 ((rect.top - rect.bottom) / 2) as f32
             ),
             TransformBundle::from(Transform::from_xyz(
