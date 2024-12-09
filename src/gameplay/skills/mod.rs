@@ -2,6 +2,7 @@ mod dual_swords_skills;
 mod fists_skills;
 pub mod events;
 
+use std::collections::HashMap;
 use std::time::Duration;
 use crate::gameplay::GameState;
 use crate::gameplay::items::CharacterEquips;
@@ -39,49 +40,42 @@ impl Plugin for SkillsPlugin {
     }
 }
 
-#[derive(Component, Debug)]
-pub struct SkillCooldown {
-    pub skill: String,
-    timer: Timer,
-}
+#[derive(Component, Deref, DerefMut, Debug)]
+pub struct SkillCooldowns(pub HashMap<String, Timer>);
 
-impl std::ops::Deref for SkillCooldown {
-    type Target = String; 
-
-    fn deref(&self) -> &String {
-        &self.skill
-    }
-}
-
-impl SkillCooldown {
-    /// Creates a new SkillCooldown with the relevant name and a new timer with a duration set
-    /// in seconds. This will tick and reset independantly of the system 
-    fn new(skill_name: &str, duration: f32) -> Self {
-        Self {
-            skill: skill_name.into(),
-            timer: Timer::new(Duration::from_secs_f32(duration), TimerMode::Once)
-        }
+impl SkillCooldowns {
+    /// Creates a new Cooldown with the relevant name and a new timer with a duration set
+    /// in seconds. This will tick and reset independently. I
+    fn add_cooldown(&mut self, skill_name: &str, duration: f32) {
+        self.insert(
+            skill_name.into(),
+            Timer::new(Duration::from_secs_f32(duration), TimerMode::Once)
+        );
     }
 
     fn tick(&mut self, duration: Duration) {
-        self.timer.tick(duration);
-    }
-
-    fn is_finished(&self) -> bool {
-        self.timer.finished()
+        for timer in self.values_mut() {
+            timer.tick(duration);
+        }
     }
 }
 
 fn tick_skill_cooldowns(
-    mut commands: Commands,
     time: Res<Time>,
-    mut cooldown_query: Query<(Entity, &mut SkillCooldown)>
+    mut cooldowns_query: Query<&mut SkillCooldowns>
 ) {
-    for (entity, mut cooldown) in &mut cooldown_query {
-        cooldown.tick(time.delta());
+    for mut cooldowns in &mut cooldowns_query {
+        cooldowns.tick(time.delta());
         
-        if cooldown.is_finished() {
-            commands.entity(entity).remove::<SkillCooldown>();
+        let mut finished_cooldowns = Vec::<String>::new();
+        for (skill, timer) in cooldowns.iter_mut() {
+            if timer.finished() {
+                finished_cooldowns.push(skill.clone());
+            }
+        }
+        for skill in finished_cooldowns {
+            println!("FINISHED COOLDOWN {}", skill);
+            cooldowns.remove(&skill);
         }
     }
 }

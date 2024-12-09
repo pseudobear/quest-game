@@ -8,9 +8,6 @@ use crate::gameplay::characters::systems::movement::{
     player_air_movement,
     detect_grounded,
 };
-use crate::gameplay::characters::systems::event::{
-    emit_ds_skill_activation,
-};
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
 use crate::animations::{ Animatable, AnimationConfig };
@@ -45,7 +42,6 @@ impl Plugin for PlayerPlugin {
         app.add_sub_state::<PlayerMovementState>()
            .add_systems(OnEnter(GameState::Playing), spawn_player)
            .add_systems(Update, (
-                emit_ds_skill_activation::<PlayerPhysics, PlayerSprite>,
                 (   // movement systems
                     player_grounded_movement::<PlayerPhysics>,
                     player_air_movement::<PlayerPhysics>,
@@ -99,7 +95,10 @@ fn spawn_player(
 4: Jump
 5: Jump fall transition
 6: Fall
-7: Slash_1
+7: Slash_0
+8: Slash_1
+9: Slash_2
+10: Slash_3
 */
 fn create_player_animatable(player_sprite: &Res<SwordsMasterSpriteAssets>) -> Animatable {
     let idle_config = AnimationConfig::new(0, 8, 10, true, player_sprite.idle.clone());
@@ -109,7 +108,10 @@ fn create_player_animatable(player_sprite: &Res<SwordsMasterSpriteAssets>) -> An
     let jump_config = AnimationConfig::new(0, 2, 10, true, player_sprite.jump.clone());
     let jump_fall_transition_config = AnimationConfig::new(0, 3, 16, false, player_sprite.jump_fall_transition.clone());
     let fall_config = AnimationConfig::new(0, 2, 10, true, player_sprite.fall.clone());
-    let slash_1_config = AnimationConfig::new(0, 6, 10, false, player_sprite.slash_1.clone());
+    let slash_0_config = AnimationConfig::new(0, 6, 10, false, player_sprite.slash_0.clone());
+    let slash_1_config = AnimationConfig::new(0, 4, 10, false, player_sprite.slash_1.clone());
+    let slash_2_config = AnimationConfig::new(0, 4, 10, false, player_sprite.slash_2.clone());
+    let slash_3_config = AnimationConfig::new(0, 5, 10, false, player_sprite.slash_3.clone());
 
     let player_animatable = Animatable::new(Vec::from([
         idle_config,
@@ -119,7 +121,10 @@ fn create_player_animatable(player_sprite: &Res<SwordsMasterSpriteAssets>) -> An
         jump_config,
         jump_fall_transition_config,
         fall_config,
+        slash_0_config,
         slash_1_config,
+        slash_2_config,
+        slash_3_config,
     ]));
 
     return player_animatable;
