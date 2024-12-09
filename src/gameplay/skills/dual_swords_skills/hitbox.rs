@@ -12,15 +12,15 @@ use crate::gameplay::hitbox::hitbox_frame::{
 */
 pub fn create_dual_swords_hitbox_thrower() -> HitboxThrower {
 
-    let basic_attack_config = HitboxConfig::new("ds_basic_attack".to_string(), 0, 6, 10, false, ds_basic_attack_frames());
+    let basic_attack_0_config = HitboxConfig::new("ds_basic_attack_0".to_string(), 0, 6, 10, false, ds_basic_attack_0_frames());
 
     HitboxThrower::new(Vec::from([
-        basic_attack_config
+        basic_attack_0_config
     ]))
 }
 
 
-fn ds_basic_attack_frames() -> Vec<HitboxFrame> {
+fn ds_basic_attack_0_frames() -> Vec<HitboxFrame> {
     Vec::from([
         HitboxFrame::new(1, 1, Vec::from([CuboidColliderSpec::new(
             24.0, 8.0,
