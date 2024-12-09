@@ -8,9 +8,6 @@ use crate::gameplay::characters::systems::movement::{
     player_air_movement,
     detect_grounded,
 };
-use crate::gameplay::characters::systems::event::{
-    emit_ds_skill_activation,
-};
 use crate::gameplay::resources::ScreenBottomLeft;
 use crate::GameState;
 use crate::animations::{ Animatable, AnimationConfig };
@@ -45,7 +42,6 @@ impl Plugin for PlayerPlugin {
         app.add_sub_state::<PlayerMovementState>()
            .add_systems(OnEnter(GameState::Playing), spawn_player)
            .add_systems(Update, (
-                emit_ds_skill_activation::<PlayerPhysics, PlayerSprite>,
                 (   // movement systems
                     player_grounded_movement::<PlayerPhysics>,
                     player_air_movement::<PlayerPhysics>,
