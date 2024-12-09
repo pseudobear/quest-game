@@ -40,7 +40,7 @@ fn basic_attack_chain(
     } else if cooldowns.contains_key("ds_basic_attack_2") {
         ev_activate_skill.send(ActivateSkillEvent {
             skill: "ds_basic_attack_3".to_string(),
-            cooldown: 0.0,
+            cooldown: 0.2,
             physics_entity: physics_entity,
             sprite_entity: sprite_entity,
             animation_index: 10,
@@ -53,7 +53,7 @@ fn basic_attack_chain(
     } else if cooldowns.contains_key("ds_basic_attack_1") {
         ev_activate_skill.send(ActivateSkillEvent {
             skill: "ds_basic_attack_2".to_string(),
-            cooldown: 0.8,
+            cooldown: 0.6,
             physics_entity: physics_entity,
             sprite_entity: sprite_entity,
             animation_index: 9,
@@ -66,7 +66,7 @@ fn basic_attack_chain(
     } else if cooldowns.contains_key("ds_basic_attack_0") {
         ev_activate_skill.send(ActivateSkillEvent {
             skill: "ds_basic_attack_1".to_string(),
-            cooldown: 0.8,
+            cooldown: 0.6,
             physics_entity: physics_entity,
             sprite_entity: sprite_entity,
             animation_index: 8,
@@ -79,7 +79,7 @@ fn basic_attack_chain(
     } else {
         ev_activate_skill.send(ActivateSkillEvent {
             skill: "ds_basic_attack_0".to_string(),
-            cooldown: 0.8,
+            cooldown: 0.6,
             physics_entity: physics_entity,
             sprite_entity: sprite_entity,
             animation_index: 7,

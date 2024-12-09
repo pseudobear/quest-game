@@ -46,7 +46,7 @@ fn fists_activate_basic_attack (
         
         // throw the sensor colliders
         let mut hitbox_thrower = hitbox_thrower_query.get_mut(ev.sprite_entity).unwrap();
-        hitbox_thrower.trigger_hitbox(ev.hitbox_index, ev.hitbox_lock);
+        hitbox_thrower.trigger_hitbox(ev.hitbox_index, ev.hitbox_lock, 0.);
         
         // lock the movement state to momentum 
 

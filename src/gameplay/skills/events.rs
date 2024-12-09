@@ -21,6 +21,7 @@ pub struct EndSkillEvent {
     pub physics_entity: Entity,
     pub sprite_entity: Entity,
     pub skill: String,
+    pub cooldown: f32,
 }
 
 pub fn activate_skill (
@@ -34,7 +35,7 @@ pub fn activate_skill (
         
         // throw the sensor colliders
         let mut hitbox_thrower = hitbox_thrower_query.get_mut(ev.sprite_entity).unwrap();
-        hitbox_thrower.trigger_hitbox(ev.hitbox_index, ev.hitbox_lock);
+        hitbox_thrower.trigger_hitbox(ev.hitbox_index, ev.hitbox_lock, ev.cooldown);
     }
 }
 
@@ -43,6 +44,6 @@ pub fn end_skill(
     mut skill_cooldowns_query: Query<&mut SkillCooldowns>
 ) {
     for ev in ev_end_skill.read() {
-        skill_cooldowns_query.get_mut(ev.sprite_entity).unwrap().add_cooldown(ev.skill.as_str(), 1.0);
+        skill_cooldowns_query.get_mut(ev.sprite_entity).unwrap().add_cooldown(ev.skill.as_str(), ev.cooldown);
     }
 }

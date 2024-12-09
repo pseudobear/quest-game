@@ -25,6 +25,7 @@ pub struct HitboxThrower {
     pub hitboxes: Vec<HitboxConfig>,
     pub active: Option<usize>,
     locked: bool,
+    cooldown: f32,        // this exists to be set on skill activation so we know what value to set the skill cooldown to
 }
 
 impl HitboxThrower {
@@ -32,19 +33,21 @@ impl HitboxThrower {
         Self {
             hitboxes: hitboxes,
             active: None,
-            locked: false
+            locked: false,
+            cooldown: 0.
         }
     }
 
     /// activates hitbox given by index
     /// if the hitbox_thrower is locked, trigger_hitbox will not do anything. Use the lock parameter
     /// to lock the hitbox_thrower during the first loop of the hitbox
-    pub fn trigger_hitbox(&mut self, index: usize, lock: bool) {
+    pub fn trigger_hitbox(&mut self, index: usize, lock: bool, cooldown: f32) {
         if !self.locked {
             self.active = Some(index);
             self.locked = lock;
             self.hitboxes[index].frame_timer = HitboxConfig::timer_from_fps(self.hitboxes[index].fps);
             self.hitboxes[index].reset_index();
+            self.cooldown = cooldown;
         }
     }
 }
@@ -150,6 +153,7 @@ fn execute_hitboxes(
                         physics_entity: parent.get(),
                         sprite_entity: entity,
                         skill: config.skill_name.clone(),
+                        cooldown: hitbox_thrower.cooldown
                     });
                 }
 
