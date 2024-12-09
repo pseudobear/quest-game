@@ -14,6 +14,8 @@ pub fn emit_ds_skill_activation<SourcePhysics: Component, SourceSprite: Componen
     // iterate in case the player controls multiple
     for physics_entity in physics_entity_query.iter() {
         for (sprite_entity, equips, mut cooldowns) in &mut sprite_entity_query {
+
+            println!("{:?}", cooldowns);
             if equips.weapon.weapon_type != WeaponType::DualSwords {
                 continue;
             }
@@ -33,16 +35,30 @@ fn basic_attack_chain(
     physics_entity: Entity,
     sprite_entity: Entity
 ) {
-    if cooldowns.contains_key("ds_basic_attack_2") {
+    if cooldowns.contains_key("ds_basic_attack_3") {
         return;
+    } else if cooldowns.contains_key("ds_basic_attack_2") {
+        ev_activate_skill.send(ActivateSkillEvent {
+            skill: "ds_basic_attack_3".to_string(),
+            cooldown: 0.0,
+            physics_entity: physics_entity,
+            sprite_entity: sprite_entity,
+            animation_index: 10,
+            animation_lock: true,
+            hitbox_index: 3,
+            hitbox_lock: true,
+        });
+        cooldowns.remove("ds_basic_attack_2");
+
     } else if cooldowns.contains_key("ds_basic_attack_1") {
         ev_activate_skill.send(ActivateSkillEvent {
             skill: "ds_basic_attack_2".to_string(),
+            cooldown: 0.8,
             physics_entity: physics_entity,
             sprite_entity: sprite_entity,
-            animation_index: 7,
+            animation_index: 9,
             animation_lock: true,
-            hitbox_index: 0,
+            hitbox_index: 2,
             hitbox_lock: true,
         });
         cooldowns.remove("ds_basic_attack_1");
@@ -50,11 +66,12 @@ fn basic_attack_chain(
     } else if cooldowns.contains_key("ds_basic_attack_0") {
         ev_activate_skill.send(ActivateSkillEvent {
             skill: "ds_basic_attack_1".to_string(),
+            cooldown: 0.8,
             physics_entity: physics_entity,
             sprite_entity: sprite_entity,
-            animation_index: 7,
+            animation_index: 8,
             animation_lock: true,
-            hitbox_index: 0,
+            hitbox_index: 1,
             hitbox_lock: true,
         });
         cooldowns.remove("ds_basic_attack_0");
@@ -62,6 +79,7 @@ fn basic_attack_chain(
     } else {
         ev_activate_skill.send(ActivateSkillEvent {
             skill: "ds_basic_attack_0".to_string(),
+            cooldown: 0.8,
             physics_entity: physics_entity,
             sprite_entity: sprite_entity,
             animation_index: 7,

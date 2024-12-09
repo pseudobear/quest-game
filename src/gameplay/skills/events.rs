@@ -9,6 +9,7 @@ pub struct ActivateSkillEvent {
     pub physics_entity: Entity,
     pub sprite_entity: Entity, 
     pub skill: String,
+    pub cooldown: f32,
     pub animation_index: usize,
     pub animation_lock: bool,
     pub hitbox_index: usize,
