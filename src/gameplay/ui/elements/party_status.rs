@@ -22,6 +22,9 @@ pub struct CharacterStatusUi;
 #[derive(Component)]
 pub struct HealthBar;
 
+#[derive(Component)]
+pub struct PlayerHealthBar;
+
 pub fn setup_player_status_group(commands: &mut Commands, parent: Entity) -> Entity {
     let party_status_group = commands.spawn((
         NodeBundle {
@@ -66,13 +69,14 @@ pub fn spawn_character_status(commands: &mut Commands, parent_node: Entity) {
     ).id();
     commands.entity(parent_node).add_child(character_name);
     
-    spawn_bar(
+    let player_health_bar = spawn_bar(
         commands,
         health_bar,
         parent_node,
         Val::Px(5.0),
         Val::Px(0.0),
     );
+    commands.entity(player_health_bar).insert(PlayerHealthBar);
 
     spawn_bar(
         commands,

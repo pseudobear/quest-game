@@ -1,6 +1,6 @@
 mod top_bar;
 mod bottom_bar;
-mod elements;
+pub mod elements;
 mod windows;
 
 use crate::gameplay::ui::bottom_bar::{ GameUiBottomBar, BottomBarPlugin};

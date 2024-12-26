@@ -1,3 +1,5 @@
+use crate::ui::bars::Bar;
+use crate::gameplay::ui::elements::party_status::PlayerHealthBar;
 use bevy::prelude::*;
 
 
@@ -14,4 +16,12 @@ impl Plugin for StatsPlugin {
 pub struct CharacterStats {
     pub health: u32,
     pub mana: u32,
+    pub max_health: u32,
+}
+
+fn sync_health_bar(
+    mut query: Query<&Bar, With<PlayerHealthBar>>
+) {
+    for bar in query.iter_mut() {
+    }
 }
