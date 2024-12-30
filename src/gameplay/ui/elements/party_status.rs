@@ -1,9 +1,5 @@
-use crate::ui::bars::{
-    Bar,
-    spawn_bar,
-};
+use crate::ui::bars::{spawn_bar, Bar};
 use bevy::prelude::*;
-
 
 const STATUS_BAR_LENGTH: f32 = 300.0;
 const STATUS_BAR_HEIGHT: f32 = 16.0;
@@ -26,20 +22,22 @@ pub struct HealthBar;
 pub struct PlayerHealthBar;
 
 pub fn setup_player_status_group(commands: &mut Commands, parent: Entity) -> Entity {
-    let party_status_group = commands.spawn((
-        NodeBundle {
-            style: Style {
-                width: Val::Percent(100.0),
-                height: Val::Percent(100.0),
-                flex_direction: FlexDirection::Column,
-                align_items: AlignItems::Start,
-                justify_content: JustifyContent::Start,
+    let party_status_group = commands
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(100.0),
+                    flex_direction: FlexDirection::Column,
+                    align_items: AlignItems::Start,
+                    justify_content: JustifyContent::Start,
+                    ..default()
+                },
                 ..default()
             },
-            ..default()
-        },
-        PartyStatusUi,
-    )).id();
+            PartyStatusUi,
+        ))
+        .id();
 
     commands.entity(parent).add_child(party_status_group);
 
@@ -64,11 +62,14 @@ pub fn spawn_character_status(commands: &mut Commands, parent_node: Entity) {
     health_bar.set_progress(0.7);
     mana_bar.set_progress(0.3);
 
-    let character_name = commands.spawn(
-        character_status_text("Character Name", Color::linear_rgb(255., 255., 255.))
-    ).id();
+    let character_name = commands
+        .spawn(character_status_text(
+            "Character Name",
+            Color::linear_rgb(255., 255., 255.),
+        ))
+        .id();
     commands.entity(parent_node).add_child(character_name);
-    
+
     let player_health_bar = spawn_bar(
         commands,
         health_bar,
@@ -78,13 +79,7 @@ pub fn spawn_character_status(commands: &mut Commands, parent_node: Entity) {
     );
     commands.entity(player_health_bar).insert(PlayerHealthBar);
 
-    spawn_bar(
-        commands,
-        mana_bar,
-        parent_node,
-        Val::Px(5.0),
-        Val::Px(0.0),
-    );
+    spawn_bar(commands, mana_bar, parent_node, Val::Px(5.0), Val::Px(0.0));
 }
 
 fn character_status_text(text: &str, color: Color) -> TextBundle {
@@ -94,6 +89,6 @@ fn character_status_text(text: &str, color: Color) -> TextBundle {
             font_size: STATUS_TEXT_SIZE,
             color: color,
             ..default()
-        }
+        },
     )
 }
