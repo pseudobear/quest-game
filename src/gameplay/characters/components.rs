@@ -1,10 +1,9 @@
 use crate::animations::Animatable;
-use crate::gameplay::items::CharacterEquips;
-use crate::gameplay::items::weapons::BARE_FISTS;
 use crate::gameplay::characters::stats::CharacterStats;
+use crate::gameplay::items::weapons::BARE_FISTS;
+use crate::gameplay::items::CharacterEquips;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-
 
 #[derive(Component, Default, Clone, Eq, PartialEq, Debug, Hash)]
 pub enum GroundStatus {
@@ -25,7 +24,7 @@ pub struct CharacterPhysics;
 
 #[derive(Component)]
 pub struct CharacterSprite {
-    pub centering_transform: Vec3
+    pub centering_transform: Vec3,
 }
 
 #[derive(Bundle)]
@@ -56,10 +55,18 @@ impl Default for CharacterPhysicsBundle {
             active_events: ActiveEvents::COLLISION_EVENTS,
             solver_group: SolverGroups::new(Group::GROUP_1, Group::GROUP_1.complement()),
             // markers to access rigidbody attributes
-            external_force: ExternalForce { ..Default::default() },
-            external_impulse: ExternalImpulse { ..Default::default() },
-            damping: Damping { ..Default::default() },
-            velocity: Velocity { ..Default::default() },
+            external_force: ExternalForce {
+                ..Default::default()
+            },
+            external_impulse: ExternalImpulse {
+                ..Default::default()
+            },
+            damping: Damping {
+                ..Default::default()
+            },
+            velocity: Velocity {
+                ..Default::default()
+            },
             colliding_entities: CollidingEntities::default(),
             ground_status: GroundStatus::default(),
             character_physics: CharacterPhysics,
@@ -92,12 +99,20 @@ impl CharacterSpriteBundle {
                 transform: transform,
                 ..Default::default()
             },
-            texture_atlas: TextureAtlas { ..Default::default() },
+            texture_atlas: TextureAtlas {
+                ..Default::default()
+            },
             animatable: animatable,
             facing: Facing::default(),
-            character_sprite: CharacterSprite { centering_transform: centering_transform },
+            character_sprite: CharacterSprite {
+                centering_transform: centering_transform,
+            },
             character_equips: CharacterEquips { weapon: BARE_FISTS },
-            character_stats: CharacterStats { ..Default::default() },
+            character_stats: CharacterStats {
+                health: 50,
+                mana: 100,
+                max_health: 100,
+            },
         }
     }
 }

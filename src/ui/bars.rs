@@ -10,14 +10,14 @@ impl Plugin for UiBarPlugin {
 
 fn update_bar(
     bar_query: Query<(&Children, &Bar), Changed<Bar>>,
-    mut active_bar_area_query: Query<(&mut Style, &ActiveBarArea)>
+    mut active_bar_area_query: Query<(&mut Style, &ActiveBarArea)>,
 ) {
     for (children, bar) in bar_query.iter() {
         let mut drawn_area: f32 = 0.0;
         for &child in children.iter() {
             let (mut style, active_bar_area) = active_bar_area_query.get_mut(child).unwrap();
             let (size, c) = bar.sections[active_bar_area.0];
-            
+
             let current_area = size as f32 / bar.total_size as f32;
 
             if current_area + drawn_area <= bar.progress {
@@ -30,7 +30,7 @@ fn update_bar(
                 drawn_area += current_area;
             }
         }
-    } 
+    }
 }
 
 pub fn spawn_bar(
@@ -40,35 +40,37 @@ pub fn spawn_bar(
     margin_vert: Val,
     margin_hor: Val,
 ) -> Entity {
-    let bar = commands.spawn((
-        NodeBundle {
-            style: Style {
-                width: Val::Px(bar.dimensions.x),
-                height: Val::Px(bar.dimensions.y),
-                margin: UiRect::axes(margin_hor, margin_vert),
-                ..default()
-            },
-            background_color: bar.empty_color.into(),
-            ..default()
-        },
-        bar.clone()
-    )).with_children(|parent| {
-
-        for (index, (_, color)) in bar.sections.iter().enumerate() {
-            parent.spawn((
-                NodeBundle {
-                    style: Style {
-                        width: Val::Px(30.0),
-                        height: Val::Px(bar.dimensions.y),
-                        ..default()
-                    },
-                    background_color: (*color).into(),
+    let bar = commands
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    width: Val::Px(bar.dimensions.x),
+                    height: Val::Px(bar.dimensions.y),
+                    margin: UiRect::axes(margin_hor, margin_vert),
                     ..default()
                 },
-                ActiveBarArea(index),
-            ));
-        }
-    }).id();
+                background_color: bar.empty_color.into(),
+                ..default()
+            },
+            bar.clone(),
+        ))
+        .with_children(|parent| {
+            for (index, (_, color)) in bar.sections.iter().enumerate() {
+                parent.spawn((
+                    NodeBundle {
+                        style: Style {
+                            width: Val::Px(30.0),
+                            height: Val::Px(bar.dimensions.y),
+                            ..default()
+                        },
+                        background_color: (*color).into(),
+                        ..default()
+                    },
+                    ActiveBarArea(index),
+                ));
+            }
+        })
+        .id();
     commands.entity(parent).add_child(bar);
 
     return bar;
@@ -100,7 +102,7 @@ impl Bar {
             sections: sections,
             total_size: total_size,
             empty_color: empty_color,
-            dimensions: dimensions
+            dimensions: dimensions,
         }
     }
 
@@ -156,3 +158,4 @@ impl Bar {
         self
     }
 }
+
