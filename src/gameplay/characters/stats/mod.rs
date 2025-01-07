@@ -1,13 +1,16 @@
 use crate::gameplay::ui::elements::party_status::PlayerHealthBar;
 use crate::ui::bars::Bar;
 use bevy::prelude::*;
+use blake2::digest::Update;
 
 pub struct StatsPlugin;
 
 /// This plugin handles player related stuff like movement
 /// Player logic is only active during the State `GameState::Playing`
 impl Plugin for StatsPlugin {
-    fn build(&self, app: &mut App) {}
+    fn build(&self, app: &mut App) {
+        app.add_systems(Update, sync_health_bar);
+    }
 }
 
 #[derive(Component, Default)]
@@ -18,16 +21,10 @@ pub struct CharacterStats {
 }
 
 fn sync_health_bar(
-    mut bar_query: Query<&Bar, With<PlayerHealthBar>>,
-    mut player_stat_query: Query<&CharacterStats>,
+    mut bar_query: Query<&mut Bar, With<PlayerHealthBar>>,
+    player_stat_query: Query<&CharacterStats>,
 ) {
-    let mut updated_health = 0.0;
-    for stats in player_stat_query.iter_mut() {
-        updated_health = (stats.health as f32 / stats.max_health as f32);
-    }
-
-    for mut bar in bar_query.iter_mut() {
-        bar.set_progress(updated_health);
-    }
+    let player_stat = player_stat_query.single();
+    let mut bar = bar_query.single_mut();
+    bar.set_progress(player_stat.health as f32 / player_stat.max_health as f32);
 }
-
